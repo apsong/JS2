@@ -8,3 +8,7 @@ fi
 if [ -f javaserver.jar ]; then
     cp -v javaserver.jar iHub/Jar/javaserver.jar
 fi
+
+if [ -f birtre.jar ]; then
+    cp -v birtre.jar iHub/reportengines/engines/birt/lib/birtre.jar
+fi
