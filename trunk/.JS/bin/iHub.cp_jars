@@ -1,14 +1,17 @@
 #! /usr/bin/sh
 
-if [ -f jrem.jar ]; then
-    cp -v jrem.jar iHub/reportengines/lib/jrem.jar
-    cp -v jrem.jar iHub/servletcontainer/iportal/WEB-INF/lib/com.actuate.jrem.jar
-fi
-
-if [ -f javaserver.jar ]; then
-    cp -v javaserver.jar iHub/Jar/javaserver.jar
-fi
-
-if [ -f birtre.jar ]; then
-    cp -v birtre.jar iHub/reportengines/engines/birt/lib/birtre.jar
-fi
+#if [ -f jrem.jar ]; then
+#    cp -v jrem.jar iHub/reportengines/lib/jrem.jar
+#    cp -v jrem.jar iHub/servletcontainer/iportal/WEB-INF/lib/com.actuate.jrem.jar
+#fi
+#
+#if [ -f javaserver.jar ]; then
+#    cp -v javaserver.jar iHub/Jar/javaserver.jar
+#fi
+#
+#if [ -f birtre.jar ]; then
+#    cp -v birtre.jar iHub/reportengines/engines/birt/lib/birtre.jar
+#fi
+for JAR in `ls -d *.jar 2>/dev/null`; do
+    find iHub/{servletcontainer,reportengines,Jar} \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -v $JAR {} \;
+done
