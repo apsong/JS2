@@ -13,5 +13,10 @@
 #    cp -v birtre.jar iHub/reportengines/engines/birt/lib/birtre.jar
 #fi
 for JAR in `ls -d *.jar 2>/dev/null`; do
-    find iHub/{servletcontainer,reportengines,Jar} \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -v $JAR {} \;
+    if [ "$1" = "undo" ]; then
+        find iHub/{servletcontainer,reportengines,Jar} \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -v {}.orig {} \;
+    else
+        find iHub/{servletcontainer,reportengines,Jar} \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -vn {} {}.orig \;
+        find iHub/{servletcontainer,reportengines,Jar} \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -v $JAR {} \;
+    fi
 done
