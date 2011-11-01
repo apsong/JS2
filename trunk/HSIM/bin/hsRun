@@ -30,6 +30,7 @@ usage()
     echo 1>&2 "    TESTCASE:"
     echo 1>&2 "        [PATH/]<FILE>.sim        --File with suffix '.sim' containing test URLs"
     echo 1>&2 "    -V                           --Print out all messages exchanged between the test client and server"
+    echo 1>&2 "    -v                           --Print out one-line messages exchanged between the test client and server"
     echo 1>&2 "    --job <CMD>                  --Runs 'CMD HOST DURATION' in the background when $PROGRAM is running"
     echo 1>&2
     echo 1>&2 "Examples:"
@@ -93,8 +94,8 @@ while [ $# -gt 0 ]; do
         [a-zA-Z_][a-zA-Z_0-9]*|*[0-9].[0-9]*.*[0-9].[0-9]*)
             HOST="$1"
             ;;
-        -V)
-            VERBOSE=true
+        -[vV])
+            VERBOSE="$1"
             ;;
         --job)
             shift
@@ -132,7 +133,7 @@ for DURATION in $DURATIONS; do
     OPTS="$OPTS -d $APACHE_DIR"
     [ "$SERVER_TYPE" != AJC ] && OPTS="$OPTS -S $ENCYCL_VOL"
     OPTS="$OPTS $TEST_FILE $TEST_OPTS"
-    [ -n "$VERBOSE" ] && OPTS="$OPTS -V"
+    [ -n "$VERBOSE" ] && OPTS="$OPTS $VERBOSE"
     OPTS="$OPTS -T 900"
 
     [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"

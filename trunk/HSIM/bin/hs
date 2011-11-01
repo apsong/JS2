@@ -51,10 +51,10 @@ _ht()
 
 _hs()
 {
-    ARGS_START=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
+    ARGS_START=`hsPrintf "%S %H $HSIM_HOME/%T %N %L%V"` || exit 1
 
     case "$ARGS_START" in
-        *[0-9][smhtTi])
+        *[0-9][smhtTi]*)
                 LOG=`NEWFILE hs.log`
                 echo "#!CMD:[ hsRun $ARGS_START --job hs.perfmon ]" > $LOG
                 _EVAL hsRun $ARGS_START --job hs.perfmon "|" tee -a $LOG
