@@ -31,6 +31,7 @@ $temp = (Get-Content $csv)
 $temp | Out-File $csv -Encoding Unicode
 }
 
+$LastQuarter = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 90)))
 
 $HASH = @{}
 $row = 0
@@ -71,9 +72,10 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
         $person.XFSL += $xfsl
         $person.PTSL += $ptsl
         if ($_.Email -ne $null -and $_.Email -ne "") {
-            if ($person.Email -ne $null -and $person.Email -ne "" -and $person.Email.IndexOf($_.Email) -lt 0) {
+            if ($person.Email -ne $null -and $person.Email -ne "" -and $person.Email.IndexOf($_.Email) -lt 0 `
+                    -and $person.LastDate -gt $LastQuarter) {
                 $person.Email += "|" + $_.Email
-                $ID + ": " + $person.Email
+                $ID + ": " + $person.Email + " : " + $person.LastDate
             } else {
                 $person.Email = $_.Email
             }

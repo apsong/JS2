@@ -1,0 +1,41 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>@200</ConnectionHandle>
+        <RequestId>2</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>@149</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>http://@-3:@-4/@-6/</AppBaseUrl>
+                <iPortalID>@100</iPortalID>
+                <HttpSessionId>@101</HttpSessionId>
+                <DashboardSessionID>@151</DashboardSessionID>
+                <IVSessionID>@152</IVSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>AddSharedTab</Operator>
+                <Target>
+                    <Id>Engine</Id>
+                    <Type>Engine</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>FilePath</Name>
+                            <Value>/Dashboard/Contents/TPCHCrosstab.DASHBOARD</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>allowDuplicate</Name>
+                            <Value>true</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+            <IVSessionID>@152</IVSessionID>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,14 @@
+#!hsim -x
+
+S:/@-6/loginservlet?__vp=@-5&userid=@-1&password=@-2&locale=en_US&loginpostback=true&timezone=America%2FLos_Angeles {(JSESSIONID=@257; Path);("iPortalId">@100</Param>);("httpSessionId">@101</Param>)}
+
+#Create->Dashboard
+M:/@-6/dashboard?__launchDesigner=true&usePersonalDashboard=false&__vp=@-5&volume=@-5&locale=en_USHEAD:Cookie: JSESSIONID=@257 {(dashboard.setDashboardName("@149"))}
+M:/@-6/dashboard?__vp=Default%20Volume&volume=Default%20Volume&locale=en_US&closex=trueHEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<dashboard/StartUp> {(activeTab&quot;:&quot;@150&quot);(<DashboardSessionID>@151</DashboardSessionID>);(<ConnectionHandle>@200</ConnectionHandle>)}
+M:/@-6/dashboard?__vp=Default%20Volume&volume=Default%20Volume&locale=en_US&closex=trueHEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<dashboard/1ExecuteDashboard> {(<IVSessionID>@152</IVSessionID>)}
+
+#Insert->Dashboard from Gallery...
+#M:/@-6/dashboard?__vp=Default%20Volume&volume=Default%20Volume&locale=en_US&closex=trueHEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<dashboard/StartUp> {(<ConnectionHandle>@200</ConnectionHandle>)}
+M:/@-6/dashboard?__vp=Default%20Volume&volume=Default%20Volume&locale=en_US&closex=trueHEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<dashboard/AddSharedTab> {(tabName&quot;:&quot;@201&quot)}
+M:/@-6/dashboard?__vp=Default%20Volume&volume=Default%20Volume&locale=en_US&closex=trueHEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<dashboard/ExecuteDashboard>
+M:/@-6/dashboard?__vp=Default%20Volume&volume=Default%20Volume&locale=en_US&closex=trueHEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<dashboard/SetActiveTab> {(set dashboard active tab finished successfully)}

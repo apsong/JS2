@@ -1,0 +1,39 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>@200</ConnectionHandle>
+        <RequestId>1</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>@149</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>http://jinsong:8700/iportal/</AppBaseUrl>
+                <iPortalID>@100</iPortalID>
+                <HttpSessionId>@101</HttpSessionId>
+                <DashboardSessionID>@151</DashboardSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>ExecuteDashboard</Operator>
+                <Target>
+                    <Id/>
+                    <Type>Dashboard</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>Id</Name>
+                            <Value>@150</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Action</Name>
+                            <Value>Run</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>

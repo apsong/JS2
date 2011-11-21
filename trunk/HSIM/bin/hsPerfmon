@@ -86,7 +86,7 @@ if {[llength $CPU] > 0} {
     lappend aveCPUs $aveCPU
     lappend aveDQLs $aveDQL
     puts [LIST2line $CPU "CPU" $aveCPU]
-    puts [LIST2line $DQL "DQL" $aveDQL]
+    puts [LIST2line $DQL "DiskQ" $aveDQL]
     set CPU {}
     set DQL {}
 }

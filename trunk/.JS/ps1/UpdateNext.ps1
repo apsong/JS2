@@ -9,20 +9,42 @@ function Release-Ref ($ref) {
 $XLS = (Get-ChildItem I:\【数据管理】\人员信息总表*.xlsx | Sort-Object | Select-Object -last 1).FullName
 $CSV = $XLS.Replace(".xlsx", ".csv")
 $SUMMARY = "I:\【数据管理】\人员信息总表_Summary.csv"
+$Summary2 = "I:\【数据管理】\人员信息总表_Summary2.csv"
 $NextPTSL = "I:\【数据管理】\人员信息总表_NextPTSL.csv"
 $NextXFSL = "I:\【数据管理】\人员信息总表_NextXFSL.csv"
 
+### Load Approved #################################################################################
+$HASH = @{}
+Get-Item "I:\【数据管理】\报名表.已交修学处\*.csv" | ForEach-Object -process {
+    Import-Csv $_ | %{
+        if ($_.Phone1 -ne "") { $HASH[$_.Phone1] = $True }
+        if ($_.Phone2 -ne "") { $HASH[$_.Phone2] = $True }
+    }
+}
 ###################################################################################################
 $LastSL = (Import-Csv $CSV | %{ Get-Date -UFormat "%Y/%m/%d" $_.参加沙龙时间 } | sort -Unique -Descending | Select-Object -First 1)
 
-$LastQuarter = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date $LastSL) - (New-TimeSpan -Days 90)))
-Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastQuarter -and $_.PTSL -eq 0} | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
-    | export-csv -noTypeInformation -encoding Unicode $NextPTSL
-    
-$LastMonth = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date $LastSL) - (New-TimeSpan -Days 30)))
-Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastMonth } | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
-    | export-csv -noTypeInformation -encoding Unicode $NextXFSL
+### All Summary ###
+Import-Csv $SUMMARY | ?{$_.Phone.Length -eq 11} | sort Phone | %{
+        if ($_.Phone -ne $__lastPhone -and $HASH[$_.Phone] -ne $True) { $_ }
+        $__lastPhone = $_.Phone
+    } | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent | export-csv -noTypeInformation -encoding Unicode $Summary2
 
+### Next XFSL ###
+$LastMonth = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date $LastSL) - (New-TimeSpan -Days 30)))
+Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastMonth -and $_.Phone.Length -eq 11} | sort Phone | %{
+        if ($_.Phone -ne $__lastPhone -and $HASH[$_.Phone] -ne $True) { $_ }
+        $__lastPhone = $_.Phone
+    } | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent | export-csv -noTypeInformation -encoding Unicode $NextXFSL
+
+### Next PTSL ###
+$LastQuarter = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date $LastSL) - (New-TimeSpan -Days 90)))
+Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastQuarter -and $_.Phone.Length -eq 11 -and $_.PTSL -eq 0} | sort Phone | %{
+        if ($_.Phone -ne $__lastPhone) { $_ }
+        $__lastPhone = $_.Phone
+    } | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent | export-csv -noTypeInformation -encoding Unicode $NextPTSL
+
+### Unsent? ###    
 Import-Csv $SUMMARY | ?{$_.Applied -eq "是" -and $_.Sent -ne "是" -and $_.PTSL -gt 0}
 
 ###################################################################################################
@@ -33,7 +55,7 @@ $excel.DisplayAlerts = $False
 $workbook = $excel.Workbooks.Open($XLS) 
 
 ###################################################################################################
-$workbook.Worksheets | ?{$_.Name -like "下次*沙龙(*)"} | %{ $_.Delete()} 
+$workbook.Worksheets | ?{$_.Name -like "下次*沙龙(*)" -or $_.Name -eq "Summary"} | %{ $_.Delete()} 
 
 function NewSheet($workbook, $name, $file) {
     $newSheet = $workbook.Worksheets.Add()
@@ -69,6 +91,7 @@ function NewSheet($workbook, $name, $file) {
     
     $a = Release-Ref($newSheet)
 }
+NewSheet $workbook "Summary" $Summary2
 NewSheet $workbook (Get-Date -UFormat "下次学佛沙龙(>%Y-%m-%d)" $LastMonth) $NextXFSL
 NewSheet $workbook (Get-Date -UFormat "下次菩提沙龙(>%Y-%m-%d)" $LastQuarter) $NextPTSL
 
