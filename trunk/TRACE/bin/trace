@@ -1,0 +1,48 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+
+_EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+do_trace()
+{
+    SCRIPT=$TRACE_HOME/Dashboard/`basename \`pwd\``.xml
+    [ -f $SCRIPT ] || { echo 1>&2 "Error: '$SCRIPT' doesn't exist."; return 1;}
+
+    LOG=`NEWFILE trace.out`
+    SCRIPT=`cygpath -w $SCRIPT | sed -e 's@\\\\@/@g'`
+    _EVAL traceRun --s $SCRIPT | tee $LOG
+    _EVAL sleep $DELAY
+}
+
+DELAY=0
+REPEAT=1
+repeat=1
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -D) shift; DELAY=$1;;
+        -R) shift; REPEAT=$1;;
+        -r) shift; repeat=$1;;
+        *) DIRS="$DIRS $1";;
+    esac
+    shift
+done
+[ -z "$DIRS" ] && DIRS="$PWD"
+
+ORIG_PWD="$PWD"
+for I in `seq $REPEAT`; do
+    for DIR in $DIRS; do
+        for i in `seq $repeat`; do
+            [ $REPEAT -gt 1 -o $repeat -gt 1 ] && echo [ $I.$i ]
+            echo
+            _EVAL cd "$DIR" && { do_$PROGRAM; true;} || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
+            cd "$ORIG_PWD"
+        done
+
+    done
+done
+

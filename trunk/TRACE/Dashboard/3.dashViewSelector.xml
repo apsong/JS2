@@ -1,0 +1,457 @@
+<trace ScenarioName="Viewing of Shared Dashboard for Summary"
+	ScenarioDescription="Users interact on a shared dashboard that contains a summary table, flash chart, and item selector."
+	ScenarioType="Transient,Viewing"
+	httpmaxconnections="300" 
+	onerror="continue"
+	collectstats="off"
+	>
+	<variable name="iportal" value="http://birt01-win:8700/iportal"/>
+	<variable name="volume" value="Default%20Volume"/>
+	<variable name="NoOfUsers" value="16"/>
+	<variable name="TestDuration" value="900"/>
+	<variable name="ThinkTime" value="0"/>
+	<variable name="ipid" value=""/>
+	
+	<variable name="sharedDashboard" value="/Dashboard/Contents/TPCHSummary.dashboard"/>
+	<variable name="unescapedConnHandle" value=""/>
+	<variable name="generationStatus" value="Pending"/>
+	<variable name="getGenStatusCount" value=""/>
+	<variable name="GenStatusLimit" value="60"/>
+	<variable name="selectorId" value=""/>
+	<variable name="gadgets" value=""/>
+	<variable name="gadgetNames" value=""/>
+	<variable name="viewerGadgetName" value=""/>
+	<variable name="viewerGadgetDataId" value=""/>
+	<variable name="viewerGadgetList" value=""/>
+	<variable name="jsCount" value=""/>
+	<variable name="metadataList" value=""/>
+	<variable name="gadgetMetadata" value=""/>
+	<variable name="gadgetMetadataNew" value=""/>
+	<variable name="gadgetData" value=""/>
+	
+	<list name="selectorItems">164,35,423</list>
+
+	<!--<include>../DashboardPerformance/Scenarios/CommonUtility/iportalbuild.xml</include>-->
+	
+	<step count="{NoOfUsers}" delayms="100" var="n">	<!-- total number of users -->
+		<timer duration="{TestDuration}">		<!-- duration of test -->
+			<timer duration="300">	<!-- 5 minutes to successfully login once -->
+				<while cond="ISEMPTY({ipid})">
+					<httpget label="1_Login" stats="on" url="{iportal}/loginservlet?userid=user{n}&amp;password=&amp;__vp={volume}">
+						<httpresponse>
+							<read body='&lt;Param id="iPortalId">(.+?)&lt;/Param>' into="ipid"/>
+						</httpresponse>
+					</httpget>
+					<think mean="{ThinkTime}" algorithm="exponential" label="Thinking"/>
+				</while>
+			</timer>
+			<verify cond="NOT(ISEMPTY({ipid}))" onfail="exit"/>	<!-- a user failed to login, test is invalid -->
+			
+			<while>
+
+				<!-- Open Dashboard page -->
+				<httpget label="2_Open_Dashboard" stats="on" url="{iportal}/dashboard?__vp={volume}">
+					<httpresponse>
+						<read body='dashboard.setDashboardName\("(.*?)"\);' into="dashboardFile"/>
+					</httpresponse>
+				</httpget>
+				
+				<!-- Dashboard Startup -->
+				<httppost label="3_Startup_Dashboard" stats="on" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+					<header name='Pragma' value='no-cache'/>
+					<header name='soapaction' value='""'/>
+					<header name='request-type' value='SOAP'/>
+					<header name='x-requested-with' value='XMLHttpRequest'/>
+					<postbody>
+						<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<soapenv:Header>
+		<RequestId>0</RequestId>
+	</soapenv:Header>
+	<soapenv:Body>
+		<GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+			<Object>
+				<Name>{dashboardFile}</Name>
+			</Object>
+			<DashboardContext></DashboardContext>
+			<Operation>
+				<Operator>StartUp</Operator>
+				<Target>
+					<Id>Engine</Id>
+					<Type>Engine</Type>
+				</Target>
+				<Data>
+					<ParameterValues>
+						<ParameterValue>
+							<Name>UseProfile</Name>
+							<Value>true</Value>
+						</ParameterValue>
+						<ParameterValue>
+							<Name>Embed</Name>
+							<Value>false</Value>
+						</ParameterValue>
+					</ParameterValues>
+				</Data>
+			</Operation>
+		</GetDashboardUpdatedObjects>
+	</soapenv:Body>
+</soapenv:Envelope>
+						]]>
+					</postbody>
+					<httpresponse>
+						<read body="&lt;Name>iportalid&lt;/Name>&lt;Value>(.+?)&lt;/Value>" into="iportalid"/>
+						<read body="&lt;IVSessionID>(.+?)&lt;/IVSessionID>" into="ivsession"/>
+						<read body="&lt;DashboardSessionID>(.+?)&lt;/DashboardSessionID>" into="dashsession"/>
+						<read body="&lt;Json>(.+?)&lt;/Json>" into="jsondata"/>
+					</httpresponse>
+				</httppost>
+				<json var="jsondata" read="activeTab" into="activeTabId"/>
+				
+				<!-- Execute Dashboard -->
+				<httppost label="4_Execute_Dashboard" stats="on" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+					<header name='Pragma' value='no-cache'/>
+					<header name='soapaction' value='""'/>
+					<header name='request-type' value='SOAP'/>
+					<header name='x-requested-with' value='XMLHttpRequest'/>
+					<postbody>
+						<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<soapenv:Header>
+		<RequestId>3</RequestId>
+	</soapenv:Header>
+	<soapenv:Body>
+		<GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+			<Object>
+				<Name>{sharedDashboard}</Name>
+			</Object>
+			<DashboardContext>
+				<WebAppPath>null</WebAppPath>
+				<AppBaseUrl>{iportal}/</AppBaseUrl>
+				<iPortalID>{iportalid}</iPortalID>
+			</DashboardContext>
+			<Operation>
+				<Operator>ExecuteDashboard</Operator>
+				<Target>
+					<Id/>
+					<Type>Dashboard</Type>
+				</Target>
+				<Data>
+					<ParameterValues>
+						<ParameterValue>
+							<Name>Id</Name>
+							<Value>{activeTabId}</Value>
+						</ParameterValue>
+						<ParameterValue>
+							<Name>Action</Name>
+							<Value>Run</Value>
+						</ParameterValue>
+					</ParameterValues>
+				</Data>
+			</Operation>
+		</GetDashboardUpdatedObjects>
+	</soapenv:Body>
+</soapenv:Envelope>
+						]]>
+					</postbody>
+					<httpresponse>
+						<read body="&lt;TransientDocument>(.+?)&lt;/TransientDocument>" into="dashdocument"/>
+						<read body="&lt;ConnectionHandle>(.+?)&lt;/ConnectionHandle>" into="connHandle"/>
+						<read body="&lt;IVSessionID>(.+?)&lt;/IVSessionID>" into="ivsession"/>
+						<read body="&lt;Metadata>(.+?)&lt;/Metadata>" into="jsondata"/>
+					</httpresponse>
+				</httppost>
+				<set var="unescapedConnHandle" value="{connHandle}"/>
+				<replace var="connHandle" expression="=" new="%3D"/>
+				<replace var="connHandle" expression="\+" new="%2B"/>
+				<verify cond="NOT(ISEMPTY({dashdocument}))" onfail="continue"/>
+				
+				<search var="jsondata" expression="(/\d+)" into="objectids"/>	<!-- EX: "/51": -->
+	
+				<!-- locate the selector id and viewer ids -->
+				<set var="gadgetNames" value=""/>
+				<for each="objectids" var="id">
+					<json var="jsondata" read="{id}/Base/gadgetContent/gadgetType" into="gadgettype"/>
+					
+					<if cond="({gadgettype} EQ selector)">
+						<json var="jsondata" read="{id}/Base/name" into="selectorid"/>
+						<json var="jsondata" read="{id}/Base/realName" into="selectorid_realName"/>
+					</if>
+					
+					<if cond="({gadgettype} EQ viewer)">
+						<json var="jsondata" read="{id}/Base/realName" into="viewerGadgetName"/>
+						<json var="jsondata" read="{id}/Base/gadgetContent/dataViewId" into="viewerGadgetDataId"/>
+						<set var="gadgetNames" value="{gadgetNames},{viewerGadgetDataId}:{viewerGadgetName}"/>	<!-- add to list -->
+					</if>
+				</for>
+				<search var="gadgetNames" expression=",([^,]+)"	into="viewerGadgetList"/>
+				
+				
+				<!--GetGenerationStatus and re-run request took out -->
+				
+				<httppost label="5_FetchData" stats="on" url="{iportal}/iv?__vp={volume}&amp;locale=en_US&amp;__design={sharedDashboard}&amp;closex=true">
+					<header name='Pragma' value='no-cache'/>
+					<header name='soapaction' value='""'/>
+					<header name='request-type' value='SOAP'/>
+					<header name='x-requested-with' value='XMLHttpRequest'/>
+					<postbody>
+						<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+	<Body>
+		<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+			<IVSessionID>{ivsession}</IVSessionID>
+			<ViewerId>js1</ViewerId>
+			<Operation>
+				<Target>
+					<Id>{selectorid}</Id>
+					<Type>Selector</Type>
+				</Target>
+				<Operator>FetchData</Operator>
+				<Data>
+					<Json>{selectorid_realName}</Json>
+				</Data>
+			</Operation>
+		</GetIVUpdatedObjects>
+	</Body>
+</Envelope>
+						]]>
+					</postbody>
+					<httpresponse>
+						<read body="&lt;Json>(.+?)&lt;/Json>" into="jsondata"/>
+					</httpresponse>
+				</httppost>
+				<verify cond="NOT(ISEMPTY({jsondata}))" onfail="continue"/>
+				
+				<set var="jsCount" value="3"/>
+				<set var="gadgetMetadata" value=""/>
+				<set var="gadgetData" value=""/>
+				<for each="viewerGadgetList" var="viewerGadgetData">
+					<search var="viewerGadgetData" expression="(.*?):" into="vgMetadata"/>
+					<search var="viewerGadgetData" expression=":(.*?)$" into="viewid"/>
+					<replace var="vgMetadata" expression="/" new=""/>
+				
+					<httppost label="6_Startup_{viewid}" stats="on" url="{iportal}/iv?__vp={volume}&amp;locale=en_US&amp;closex=true&amp;connectionHandle={connHandle}&amp;__report={dashdocument}&amp;viewerId=js{jsCount}">
+						<header name='Pragma' value='no-cache'/>
+						<header name='soapaction' value='""'/>
+						<header name='request-type' value='SOAP'/>
+						<header name='x-requested-with' value='XMLHttpRequest'/>
+						<postbody>
+							<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+	<Body>
+		<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+			<IVSessionID>{ivsession}</IVSessionID>
+			<ViewerId>js{jsCount}</ViewerId>
+			<Operation>
+				<Target>
+					<Id>Document</Id>
+					<Type>Document</Type>
+				</Target>
+				<Operator>StartUp</Operator>
+				<Oprand>
+					<Name>svg</Name>
+					<Value>false</Value>
+				</Oprand>
+				<Oprand>
+					<Name>standalone</Name>
+					<Value>false</Value>
+				</Oprand>
+				<Oprand>
+					<Name>gadgetId</Name>
+					<Value>{viewid}</Value>
+				</Oprand>
+			</Operation>
+		</GetIVUpdatedObjects>
+	</Body>
+</Envelope>
+							]]>
+						</postbody>
+						<httpresponse>
+							<read body="&lt;RptElementId>(.+?)&lt;/RptElementId>" into="reportElements"/>
+							<read body="&lt;ConnectionHandle>(.+?)&lt;/ConnectionHandle>" into="gadgetCH"/>
+						</httpresponse>
+					</httppost>		
+					<replace var="gadgetCH" expression="=" new="%3D"/>
+					<replace var="gadgetCH" expression="\+" new="%2B"/>
+					
+					<!-- EX: /8,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/40 -->
+					<set var="metadataList" value=""/>
+					<for each="reportElements" var="item">
+						<set var="metadataList" value="{metadataList},/{item}"/>
+						<set var="gadgetMetadata" value="{item},{gadgetMetadata}"/>
+					</for>
+					<replace var="metadataList" expression="^," new=""/>
+					<replace var="gadgetMetadata" expression=",$" new=""/>
+					
+					<!-- Enable IV -->
+					<httppost label="7_Enable_IV_{viewid}" stats="on" url="{iportal}/iv?__vp={volume}&amp;locale=en_US&amp;closex=true&amp;connectionHandle={gadgetCH}&amp;__report={dashdocument}&amp;viewerId=js{jsCount}">
+						<header name='Pragma' value='no-cache'/>
+						<header name='soapaction' value='""'/>
+						<header name='request-type' value='SOAP'/>
+						<header name='x-requested-with' value='XMLHttpRequest'/>
+						<postbody>
+							<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+	<Body>
+		<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+			<IVSessionID>{ivsession}</IVSessionID>
+			<ViewerId>js{jsCount}</ViewerId>
+			<Operation>
+				<Target>
+					<Id>js{jsCount}</Id>
+					<Type>Document</Type>
+				</Target>
+				<Operator>EnableIV</Operator>
+				<Oprand>
+					<Name>gadgetId</Name>
+					<Value>{viewid}</Value>
+				</Oprand>
+			</Operation>
+			<Operation>
+				<Target>
+					<Id>js{jsCount}</Id>
+					<Type>Document</Type>
+				</Target>
+				<Operator>GetFeatureMetadata</Operator>
+				<Data>
+					<Metadata>{metadataList}</Metadata>
+				</Data>
+			</Operation>
+		</GetIVUpdatedObjects>
+	</Body>
+</Envelope>
+							]]>
+						</postbody>
+						<httpresponse>				
+							<read body="&lt;ConnectionHandle>(.+?)&lt;/ConnectionHandle>" into="gadgetCH"/>
+						</httpresponse>
+					</httppost>
+					<replace var="gadgetCH" expression="=" new="%3D"/>
+					<replace var="gadgetCH" expression="\+" new="%2B"/>
+					<set var="gadgetData" value="{gadgetData},js{jsCount}:{viewid}:{vgMetadata}:{gadgetCH}"/>
+					
+					<set var="jsCount" value="({jsCount} + 1)"/>
+				</for>
+				
+				
+				<set var="gadgetMetadataNew" value="{gadgetMetadata}"/>
+				<for each="selectorItems" var="item">
+					<httppost label="8_UpdateValue_{selectorid}_{item}" stats="on" url="{iportal}/iv?__vp={volume}&amp;locale=en_US&amp;__design={sharedDashboard}&amp;closex=true">
+						<header name='Pragma' value='no-cache'/>
+						<header name='soapaction' value='""'/>
+						<header name='request-type' value='SOAP'/>
+						<header name='x-requested-with' value='XMLHttpRequest'/>
+						<postbody>
+							<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+	<Body>
+		<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+			<IVSessionID>{ivsession}</IVSessionID>
+			<ViewerId>js1</ViewerId>
+			<Operation>
+				<Target>
+					<Id>{selectorid}</Id>
+					<Type>Selector</Type>
+				</Target>
+				<Operator>UpdateValue</Operator>
+				<Oprand>
+					<Name>values</Name>
+					<Value>["{item}"]</Value>
+				</Oprand>
+			</Operation>
+		</GetIVUpdatedObjects>
+	</Body>
+</Envelope>
+							]]>
+						</postbody>
+					</httppost>
+					
+					
+					<search var="gadgetData" expression=",(.*?):" into="jsList"/>
+					<for each="jsList" var="js">	
+						<!-- log level="always" category="gadgetData">{gadgetData}</log -->	
+						<search var="gadgetData" expression=",{js}:(.*?):" into="gadgetid"/>
+						<!-- search var="gadgetData" expression=",{js}:.*?:(.*?):" into="gadgetMetadata"/ -->
+						<search var="gadgetData" expression=",{js}:.*?:.*?:([^,]*)" into="gadgetCH"/>
+			
+						<httppost label="9_GetPage_{selectorid}_{item}_{gadgetid}_{js}" stats="on" url="{iportal}/iv?__vp={volume}&amp;locale=en_US&amp;closex=true&amp;connectionHandle={gadgetCH}&amp;__report={dashdocument}&amp;viewerId={js}">
+							<header name='Pragma' value='no-cache'/>
+							<header name='soapaction' value='""'/>
+							<header name='request-type' value='SOAP'/>
+							<header name='x-requested-with' value='XMLHttpRequest'/>
+							<postbody>
+								<![CDATA[			
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+	<Body>
+		<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+			<IVSessionID>{ivsession}</IVSessionID>
+			<ViewerId>{js}</ViewerId>
+			<Operation>
+				<Target>
+					<Id>Document</Id>
+					<Type>Document</Type>
+				</Target>
+				<Operator>GetPage</Operator>
+				<Oprand>
+					<Name>page</Name>
+					<Value>1</Value>
+				</Oprand>
+				<Oprand>
+					<Name>dashboardDesign</Name>
+					<Value>{sharedDashboard}</Value>
+				</Oprand>
+				<Oprand>
+					<Name>gadgetId</Name>
+					<Value>{gadgetid}</Value>
+				</Oprand>
+				<Oprand>
+					<Name>undefined</Name>
+					<Value/>
+				</Oprand>
+				<Oprand>
+					<Name>svg</Name>
+					<Value>false</Value>
+				</Oprand>
+				<Oprand>
+					<Name>requestBaseMetadata</Name>
+					<Value>{gadgetMetadataNew}</Value>
+				</Oprand>
+			</Operation>
+		</GetIVUpdatedObjects>
+	</Body>
+</Envelope>
+								]]>
+							</postbody>
+							<httpresponse>
+								<read body="&lt;ConnectionHandle>(.+?)&lt;/ConnectionHandle>" into="gadgetCHTemp"/>
+								<read body="value=&amp;quot;(.*?__ivcmd=getimage.*?swf.*?)&amp;quot;" into="swflink"/>
+								<read body="&lt;Type>Table&lt;/Type>.+?&lt;Metadata>(.+?)&lt;/Metadata>" into="jsondata"/>
+							</httpresponse>
+						</httppost>
+						
+						<replace var="gadgetCHTemp" expression="=" new="%3D"/>
+						<replace var="gadgetCHTemp" expression="\+" new="%2B"/>
+						<search var="gadgetData" expression="(,{js}:.*?:.*?:)" into="firstpart"/>
+						<search var="gadgetData" expression=",{js}:.*?:.*?:.*?(,?)" into="endpart"/>
+						<replace var="gadgetData" expression=",{js}:.*?:.*?:([^,]*)" new="{firstpart}{gadgetCHTemp}{endpart}"/>
+						
+						<if cond="NOT(ISEMPTY({swflink}))">
+							<replace var="swflink" expression="&amp;amp;amp;" new="&amp;"/>				
+							<httpget label="A_swf_link_{selectorid}_{item}" stats="on" url="{swflink}"/>
+						</if>
+		
+					</for>		
+					<!-- log level="always" category="jsondata">{item}||{jsondata}</log -->
+					<if cond="NOT(ISEMPTY({jsondata}))">
+					
+						<search var="jsondata" expression="/(\d+)" into="objectids"/>
+						<set var="gadgetMetadataNew" value="{gadgetMetadata}"/>
+						<for each="objectids" var="id">
+							<set var="gadgetMetadataNew" value="{gadgetMetadataNew},{id}"/>
+						</for>
+					</if>
+					<think mean="{ThinkTime}" algorithm="exponential"/>
+				</for>	
+			</while>
+		</timer>
+	</step>
+</trace>

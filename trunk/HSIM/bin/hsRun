@@ -118,10 +118,17 @@ done
 [ -z "$TEST_FILE" ] && { echo 1>&2 "($PROGRAM)Error: TESTCASE is not set"; ERROR=1;}
 [ -n "$ERROR" ] && { echo 1>&2; usage; exit 2;}
 
-[ -z "$ENCYCL_VOL" -a "$SERVER_TYPE" = "iServer" ] && ENCYCL_VOL=`echo $HOST | sed -e 's/-/_/g'`
-[ -z "$ENCYCL_VOL" -a "$SERVER_TYPE" = "iHub" ]    && ENCYCL_VOL="Default%20Volume"
-#ENCYCL_VOL=`echo $HOST | sed -e 's/-/_/g'`
-[ -z "$PORT" ] && [ "$SERVER_TYPE" = AJC ] && PORT=8080 || PORT=8700
+RUN_DATE=`hsPrintf %D`
+[ -z "$ENCYCL_VOL" ] && [ "$SERVER_TYPE" = "iHub" -a "$RUN_DATE" -gt 130801 ] && ENCYCL_VOL="Default%20Volume" || ENCYCL_VOL=`echo $HOST | sed -e 's/-/_/g'`
+[ -z "$PORT" ] && {
+    if [ "$SERVER_TYPE" = AJC ]; then
+        PORT=8080
+    elif [ "$RUN_DATE" -lt 131105 ]; then
+        PORT=8900
+    else
+        PORT=8700
+    fi
+}
 [ -z "$SOAP_HOST" ] && SOAP_HOST=$HOST
 [ -z "$SOAP_PORT" ] && SOAP_PORT=$PORT
 

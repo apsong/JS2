@@ -1,10 +1,13 @@
+echo "########## source $HOME/.bash_functions ##########"
 source $HOME/.bash_functions
 
 export HSIM_HOME=$HOME/HSIM
 export WCSPT_HOME=$HOME/WCSPT
 export JMETER_HOME=$HOME/JMeter
+export TRACE_HOME=$HOME/TRACE
+export TRACE_BASE=$HOME/Trace131120
 export JM_HOME=$HOME/JM
-export PATH=$HOME/.JS/bin:$HSIM_HOME/bin:$WCSPT_HOME/bin:$JM_HOME/bin:$PATH:$HOME/SysinternalsSuite
+export PATH=$HOME/.JS/bin:$HSIM_HOME/bin:$TRACE_HOME/bin:$WCSPT_HOME/bin:$JM_HOME/bin:$PATH:$HOME/SysinternalsSuite
 [ "$HOSTNAME" != "jinsong" ] && export LANG=C
 
 alias ls='ls --color=auto'
@@ -13,6 +16,7 @@ alias ll='ls -l'
 alias h='history'
 alias js='cd $HOME/.JS/bin'
 alias .h='cd $HOME/HSIM/bin'
+alias .t='cd $HOME/TRACE/bin'
 alias vi='vim'
 
 ####################### reset PATH ###########################

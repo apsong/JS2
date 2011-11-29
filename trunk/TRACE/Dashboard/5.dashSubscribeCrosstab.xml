@@ -1,0 +1,321 @@
+<trace
+	ScenarioName="Dashboard Test: subscribe dashboard which contains a crosstab" 
+	ScenarioDescription="Rewriten on iHub AugustaR1 DEV131105. See Step 1./2./3 in comments below."
+	ScenarioType="Sanity,Dashboard"	
+	collectstats="off"
+	>
+	<variable name="iportal" value="http://birt01-win:8700/iportal"/>
+	<variable name="volume" value="Default%20Volume"/>
+	<variable name="NoOfUsers" value="1"/>
+	<variable name="TestDuration" value="900"/>
+	<variable name="ThinkTime" value="0"/>
+
+	<variable name="sharedDashboard" value="/Dashboard/Contents/TPCHCrosstab.dashboard"/>
+	<variable name="generationStatus" value="Pending"/>
+	<variable name="getGenStatusCount" value=""/>
+	<variable name="GenStatusLimit" value="30"/>
+    
+	<step count="{NoOfUsers}" delayms="100" var="n">
+		<timer duration="{TestDuration}">
+            <while>
+        
+	    <!-- Step 1: Login iPortal -->
+		<httpget stats="on" label="1_Login" url="{iportal}/loginservlet?userid=user{n}&amp;password=&amp;__vp={volume}">
+			<httpresponse>
+				<read body='&lt;Param id="iPortalId">(.+?)&lt;/Param>' into="iPortalId"/>
+                <read body='&lt;Param id="httpSessionId">(.+?)&lt;/Param>' into="httpSessionId"/>
+			</httpresponse>
+		</httpget>
+		<verify cond="NOT(ISEMPTY({iPortalId}))" onfail="exit"/>	<!-- a user failed to login, test is invalid -->
+        <log level="info">iPortalId: {iPortalId}</log>
+        <log level="info">httpSessionId: {httpSessionId}</log>
+        
+        <!-- Step 2: In iPortal,
+                     click "Create" and pick "Dashboard" from dropdownlist, generating the following three requests -->
+        
+		<httpget stats="on" label="2a_launchDesigner" url="{iportal}/dashboard?__launchDesigner=true&amp;usePersonalDashboard=false&amp;__vp={volume}&amp;locale=en_US">
+			<httpresponse>
+				<read body='dashboard.setDashboardName\("(.*?)"\);' into="newDashboard"/>
+			</httpresponse>
+		</httpget>
+        <log level="info">newDashboard: {newDashboard}</log>
+		
+		<httppost stats="on" label="2b_Startup" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <RequestId>0</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{newDashboard}</Name>
+            </Object>
+            <DashboardContext/>
+            <Operation>
+                <Operator>StartUp</Operator>
+                <Target>
+                    <Id>Engine</Id>
+                    <Type>Engine</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>UseProfile</Name>
+                            <Value>false</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Embed</Name>
+                            <Value>false</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>
+			</postbody>
+			<httpresponse>	
+				<read body="activeTab&amp;quot;:&amp;quot;(.+?)&amp;quot;" into="activeTab"/>
+				<read body="&lt;DashboardSessionID>(.+?)&lt;/DashboardSessionID>" into="dashboardSessionId"/>
+                <read body="&lt;ConnectionHandle>(.+?)&lt;/ConnectionHandle>" into="connectionHandle"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">activeTab: {activeTab}</log>
+        <log level="info">dashboardSessionId: {dashboardSessionId}</log>
+        <log level="info">connectionHandle: {connectionHandle}</log>
+
+		<httppost stats="on" label="2c_ExecuteDashboard" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>{connectionHandle}</ConnectionHandle>
+        <RequestId>1</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{newDashboard}</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>{iportal}</AppBaseUrl>
+                <iPortalID>{iPortalId}</iPortalID>
+                <HttpSessionId>{httpSessionId}</HttpSessionId>
+                <DashboardSessionID>{dashboardSessionId}</DashboardSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>ExecuteDashboard</Operator>
+                <Target>
+                    <Id/>
+                    <Type>Dashboard</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>Id</Name>
+                            <Value>{activeTab}</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Action</Name>
+                            <Value>Run</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+				<read body="&lt;IVSessionID>(.+?)&lt;/IVSessionID>" into="ivSessionId"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">ivSessionId: {ivSessionId}</log>
+		
+		<!-- Step 3: In the opened dashboard designer,
+                     click "Insert" and pick "Dashboard from Gallery..." in the dropdownlist,
+                     and then select "TPCHCrosstab.dashboard" in the popup dialog, generating four requests.
+                     Ignore the first "StartUp" as duplicate before, and record the left as below -->
+        
+		<httppost stats="on" label="3a_AddSharedTab" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>		
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>{connectionHandle}</ConnectionHandle>
+        <RequestId>2</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{newDashboard}</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>{iportal}</AppBaseUrl>
+                <iPortalID>{iPortalId}</iPortalID>
+                <HttpSessionId>{httpSessionId}</HttpSessionId>
+                <DashboardSessionID>{dashboardSessionId}</DashboardSessionID>
+                <IVSessionID>{ivSessionId}</IVSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>AddSharedTab</Operator>
+                <Target>
+                    <Id>Engine</Id>
+                    <Type>Engine</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>FilePath</Name>
+                            <Value>/Dashboard/Contents/TPCHCrosstab.DASHBOARD</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>allowDuplicate</Name>
+                            <Value>true</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+            <IVSessionID>{ivSessionId}</IVSessionID>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>	
+			</postbody>
+			<httpresponse>
+				<read body="tabName&amp;quot;:&amp;quot;(.+?)&amp;quot;" into="tabName"/>
+                <read body="realName&amp;quot;:&amp;quot;(.+?)&amp;quot;" into="realName"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">tabName: {tabName}</log>
+
+		<httppost stats="on" label="3b_ExecuteDashboard" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <RequestId>0</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>/Dashboard/Contents/TPCHCrosstab.DASHBOARD</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>{iportal}</AppBaseUrl>
+                <iPortalID>{iPortalId}</iPortalID>
+                <HttpSessionId>{httpSessionId}</HttpSessionId>
+            </DashboardContext>
+            <Operation>
+                <Operator>ExecuteDashboard</Operator>
+                <Target>
+                    <Id/>
+                    <Type>Dashboard</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>Id</Name>
+                            <Value>{tabName}</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Action</Name>
+                            <Value>Run</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+				<read body="&lt;TransientDocument>(.+?)&lt;/TransientDocument>" into="transientDocument"/>
+			</httpresponse>
+		</httppost>
+		<verify cond="NOT(ISEMPTY({transientDocument}))" onfail="continue"/>		
+				
+		<httppost stats="on" label="3c_SetActiveTab" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>{connectionHandle}</ConnectionHandle>
+        <RequestId>3</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{newDashboard}</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>{iportal}</AppBaseUrl>
+                <iPortalID>{iPortalId}</iPortalID>
+                <HttpSessionId>{httpSessionId}</HttpSessionId>
+                <DashboardSessionID>{dashboardSessionId}</DashboardSessionID>
+                <IVSessionID>{ivSessionId}</IVSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>SetActiveTab</Operator>
+                <Target>
+                    <Id>Engine</Id>
+                    <Type>Engine</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>Id</Name>
+                            <Value>{tabName}</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+            <IVSessionID>{ivSessionId}</IVSessionID>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+				<read body="(set dashboard active tab finished successfully)" into="result"/>
+			</httpresponse>
+		</httppost>
+		<verify cond="NOT(ISEMPTY({result}))" onfail="continue"/>
+        <log level="info">result: {result}</log>
+                
+                
+		<think mean="{ThinkTime}" algorithm="exponential"/>
+                
+		    </while>
+		</timer>
+	</step>
+</trace>

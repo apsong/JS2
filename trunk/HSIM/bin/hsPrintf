@@ -6,7 +6,7 @@ usage()
 {
     echo 1>&2 "Usage:"
     echo 1>&2 " $PROGRAM '-host %H -server_type %S -client_num %N -duration %L -testcase %T'"
-    echo 1>&2 " $PROGRAM '-test_type %t -report_name %f'"
+    echo 1>&2 " $PROGRAM '-test_type %t -report_name %f -date %D -verbose %V'"
 }
 
 case $# in
@@ -21,6 +21,7 @@ case $DIR in
     *) echo 1>&2 "Error: Invalid directory '$DIR'"; exit 2;;
 esac
 
+D=`echo $DIR | sed -e 's/@.*$//' | awk -F '/' '{print $NF}'`
 DIR=`echo $DIR | sed -e 's/^.*@//' -e 's/\[.*\]//g'`
 
 H=`echo $DIR | awk -F '[./]' '{print $1}'`
@@ -30,7 +31,7 @@ f=`echo $DIR | awk -F   '/'  '{print $3}'`; [ -z "$f" ] && f=NULL
 for arg in `echo $DIR | awk -F '/' '{print $4}' | sed -e 's/\./ /g'`; do
     case $arg in
         [0-9]|[0-9]*[0-9]) N=$arg;;
-        [0-9][smhti]|[0-9]*[0-9][smhti]) L=$arg;;
+        [0-9][smhtTi]|[0-9]*[0-9][smhtTi]) L=$arg;;
         -v) V=" $arg";;
     esac
 done
@@ -39,6 +40,7 @@ done
 T=$S/$t/$f.sim
 
 echo $FORMAT | sed \
+    -e "s^%D^$D^g" \
     -e "s^%H^$H^g" \
     -e "s^%S^$S^g" \
     -e "s^%t^$t^g" \
