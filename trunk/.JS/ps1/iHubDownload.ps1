@@ -15,9 +15,9 @@ function iHubDownload ($release_base, $license_base, $DST_DIR) {
     if (Test-Path "$DST_FILE.zip") {
         "`nNOTE: $DST_FILE.zip already exists~~~~~~~~~~~~~~~~~~~~"
     } else {
-        Copy-Item $SRC $DST_FILE.zip
+        Copy-Item $SRC "$DST_FILE.zip"
     }
-    Get-ChildItem $DST_FILE.zip
+    Get-ChildItem "$DST_FILE.zip"
     
     # 3. Unzip local build
     if (Test-Path $DST_FILE) {
