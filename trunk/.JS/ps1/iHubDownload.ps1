@@ -8,7 +8,12 @@ function iHubDownload ($release_base, $license_base, $DST_DIR) {
     $SRC = (Get-ChildItem $SRC_DIR -Recurse -Filter ActuateBIRTiHub.zip).FullName
     Get-ChildItem $SRC
 
-    $DATE = $SRC_DIR -replace ".*-DEV", ""
+    if ($SRC_DIR -match "[0-9]{6}") {
+        $DATE = $matches[0]
+    } else {
+        "`nError: cannot parse DATE from '$SRC_DIR'`n"
+        exit 1
+    }
     $DST_FILE = "ActuateBIRTiHub${DATE}"
     
     # 2. Copy new build to local side
