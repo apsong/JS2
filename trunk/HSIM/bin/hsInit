@@ -1,0 +1,73 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM YYMMDD HOST"
+    echo 1>&2 "       $PROGRAM 121207 sha-perf"
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        [0-9][0-9][0-9][0-9][0-9][0-9]) YYMMDD="$1";;
+        [a-zA-z]*) HOST="$1";;
+        --help) usage; exit 0;;
+        *) echo 1>&2 "Error: Invalid option '$1'"; usage; exit 1;;
+    esac
+    shift
+done
+
+[ -n "$YYMMDD" ] || { echo 1>&2 "Error: YYMMDD is not set!"; usage; exit 2;}
+[ -n "$HOST" ] || { echo 1>&2 "Error: HOST is not set!"; usage; exit 2;}
+[ -d "$YYMMDD@$HOST" ] && { echo 1>&2 "Error: '$YYMMDD@$HOST' already exists. Remove it if need reinit."; exit 3;}
+
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV1/Crosstab~Sample~Revenue#html/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV1/Customer~Dashboard#html/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV1/Customer~Order~History#html/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV1/Sales~by~Customer#html/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV1/Sales~by~Territory#html/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV1/Top~5~Sales~Performers#html/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV1/20-customer25x100r-nogroup#html/{1,7}.6t
+
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV2/Crosstab~Sample~Revenue#pdf/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV2/Customer~Dashboard#pdf/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV2/Customer~Order~History#pdf/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV2/Sales~by~Customer#pdf/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV2/Sales~by~Territory#pdf/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV2/Top~5~Sales~Performers#pdf/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV2/20-customer25x100r-nogroup#pdf/{1,4}.6t
+
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#doc/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#docx/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#xls/{1,5}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#xlsx/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#ppt/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#pptx/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#ps/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV3/Customer~Dashboard#xhtml/{1,6}.6t
+
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#doc/1.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#docx/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#xls/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#xlsx/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#ppt/{1,7}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#pptx/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#ps/{1,4}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV4/20-customer25x100r-nogroup#xhtml/{1,5}.6t
+
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/Crosstab~Sample~Revenue/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/Customer~Dashboard/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/Customer~Order~History/{1,6}.6t
+#mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/Sales~by~Customer/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/Sales~by~Territory/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/Top~5~Sales~Performers/{1,6}.6t
+#mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/20-customer25x100r-nogroup/{1,7}.6t
+
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/IV/IV/9.3t.6t
+
+mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/BRS/BRS/6.3t.6t
+
+
+mkdir -p -v	$YYMMDD@$HOST/IS$YYMMDD/IV/IV/6.5t.10t
+
+mkdir -p -v	$YYMMDD@$HOST/IS$YYMMDD/BRS/BRS/6.5t.10t

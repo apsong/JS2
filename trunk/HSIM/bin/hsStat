@@ -1,0 +1,39 @@
+#! /bin/bash
+
+PROGRAM=`basename $0`
+
+DO_STAT()
+{
+    local OLD_PWD=`pwd` #Here has to use the bash extension for local variable
+    for DIR do
+        cd $DIR || exit 2
+        case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
+            1|2|3|4) DO_STAT */;;
+            5)
+                if [ -f hs.log ]; then
+                    awk -v DIR=`pwd | sed -e 's/^.*@//'` '
+                        /):/ {
+                            if ($9 ~ ".*%") {
+                                CPU=$9
+                            } else {
+                                URL=gensub(",", "", "g", $14); Resp=$16
+                            }
+                        }
+
+                        END {
+                            printf("%-60s:  URL:%7s    Resp:%5s    CPU:%6s\n", DIR, URL, Resp, CPU)
+                        }' hs.log
+                fi
+                ;;
+            *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; exit 1;;
+        esac
+        cd $OLD_PWD
+    done
+}
+
+if [ $# -eq 0 ]; then
+    DO_STAT .
+else 
+    DO_STAT "$@"
+fi
+

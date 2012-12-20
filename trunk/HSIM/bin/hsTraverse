@@ -1,0 +1,51 @@
+#! /bin/bash
+
+PROGRAM=`basename $0`
+
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+NEWFILE()
+{
+    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
+
+    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
+
+    mkdir -p .$FILE || exit 101
+    if [ -h $FILE ]; then
+        rm -f $FILE
+    elif [ -e $FILE ]; then
+        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
+        mv $FILE $REAL_FILE.bak
+    fi
+    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
+}
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
+
+DO_TRAVERSE()
+{
+    local OLD_PWD=`pwd` #Here has to use the bash extension for local variable
+    for DIR do
+        cd $DIR || return 2
+        pwd | awk '{print "#!CMD:[ cd " $0 " ]"}'
+        case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
+            1|2|3) DO_TRAVERSE */;;
+            4) EVAL "hs || hs && hs [0-9]*.*[0-9][smht]";; #sanity (try twice) && execute
+            5) EVAL "hs";;
+            *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; return 1;;
+        esac
+        cd $OLD_PWD
+        echo
+    done
+}
+
+if [ $# -eq 0 ]; then
+    DO_TRAVERSE .
+else 
+    DO_TRAVERSE "$@"
+fi 2>&1 | tee `NEWFILE $PROGRAM.log`
+

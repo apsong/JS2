@@ -1,0 +1,23 @@
+#part-2(sv, pdf)
+
+
+#S:/@-6/frameset?__document=Crosstab%20Sample%20Revenue.rptdocument&__format=pdf&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCrosstab%20Sample%20Revenue.rptdocument&__format=pdf&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pdf>
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=pdf&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=pdf&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pdf>
+
+#S:/@-6/frameset?__document=Customer%20Order%20History.rptdocument&__format=pdf&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Order%20History.rptdocument&__format=pdf&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pdf>
+
+#S:/@-6/frameset?__document=Sales%20by%20Customer.rptdocument&__format=pdf&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FSales%20by%20Customer.rptdocument&__format=pdf&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pdf>
+
+#S:/@-6/frameset?__document=Sales%20by%20Territory.rptdocument&__format=pdf&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FSales%20by%20Territory.rptdocument&__format=pdf&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pdf>
+
+S:/@-6/frameset?__document=Top%205%20Sales%20Performers.rptdocument&__format=pdf&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+M:/@-6/iv?__report=%2FTop%205%20Sales%20Performers.rptdocument&__format=pdf&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pdf>
+
+#S:/@-6/frameset?__document=20-customer25x100r-nogroup.rptdocument&__format=pdf&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&__format=pdf&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pdf>

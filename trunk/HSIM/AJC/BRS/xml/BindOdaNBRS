@@ -1,0 +1,16 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>$1</Id>
+<Type>$2</Type>
+</Target>
+<Operator>BindOdaN</Operator>
+<Data>
+<Json>{OdaConfig:{"odaType":"OdaSample","datasourceExtensionId":"org.eclipse.birt.report.data.oda.jdbc","datasourceDisplayName":"CLASSICMODELS","datasetExtensionId":"org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet","datasetDisplayName":"CLASSICMODELS.PAYMENTS","odaDriverClass":"org.eclipse.birt.report.data.oda.sampledb.Driver","odaURL":"jdbc:classicmodels:sampledb","odaUser":"ClassicModels","odaColumns":[{"name":"CUSTOMERNUMBER","dataType":"INTEGER"},{"name":"PAYMENTDATE","dataType":"DATE"},{"name":"CHECKNUMBER","dataType":"STRING"},{"name":"AMOUNT","dataType":"FLOAT"}]}}</Json>
+</Data>
+</Operation>
+</GetUpdatedObjects>
+</Body>
+</Envelope>

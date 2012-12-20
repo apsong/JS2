@@ -1,0 +1,1 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11"><Operation><Target><Id>$1</Id><Type>$2</Type></Target><Operator>HideDetailRow</Operator><Data><ColumnDefs><ColumnDef><Index>$3</Index></ColumnDef></ColumnDefs></Data></Operation></GetUpdatedObjects></Body></Envelope>

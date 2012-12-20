@@ -1,0 +1,25 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>$1</Id>
+<Type>$2</Type>
+</Target>
+<Operator>SetSort</Operator>
+<Oprand>
+<Name>page</Name>
+<Value>1</Value>
+</Oprand>
+<Data>
+<ColumnDefs>
+<ColumnDef>
+<Index>$3</Index>
+<SortDir>$4</SortDir>
+</ColumnDef>
+</ColumnDefs>
+</Data>
+</Operation>
+</GetUpdatedObjects>
+</Body>
+</Envelope>

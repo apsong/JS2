@@ -1,0 +1,11 @@
+#! /usr/bin/sh
+
+PROGRAM=`basename $0`
+DELAY=$1
+COUNT=$2
+
+while [ $COUNT -gt 0 ]; do
+    echo "($PROGRAM)sleep $DELAY ... ($COUNT left)"
+    sleep $DELAY
+    COUNT=`expr $COUNT '-' 1`
+done

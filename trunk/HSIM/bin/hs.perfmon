@@ -1,0 +1,20 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM HOST DURATION"
+    echo 1>&2 "       $PROGRAM sha-perf 6t"
+}
+
+EVAL()
+{
+    echo "#!CMD:[" "$@" "]"
+    eval "$@"
+}
+
+HOST="$1"
+shift
+[ -z "$HOST" ] && { echo 1>&2 "($PROGRAM)Error: HOST is not set"; usage; exit 1;}
+[ "$HOST" = "jinsong" ] && HOST=sha-perf
+EVAL ssh "$HOST" .JS/bin/VMSTAT "$@"

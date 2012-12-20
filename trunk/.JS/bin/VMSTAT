@@ -1,0 +1,80 @@
+#!/bin/sh
+
+PROGRAM=`basename $0`
+
+VERBOSE=0
+DELAY=10
+TICKLEN=100
+
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM [DELAY:10] DURATION{s|m|h|t} [-v] [--help]"
+    echo 1>&2 "       $PROGRAM 6t     -- Use default sample DELAY (10 seconds) and run for 6 ticks (600 seconds)"
+    echo 1>&2 "       $PROGRAM 5 12h  -- Use sample DELAY (5 seconds) and run for 12 hours"
+    echo 1>&2 "       $PROGRAM 3m -v  -- Run for 3 minutes with verbose out for each sample"
+}
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        --help)
+            usage; exit 0;;
+        --ticklen)
+            shift; TICKLEN=$1;; #debug only, if specified must before DURATION to take effect
+        [0-9]|[0-9][0-9]|[0-9][0-9][0-9])
+            DELAY=$1;;
+        [0-9][smht]|[0-9][0-9][smht]|[0-9][0-9][0-9][smht]|[0-9][0-9][0-9][0-9][smht])
+            NUM=`echo "$1" | sed -e 's/.$//'`
+            case "$1" in
+                *s) DURATION=$NUM;;
+                *m) DURATION=`expr $NUM '*' 60`;;
+                *h) DURATION=`expr $NUM '*' 3600`;;
+                *t) DURATION=`expr $NUM '*' $TICKLEN`;;
+            esac;;
+        -v)
+            VERBOSE=1;;
+        *)
+            echo 1>&2 "($PROGRAM)Error: Invalid option '$1'"; usage; exit 1;;
+    esac
+    shift
+done
+[ -z "$DURATION" ] && { echo 1>&2 "($PROGRAM)Error: DURATION is not set"; exit 2;}
+
+
+COUNT=`expr $DURATION '/' $DELAY '+' 1`
+[ $VERBOSE -eq 1 ] && echo "#!CMD:[vmstat -t -n -S M $DELAY $COUNT]"
+vmstat -t -n -S M $DELAY $COUNT | awk -v DELAY=$DELAY -v TICKLEN=$TICKLEN  -v VERBOSE=$VERBOSE '
+{
+    if (NR != 3 && VERBOSE == 1) {
+        print "\t\t\t\t" $0 > "/dev/stderr"
+    }
+
+    if (NR >= 4) {
+        us = $13
+        sum+=us; num++
+        values = values " " us
+        if ((NR - 4) % (TICKLEN/DELAY) == (TICKLEN/DELAY-1)) {
+            printf("\t\t\t\tTick user cpu: % 3.1f%  (%s )\n", sum/num, values) > "/dev/stderr"
+            values_all[sprintf("%05d",NR)] = sprintf("%.1f", sum/num)
+            sum=0; num=0; values=""
+        }
+    }
+}
+
+END {
+    if (num != 0) {
+        printf("\t\t\t\tTick user cpu: % 3.1f%  (%s )\n", sum/num, values) > "/dev/stderr"
+        values_all[sprintf("%05d",NR)] = sprintf("%.1f", sum/num)
+    }
+    asorti(values_all, keys)
+    for (i=2; i<length(keys); i++) {
+        _sum+=values_all[keys[i]]
+        _values=_values " " values_all[keys[i]]
+    }
+    if (length(keys) <= 2) {
+        average = -1
+    } else {
+        average = _sum/(length(keys)-2)
+    }
+    printf("Average user cpu(excluding the first and last tick): %.1f% (%s )\n", average, _values) > "/dev/stderr"
+}
+' 2>&1 #awk bug? Has to print to /dev/stderr inside then redirect to /dev/stdout outside to avoid block-bufferred IO during ssh

@@ -1,0 +1,42 @@
+@(1 1 100)
+@(2 100 100)
+S:/@-6/iv?__report=/iv.rptdocument&repositoryType=Workgroup {(JSESSIONID=@257; Path)}
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp> {(<IVSessionID>@20</IVSessionID>)}
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/EnableIV> 1 @20 
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/AddGroup> /0.31 /104 @1 @20
+
+R1000,100:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> @20 {(<Completed>@81</Completed>)}[(@81==true)]
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/DeleteGroup> /0.31 @1 @20
+
+R1000,100:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> @20 {(<Completed>@82</Completed>)}[(@82==true)]
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/SetSort> /0.31 @1 @2 /104 desc @20
+
+R1000,100:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> @20 {(<Completed>@83</Completed>)}[(@83==true)]
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/SetText> /0.34 @1 @2 Customers @20
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/SetFont> /0.34 @1 @2 arial red true @20
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/SetAlignment> /0.31 /55 center @1 @2 @20
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/SetAggregation> /0.31 @1 @2 /104 byCity @20
+
+R1000,100:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> @20 {(<Completed>@87</Completed>)}[(@87==true)]
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/SetFilter> /0.31 /104 @1 Score 2499 @20
+
+R1000,100:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> @20 {(<Completed>@88</Completed>)}[(@88==true)]
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/HideColumn> /0.31 /58 @1 @20
+
+R1000,100:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> @20 {(<Completed>@89</Completed>)}[(@89==true)]
+
+M:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/InsertComputedColumn> /0.31 /104 @1 @2 Scorex2 [Score]*2 @20
+
+R1000,100:/@-6/iv?__report=/iv.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> @20 {(<Completed>@90</Completed>)}[(@90==true)]
+

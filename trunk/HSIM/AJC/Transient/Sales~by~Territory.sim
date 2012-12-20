@@ -1,0 +1,23 @@
+#!hsim -x
+
+#S:/@-6/frameset?__report=Crosstab%20Sample%20Revenue.rptdesign {(JSESSIONID=@257; Path)}
+#M:/@-6/executereport.do?__requesttype=immediate&invokesubmit=true&__osViewer=&__executablename=%2FCrosstab%20Sample%20Revenue.rptdesign&repositoryType=WORKGROUPHEAD:Cookie: JSESSIONID=@257 {(Transient%2f@1%2eRPTDOCUMENT|Transient%2f@1%2erptdocument);(connectionhandle=@2&|connectionHandle=@2&)}
+#M:/@-6/iv?__report=%2f%24%24%24Transient%2f@1%2erptdocument&__design=%2fCrosstab%20Sample%20Revenue%2erptdesign&connectionHandle=@2&iportalID=ULZBBNCFML&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257\r\nContent-Type: text/xmlPOST:<xml/GetPage> page 1 true 1
+
+#S:/@-6/frameset?__report=Customer%20Dashboard.rptdesign {(JSESSIONID=@257; Path)}
+#M:/@-6/executereport.do?__requesttype=immediate&invokesubmit=true&__osViewer=&__executablename=%2FCustomer%20Dashboard.rptdesign&repositoryType=WORKGROUPHEAD:Cookie: JSESSIONID=@257 {(Transient%2f@1%2eRPTDOCUMENT|Transient%2f@1%2erptdocument);(connectionhandle=@2&|connectionHandle=@2&)}
+#M:/@-6/iv?__report=%2f%24%24%24Transient%2f@1%2erptdocument&__design=%2fCustomer%20Dashboard%2erptdesign&connectionHandle=@2&iportalID=ULZBBNCFML&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257\r\nContent-Type: text/xmlPOST:<xml/GetPage> page 1 true 1
+
+#S:/@-6/frameset?__report=Customer%20Order%20History.rptdesign {(JSESSIONID=@257; Path)}
+#M:/@-6/executereport.do?__requesttype=immediate&invokesubmit=true&__osViewer=&__executablename=%2FCustomer%20Order%20History.rptdesign&Customer=Australian%20Collectors%20Co.&repositoryType=WORKGROUPHEAD:Cookie: JSESSIONID=@257 {(Transient%2f@1%2eRPTDOCUMENT|Transient%2f@1%2erptdocument);(connectionhandle=@2&|connectionHandle=@2&)}
+#M:/@-6/iv?__report=%2f%24%24%24Transient%2f@1%2erptdocument&__design=%2fCustomer%20Order%20History%2erptdesign&connectionHandle=@2&iportalID=ULZBBNCFML&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257\r\nContent-Type: text/xmlPOST:<xml/GetPage> page 1 true 5
+
+S:/@-6/frameset?__report=Sales%20by%20Territory.rptdesign {(JSESSIONID=@257; Path)}
+M:/@-6/executereport.do?__requesttype=immediate&invokesubmit=true&__osViewer=&__executablename=%2FSales%20by%20Territory.rptdesign&Territory=APAC&repositoryType=WORKGROUPHEAD:Cookie: JSESSIONID=@257 {(Transient%2f@1%2eRPTDOCUMENT|Transient%2f@1%2erptdocument);(connectionhandle=@2&|connectionHandle=@2&)}
+M:/@-6/iv?__report=%2f%24%24%24Transient%2f@1%2erptdocument&__design=%2fSales%20by%20Territory%2erptdesign&connectionHandle=@2&iportalID=ULZBBNCFML&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257\r\nContent-Type: text/xmlPOST:<xml/GetPage> page 1 true 4
+
+#S:/@-6/frameset?__report=Top%205%20Sales%20Performers.rptdesign {(JSESSIONID=@257; Path)}
+#M:/@-6/executereport.do?__requesttype=immediate&invokesubmit=true&__osViewer=&__executablename=%2FTop%205%20Sales%20Performers.rptdesign&repositoryType=WORKGROUPHEAD:Cookie: JSESSIONID=@257 {(Transient%2f@1%2eRPTDOCUMENT|Transient%2f@1%2erptdocument);(connectionhandle=@2&|connectionHandle=@2&)}
+#M:/@-6/iv?__report=%2f%24%24%24Transient%2f@1%2erptdocument&__design=%2fTop%205%20Sales%20Performers%2erptdesign&connectionHandle=@2&iportalID=ULZBBNCFML&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257\r\nContent-Type: text/xmlPOST:<xml/GetPage> page 1 true 1
+
+

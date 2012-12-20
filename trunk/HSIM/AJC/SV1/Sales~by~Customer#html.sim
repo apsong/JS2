@@ -1,0 +1,23 @@
+#part-1(sv, html)
+
+
+#S:/@-6/frameset?__document=Crosstab%20Sample%20Revenue.rptdocument&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCrosstab%20Sample%20Revenue.rptdocument&__format=html&repositoryType=WORKGROUPHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 1
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=html&repositoryType=WORKGROUPHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 1
+
+#S:/@-6/frameset?__document=Customer%20Order%20History.rptdocument&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Order%20History.rptdocument&__format=html&repositoryType=WORKGROUPHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 5
+
+S:/@-6/frameset?__document=Sales%20by%20Customer.rptdocument&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+M:/@-6/iv?__report=%2FSales%20by%20Customer.rptdocument&__format=html&repositoryType=WORKGROUPHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 25
+
+#S:/@-6/frameset?__document=Sales%20by%20Territory.rptdocument&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FSales%20by%20Territory.rptdocument&__format=html&repositoryType=WORKGROUPHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 4
+
+#S:/@-6/frameset?__document=Top%205%20Sales%20Performers.rptdocument&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FTop%205%20Sales%20Performers.rptdocument&__format=html&repositoryType=WORKGROUPHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 1
+
+#S:/@-6/frameset?__document=20-customer25x100r-nogroup.rptdocument&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&__format=html&repositoryType=WORKGROUPHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 100

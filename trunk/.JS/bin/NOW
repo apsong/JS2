@@ -1,0 +1,10 @@
+#! /usr/bin/sh
+
+#case "$1" in
+#"-2")
+    date "+%Y%m%d-%H%M%S"
+#    ;;
+#*)
+#    date "+%Y-%m-%d.%H:%M:%S"
+#    ;;
+#esac

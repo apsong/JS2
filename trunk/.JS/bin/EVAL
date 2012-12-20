@@ -1,0 +1,27 @@
+#! /bin/sh
+
+if [ "$1" = "-E" ]; then
+    shift
+    echo "#!CMD:[" "$@" "]" 1>&2
+    eval "$@" 1>&2
+elif [ "$1" = "-e" ]; then
+    shift
+    echo "#!CMD:[" "$@" "]" 1>&2
+    eval "$@"
+elif [ "$1" = "-noexec" ]; then
+    shift
+    echo "#!CMD:[" "$@" "]" 1>&2
+elif [ "$1" = "-q" ]; then
+    shift
+    eval "$@"
+elif [ "$1" = "-i" ]; then
+    shift
+    echo "#!CMD:[" "$@" "]"
+    if [ `YESNO "execute?"` = YES ]; then
+        eval "$@"
+    fi
+else
+    echo "#!CMD:[" "$@" "]"
+    eval "$@"
+fi
+

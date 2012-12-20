@@ -1,0 +1,21 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>Document</Id>
+<Type>Document</Type>
+</Target>
+<Operator>SaveFile</Operator>
+<Data>
+<File>
+<Index>-1</Index>
+<Name>$1</Name>
+<CreateNewVersion>false</CreateNewVersion>
+<IsFile>true</IsFile>
+</File>
+</Data>
+</Operation>
+</GetUpdatedObjects>
+</Body>
+</Envelope>

@@ -1,0 +1,47 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>$1</Id>
+<Type>Table</Type>
+</Target>
+<Operator>SetAggregation</Operator>
+<Oprand>
+<Name>page</Name>
+<Value>$2</Value>
+</Oprand>
+<Oprand>
+<Name>totalpage</Name>
+<Value>$3 </Value>
+</Oprand>
+<Oprand>
+<Name>columniid</Name>
+<Value>$4</Value>
+</Oprand>
+<Data>
+<ColumnDefs>
+<ColumnDef>
+<Aggregate>
+<Func>SUM</Func>
+<UIPosition>0</UIPosition>
+<SubTotal>
+<Enable>true</Enable>
+<ShowInFooter>true</ShowInFooter>
+<GroupName>$5</GroupName>
+</SubTotal>
+<GrandTotal>
+<Enable>false</Enable>
+<ShowInFooter>true</ShowInFooter>
+</GrandTotal>
+<SortDir>none</SortDir>
+</Aggregate>
+</ColumnDef>
+</ColumnDefs>
+</Data>
+</Operation>
+<IVSessionID>$6</IVSessionID>
+</GetIVUpdatedObjects>
+</Body>
+</Envelope>
+

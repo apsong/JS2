@@ -1,0 +1,95 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+NEWFILE()
+{
+    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
+
+    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
+
+    mkdir -p .$FILE || exit 101
+    if [ -h $FILE ]; then
+        rm -f $FILE
+    elif [ -e $FILE ]; then
+        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
+        mv $FILE $REAL_FILE.bak
+    fi
+    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
+}
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
+
+ERRSUM=0
+DO_HSIM()
+{
+    SERVER_ADDR=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}'`
+    SERVER_TYPE=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}'`
+    ARG3=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $3}'`
+    ARG4=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $4}'`
+
+    case $SERVER_TYPE in
+        AJC[0-9][0-9][0-9][0-9][0-9][0-9])
+            TEST_BASE=$HSIM_HOME/AJC
+            ;;
+        IS[0-9][0-9][0-9][0-9][0-9][0-9])
+            TEST_BASE=$HSIM_HOME/iServer
+            ;;
+        *)
+            echo 1>&2 "($PROGRAM)Error: Invalid SERVER_TYPE '$SERVER_TYPE'"
+            exit 1
+            ;;
+    esac
+    TESTCASE=$TEST_BASE/$ARG3/$ARG4.sim
+    [ ! -f "$TESTCASE" ] && { echo 1>&2 "($PROGRAM)Error: TESTCASE '$TESTCASE' doesn't exist"; exit 1;}
+
+    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}'`
+    case "$ARG5" in
+        *[0-9].*[0-9][smhti])
+            CLIENT_NUM_DURATION=`echo "$ARG5" | sed -e 's/\./ /g'`
+            LOG=`NEWFILE $PROGRAM.log`
+            echo "#!CMD:[ hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE $CLIENT_NUM_DURATION --job hs.perfmon ]" > $LOG
+            EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE $CLIENT_NUM_DURATION --job hs.perfmon "|" tee -a $LOG
+            ;;
+        "")
+            LOG=sanity.log
+            EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE 1 1i -V "|" tee $LOG | grep ' | '
+            ERRCNT=`egrep -c ' \| .*error' $LOG`
+
+            echo | tee -a $LOG
+            echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
+            grep ' | ' $LOG | grep -v 'grep' >> $LOG
+
+            if [ $ERRCNT -eq 0 ]; then
+                echo "($PROGRAM)Note: Sanity test PASS. Verbose output is saved in $LOG"
+            else
+                echo "($PROGRAM)Error: Sanity test FAIL. Verbose output is saved in $LOG"
+                ERRSUM=`expr $ERRSUM '+' $ERRCNT`
+            fi
+            echo
+            ;;
+        *)
+            echo 1>&2 "($PROGRAM)Error: Invalid CLIENT_NUM.DURATION '$ARG5'"
+            exit 1
+            ;;
+    esac
+}
+
+if [ $# -eq 0 ]; then
+    DO_HSIM
+else
+    ORIG_PWD="$PWD"
+    for DIR do
+        echo
+        EVAL cd "$DIR" && DO_HSIM || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
+        cd "$ORIG_PWD"
+    done
+fi
+
+exit $ERRSUM

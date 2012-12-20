@@ -1,0 +1,164 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+usage()
+{
+    echo 1>&2 "Usage:"
+    echo 1>&2 "  $PROGRAM SERVER_TYPE SERVER_ADDR CLIENT_NUM DURATION TESTCASE [-V] [--job CMD] [-R REPEAT_NUM]"
+    echo 1>&2
+    echo 1>&2 "    SERVER_TYPE:"
+    echo 1>&2 "        AJC:<APACHE_DIR>...      --May be more than one to run in sequence"
+    echo 1>&2 "        AJC<yymmdd>...           --alias of 'AJC:AJC<yymmdd>'"
+    echo 1>&2 "        iServer[:<ENCYC_VOLUME>] --ENCYC_VOLUME defaults to 'vol'"
+    echo 1>&2 "        IS<yymmdd>               --alias of 'iServer:S<yymmdd>'"
+    echo 1>&2 "    SERVER_ADDR (for AJC):"
+    echo 1>&2 "        <HOST>[:PORT]            --PORT defaults to '8080'"
+    echo 1>&2 "    SERVER_ADDR (for iServer):"
+    echo 1>&2 "        <HOST>[:PORT] [--soapserver <SOAP_HOST>[:SOAP_PORT]]"
+    echo 1>&2 "                                 --PORT defaults to '8900', SOAP_HOST:SOAP_PORT defaults to 'HOST:8000'"
+    echo 1>&2 "    CLIENT_NUM:"
+    echo 1>&2 "        <NUM>                    --The number of active clients. Maximun is 255."
+    echo 1>&2 "    DURATION:"
+    echo 1>&2 "        <NUM>{s[econds]|m[inutes]|h[ours]|t[icks]|i[terations]}..."
+    echo 1>&2 "                                 --Run test for NUM seconds/minutes/hours/ticks or NUM iterations"
+    echo 1>&2 "    TESTCASE:"
+    echo 1>&2 "        [PATH/]<FILE>.sim        --File with suffix '.sim' containing test URLs"
+    echo 1>&2 "    -V                           --Print out all messages exchanged between the test client and server"
+    echo 1>&2 "    --job <CMD>                  --Runs 'CMD HOST DURATION' in the background when $PROGRAM is running"
+    echo 1>&2 "    -R <REPEAT_NUM>              --Repeat for <REPEAT_NUM> times"
+    echo 1>&2
+    echo 1>&2 "Examples:"
+    echo 1>&2 "  $PROGRAM AJC121207 sha-perf 1 1i /home/samson/HSIM/AJC/SV1/Customer~Dashboard#html.sim -V"
+    echo 1>&2 "      --AJC sanity on server 'sha-perf:8080'"
+    echo 1>&2 "  $PROGRAM AJC:AJC121207 sha-perf 6 12h /home/samson/HSIM/AJC/SV1/Customer~Dashboard#html.sim"
+    echo 1>&2 "      --AJC execute 6 threads for 12 hours"
+    echo 1>&2 "  $PROGRAM iServer sha-perf 1 1i /home/samson/HSIM/iServer/BRS/BRS.sim -V"
+    echo 1>&2 "      --iServer sanity on server 'sha-perf:8900', soapserver 'sha-perf:8000', encyclopedia volume 'vol'"
+    echo 1>&2 "  $PROGRAM IS121207 sha-perf 4 6t /home/samson/HSIM/iServer/BRS/BRS.sim --job hs.perfmon"
+    echo 1>&2 "      --iServer execute 4 threads for 6 ticks, with backgroud job 'vmstat 10 60'"
+    echo 1>&2 "  $PROGRAM AJC121207 AJC121122 sha-perf 1 6t SV1/Customer~Dashboard#html.sim -R 3"
+    echo 1>&2 "      --AJC execute on AJC121207 and then AJC121122, repeating for 3 times."
+    echo 1>&2 "        That is: (AJC121207, AJC121122, AJC121207, AJC121122, AJC121207, AJC121122)"
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        AJC:*)
+            SERVER_TYPE=AJC
+            APACHE_DIRS="$APACHE_DIRS `echo '$1' | awk -F: '{print $2}'`"
+            ;;
+        AJC[0-9][0-9][0-9][0-9][0-9][0-9])
+            SERVER_TYPE=AJC
+            APACHE_DIRS="$APACHE_DIRS $1"
+            ;;
+        iServer:*)
+            SERVER_TYPE=iServer
+            APACHE_DIRS=iportal
+            ENCYCL_VOL=`echo "$1" | awk -F: '{print $2}'`
+            ;;
+        IS[0-9][0-9][0-9][0-9][0-9][0-9])
+            SERVER_TYPE=iServer
+            APACHE_DIRS=iportal
+            ENCYCL_VOL=$1
+            ;;
+        iServer)
+            SERVER_TYPE=iServer
+            APACHE_DIRS=iportal
+            ENCYCL_VOL=vol
+            ;;
+        *:*)
+            HOST=`echo "$1" | awk -F: '{print $1}'`
+            PORT=`echo "$1" | awk -F: '{print $2}'`
+            ;;
+        --soapserver)
+            shift
+            SOAP_HOST=`echo "$1" | awk -F: '{print $1}'`
+            SOAP_PORT=`echo "$1" | awk -F: '{print $2}'`
+            ;;
+        [0-9]|[0-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9])
+            CLIENT_NUM=$1
+            ;;
+        [0-9][smhti]*|[0-9][0-9][smhti]*|[0-9][0-9][0-9][smhti]*|[0-9][0-9][0-9][0-9][smhti]*)
+            NUM=`echo "$1" | sed -e 's/.$//'`
+            case "$1" in
+                *[0-9]s*) DURATIONS="$DURATIONS $NUM";;
+                *[0-9]m*) DURATIONS="$DURATIONS `expr $NUM '*' 60`";;
+                *[0-9]h*) DURATIONS="$DURATIONS `expr $NUM '*' 3600`";;
+                *[0-9]t*) DURATIONS="$DURATIONS `expr $NUM '*' 100`";;
+                *[0-9]i*) DURATIONS="$DURATIONS -$NUM";;
+            esac
+            ;;
+        *.sim)
+            TEST_DIR=`dirname "$1"`
+            TEST_FILE=`basename "$1"`
+            TEST_OPTS=`awk '/#!hsim /{sub("#!hsim ", ""); print}' "$1"` || exit 2
+            [ -n "$TEST_OPTS" ] && { echo "($PROGRAM)Note: Use hsim parameter '$TEST_OPTS' from $1";}
+            ;;
+        [a-zA-Z_][a-zA-Z_0-9]*)
+            HOST="$1"
+            ;;
+        -V)
+            VERBOSE=true
+            ;;
+        --job)
+            shift
+            JOB="$1"
+            ;;
+        -R)
+            shift
+            REPEAT_NUM="$1"
+            ;;
+        --help)
+            usage; exit 0
+            ;;
+        *)
+            echo 1>&2 "($PROGRAM)Error: Invalid option '$1'"; usage; exit 1
+            ;;
+    esac
+    shift
+done
+
+[ -z "$SERVER_TYPE" ] && { echo 1>&2 "($PROGRAM)Error: SERVER_TYPE is not set"; ERROR=1;}
+[ -z "$HOST" ] && { echo 1>&2 "($PROGRAM)Error: SERVER_ADDR is not set"; ERROR=1;}
+[ -z "$CLIENT_NUM" ] && { echo 1>&2 "($PROGRAM)Error: CLIENT_NUM is not set"; ERROR=1;}
+[ -z "$DURATIONS" ] && { echo 1>&2 "($PROGRAM)Error: DURATION is not set"; ERROR=1;}
+[ -z "$TEST_FILE" ] && { echo 1>&2 "($PROGRAM)Error: TESTCASE is not set"; ERROR=1;}
+[ -n "$ERROR" ] && { echo 1>&2; usage; exit 2;}
+
+[ -z "$PORT" ] && [ "$SERVER_TYPE" = AJC ] && PORT=8080 || PORT=8900
+[ -z "$SOAP_HOST" ] && SOAP_HOST=$HOST
+[ -z "$SOAP_PORT" ] && SOAP_PORT=$PORT
+[ -z "$REPEAT_NUM" ] && REPEAT_NUM=1
+
+OLD_PWD=$PWD
+cd $TEST_DIR
+while [ $REPEAT_NUM -gt 0 ]; do
+    for APACHE_DIR in $APACHE_DIRS; do
+        for DURATION in $DURATIONS; do
+            OPTS="-testType SSO -H $HOST -port $PORT"
+            [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -soapserver $SOAP_HOST -soapport $SOAP_PORT"
+            OPTS="$OPTS -clients $CLIENT_NUM"
+            [ "$DURATION" -gt 0 ] && OPTS="$OPTS -l $DURATION" || OPTS="$OPTS -n `expr $DURATION '*' -1`"
+            OPTS="$OPTS -d $APACHE_DIR"
+            [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -S $ENCYCL_VOL"
+            OPTS="$OPTS $TEST_FILE $TEST_OPTS"
+            [ -n "$VERBOSE" ] && OPTS="$OPTS -V"
+
+#OPTS="$OPTS -T 60"
+            [ -n "$JOB" ] && EVAL $JOB $HOST ${DURATION}s "2>&1" "&"
+            echo "#!CMD:[ cd $TEST_DIR; HsimD.exe $OPTS 2>&1 ]"
+            HsimD.exe $OPTS 2>&1
+            cat error.log >> $OLD_PWD/error.log; rm -f error.log
+            [ -n "$JOB" ] && EVAL wait
+        done
+    done
+    REPEAT_NUM=`expr $REPEAT_NUM '-' 1`
+done
+

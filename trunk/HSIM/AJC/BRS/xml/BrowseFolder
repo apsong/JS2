@@ -1,0 +1,20 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>g_SaveAsDialog</Id>
+<Type>Document</Type>
+</Target>
+<Operator>BrowseFolder</Operator>
+<Data>
+<FileBrowsing>
+<Search>
+<FileType>*.webrptdesign</FileType>
+</Search>
+</FileBrowsing>
+</Data>
+</Operation>
+</GetUpdatedObjects>
+</Body>
+</Envelope>

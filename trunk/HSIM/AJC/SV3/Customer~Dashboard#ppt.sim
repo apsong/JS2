@@ -1,0 +1,26 @@
+#part-3(sv, others)
+
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=doc&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=doc&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/doc>
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=docx&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=docx&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/docx>
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=xls&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=xls&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/xls>
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=xlsx&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=xlsx&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/xlsx>
+
+S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=ppt&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=ppt&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/ppt>
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=pptx&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=pptx&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/pptx>
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=postscript&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=ps&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/ps>
+
+#S:/@-6/frameset?__document=Customer%20Dashboard.rptdocument&__format=xhtml&repositoryType=WORKGROUP {(JSESSIONID=@257; Path)}
+#M:/@-6/iv?__report=%2FCustomer%20Dashboard.rptdocument&__format=xhtml&repositoryType=WORKGROUPHEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/xhtml>

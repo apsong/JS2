@@ -1,0 +1,29 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>$1</Id>
+<Type>Table</Type>
+</Target>
+<Operator>InsertComputedColumn</Operator>
+<Oprand>
+<Name>columniid</Name>
+<Value>$2</Value>
+</Oprand>
+<Data>
+<ColumnDefs>
+<ColumnDef>
+<Header>$5</Header>
+<BoundDataColumn>
+<Name>$5</Name>
+<Expression>$6</Expression>
+</BoundDataColumn>
+</ColumnDef>
+</ColumnDefs>
+</Data>
+</Operation>
+<IVSessionID>$7</IVSessionID>
+</GetIVUpdatedObjects>
+</Body>
+</Envelope>
