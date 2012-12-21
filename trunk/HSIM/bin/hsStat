@@ -14,14 +14,14 @@ DO_STAT()
                     awk -v DIR=`pwd | sed -e 's/^.*@//'` '
                         /):/ {
                             if ($9 ~ ".*%") {
-                                CPU=$9
+                                CPU=gensub("%", "", "g", $9);
                             } else {
                                 URL=gensub(",", "", "g", $14); Resp=$16
                             }
                         }
 
                         END {
-                            printf("%-60s:  URL:%7s    Resp:%5s    CPU:%6s\n", DIR, URL, Resp, CPU)
+                            printf("%-61s:  URL:%7s    Resp:%5s    %CPU:%5s\n", DIR, URL, Resp, CPU)
                         }' hs.log
                 fi
                 ;;
@@ -35,5 +35,5 @@ if [ $# -eq 0 ]; then
     DO_STAT .
 else 
     DO_STAT "$@"
-fi
+fi | tee $PROGRAM.log
 
