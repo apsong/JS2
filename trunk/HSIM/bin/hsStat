@@ -2,6 +2,30 @@
 
 PROGRAM=`basename $0`
 
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+NEWFILE()
+{
+    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
+
+    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
+
+    mkdir -p .$FILE || exit 101
+    if [ -h $FILE ]; then
+        rm -f $FILE
+    elif [ -e $FILE ]; then
+        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
+        mv $FILE $REAL_FILE.bak
+    fi
+    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
+}
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
+
 DO_STAT()
 {
     local OLD_PWD=`pwd` #Here has to use the bash extension for local variable
@@ -21,7 +45,7 @@ DO_STAT()
                         }
 
                         END {
-                            printf("%-61s:  URL:%7s    Resp:%5s    %CPU:%5s\n", DIR, URL, Resp, CPU)
+                            printf("%-64s  URL: %6s    Resp: %4s    %CPU: %4s\n", DIR, URL, Resp, CPU)
                         }' hs.log
                 fi
                 ;;
@@ -32,8 +56,7 @@ DO_STAT()
 }
 
 if [ $# -eq 0 ]; then
-    DO_STAT .
+    EVAL DO_STAT .    "|" tee `NEWFILE $PROGRAM.log`
 else 
-    DO_STAT "$@"
-fi | tee $PROGRAM.log
-
+    EVAL DO_STAT "$@" "|" tee `NEWFILE $PROGRAM.log`
+fi
