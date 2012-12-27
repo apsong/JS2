@@ -52,7 +52,7 @@ cd()
     case "$TD" in
         "-")
             if [ "${DIR_STACK[$DIR_STACK_CUR]}" != "$PWD" ]; then
-                builtin cd ${DIR_STACK[$DIR_STACK_CUR]}
+                builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
                 [ $DIR_STACK_DEBUG -eq 1 ] && cd @
                 return 0
             fi
@@ -61,7 +61,7 @@ cd()
                 return 1
             fi
             DIR_STACK_CUR=`expr \( $DIR_STACK_CUR + $DIR_STACK_LENGTH - 1 \) % $DIR_STACK_LENGTH`
-            builtin cd ${DIR_STACK[$DIR_STACK_CUR]}
+            builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
             [ $DIR_STACK_DEBUG -eq 1 ] && cd @
             ;;
         "+")
@@ -70,7 +70,7 @@ cd()
                 return 1
             fi
             DIR_STACK_CUR=`expr \( $DIR_STACK_CUR + 1 \) % $DIR_STACK_LENGTH`
-            builtin cd ${DIR_STACK[$DIR_STACK_CUR]}
+            builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
             [ $DIR_STACK_DEBUG -eq 1 ] && cd @
             ;;
         "!")
@@ -102,9 +102,9 @@ cd()
                 done
             elif [ "$INDEX" = "S" ]; then  #2. @S => Save current stack into file
                 cd @ > ~/.cd_history
-                case $PWD in
+                case "$PWD" in
                     /|$HOME)
-                        echo $PWD >> ~/.cd_history
+                        echo "$PWD" >> ~/.cd_history
                         ;;
                 esac
             elif [ "$INDEX" = "L" ]; then  #3. @L => Load current stack from file
@@ -117,7 +117,7 @@ cd()
             elif [ $DIR_STACK_BASE -le $DIR_STACK_TOP -a $DIR_STACK_BASE -le $INDEX -a $INDEX -le $DIR_STACK_TOP ] ||
                 [ $DIR_STACK_BASE -gt $DIR_STACK_TOP -a \( \( 0 -le $INDEX -a $INDEX -le $DIR_STACK_TOP \) -o \( $DIR_STACK_BASE -le $INDEX -a $INDEX -lt $DIR_STACK_LENGTH \) \) ]; then  #4. Valid index => GOTO it
                 DIR_STACK_CUR=$INDEX
-                builtin cd ${DIR_STACK[$DIR_STACK_CUR]}
+                builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
                 [ $DIR_STACK_DEBUG -eq 1 ] && cd @
             else  #5. Invalid index => Error message
                 echo "Error: Invalid DIR_STACK_INDEX:[$INDEX]!" 1>&2
@@ -125,8 +125,8 @@ cd()
             fi
             ;;
         *)
-            builtin cd $TD || { [ $DIR_STACK_DEBUG -eq 1 ] && cd @; return;}
-            case $PWD in
+            builtin cd "$TD" || { [ $DIR_STACK_DEBUG -eq 1 ] && cd @; return;}
+            case "$PWD" in
                 ${DIR_STACK[$DIR_STACK_CUR]}|/|$HOME)
                     [ $DIR_STACK_DEBUG -eq 1 ] &&
                         { echo " Note: Same dir, root dir, home dir won't be pushed into DIR_STACK."; cd @;}
@@ -134,12 +134,12 @@ cd()
                     ;;
             esac
 
-            if [ "${DIR_STACK[$DIR_STACK_TOP]}" = $PWD ]; then
+            if [ "${DIR_STACK[$DIR_STACK_TOP]}" = "$PWD" ]; then
                 DIR_STACK_CUR=$DIR_STACK_TOP
             else
                 DIR_STACK_TOP=`expr \( $DIR_STACK_TOP + 1 \) % $DIR_STACK_LENGTH`
                 DIR_STACK_CUR=$DIR_STACK_TOP
-                DIR_STACK[$DIR_STACK_CUR]=$PWD
+                DIR_STACK[$DIR_STACK_CUR]="$PWD"
                 [ $DIR_STACK_TOP -eq $DIR_STACK_BASE ] &&
                     DIR_STACK_BASE=`expr \( $DIR_STACK_BASE + 1 \) % $DIR_STACK_LENGTH`
             fi
