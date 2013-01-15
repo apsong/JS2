@@ -1,21 +1,12 @@
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
 <Body>
 <GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
-<ViewerId>js3</ViewerId>
 <Operation>
 <Target>
 <Id>Document</Id>
 <Type>Document</Type>
 </Target>
-<Operator>StartUp</Operator>
-<Oprand>
-<Name>svg</Name>
-<Value>false</Value>
-</Oprand>
-<Oprand>
-<Name>standalone</Name>
-<Value>true</Value>
-</Oprand>
+<Operator>GetToc</Operator>
 </Operation>
 </GetIVUpdatedObjects>
 </Body>

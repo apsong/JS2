@@ -1,0 +1,17 @@
+#without parameter
+S:/@-6/login.do?__vp=@-5&userid=@-1&password=@-2&locale=zh_CN&loginpostback=true&timezone=America%2FLos_Angeles&targetpage=/@-6/getfolderitems.do&redirect= {(JSESSIONID=@257; Path)}
+
+M:/@-6/executereport.do?__requesttype=immediate&__executableName=%2fSampleBIRTReport%2erptdesign&__vp=@-5&fromDashboard=true&showBanner=false&locale=en_US&__saveOutput=false&__from=requestPageHEAD:Cookie: JSESSIONID=@257
+
+M:/@-6/wsservlet?__vp=@-5&locale=en_US&closex=trueHEAD:request-type: SOAP-INT\r\nCookie: JSESSIONID=@257POST:<xml/GetCustomParameterDefinitions>
+M:/@-6/wsservlet?__vp=@-5&locale=en_US&closex=trueHEAD:request-type: SOAP-INT\r\nCookie: JSESSIONID=@257POST:<xml/GetConvertedParameterValues>
+
+M:/@-6/executereport.do?__vp=jinsong&fromDashboard=true&showBanner=false&postback=true&jobType=sync&selectedTab=0&invokeSubmit=true&inputfile=%2FSampleBIRTReport.rptdesign&changedParamterName=&changedConversionOptions=&__from=requestPage&locale=en_US&__executableName=%2FSampleBIRTReport.rptdesign&doframe=false&maincontainerParameterGroupID0ParameterID0=California&__newWindow=false&numOfParam=1&parameters%5B0%5D.name=NewParameter&parameters%5B0%5D.value=%27California%27&parameters%5B0%5D.valueIsNull=falseHEAD:Cookie: JSESSIONID=@257 {(__report=%2f%24%24%24Transient%2f@3%2eRPTDOCUMENT);(connectionHandle=@4&|connectionhandle=@4&)}
+
+M:/@-6/iv?__report=%2f%24%24%24Transient%2f@3%2eRPTDOCUMENT&__design=%2fSampleBIRTReport%2erptdesign&connectionHandle=@4&__vp=@-5HEAD:Cookie: JSESSIONID=@257
+M:/@-6/iv?__locale=en_US&connectionHandle=@4&__vp=@-5&closex=true&__report=%2F%24%24%24Transient%2F@3.RPTDOCUMENT&__design=%2fSampleBIRTReport.rptdesign&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp>
+
+#for viewing large report, please add GetPageCount url, you may need to adjust the polling interval
+#R500,100:/@-6/iv?__locale=en_US&connectionHandle=@4&__design=%2frpt10000.rptdesign&__vp=@-5&closex=true&__report=%2F%24%24%24Transient%2F@3.RPTDOCUMENT&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPageCount> 1 10000 {(<Completed>@5</Completed>)}[(@5==true)]
+#M:/@-6/iv?__locale=en_US&connectionHandle=@4&__design=%2frpt10000.rptdesign&__vp=@-5&closex=true&__report=%2F%24%24%24Transient%2F@3.RPTDOCUMENT&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 10000 true 10000
+
