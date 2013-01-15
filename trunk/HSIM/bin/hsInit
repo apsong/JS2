@@ -68,6 +68,9 @@ mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/IV/IV/9.3t.6t
 mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/BRS/BRS/6.3t.6t
 
 
-mkdir -p -v	$YYMMDD@$HOST/IS$YYMMDD/IV/IV/6.5t.10t
+mkdir -p -v	$YYMMDD@$HOST/ISV$YYMMDD/IV/IV/6.5t.10t
 
-mkdir -p -v	$YYMMDD@$HOST/IS$YYMMDD/BRS/BRS/6.5t.10t
+mkdir -p -v	$YYMMDD@$HOST/ISV$YYMMDD/BRS/BRS/6.5t.10t
+
+mkdir -p -v	$YYMMDD@$HOST/ISV$YYMMDD/SV
+mkdir -p -v	$YYMMDD@$HOST/ISV$YYMMDD/Transient
