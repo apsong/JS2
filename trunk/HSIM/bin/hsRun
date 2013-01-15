@@ -14,10 +14,10 @@ usage()
     echo 1>&2 "  $PROGRAM SERVER_TYPE SERVER_ADDR CLIENT_NUM DURATION TESTCASE [-V] [--job CMD] [-R REPEAT_NUM]"
     echo 1>&2
     echo 1>&2 "    SERVER_TYPE:"
-    echo 1>&2 "        AJC:<APACHE_DIR>...      --May be more than one to run in sequence"
+    echo 1>&2 "        AJC#<APACHE_DIR>...      --May be more than one to run in sequence"
     echo 1>&2 "        AJC<yymmdd>...           --alias of 'AJC:AJC<yymmdd>'"
-    echo 1>&2 "        iServer[:<ENCYC_VOLUME>] --ENCYC_VOLUME defaults to 'vol'"
-    echo 1>&2 "        IS<yymmdd>               --alias of 'iServer:S<yymmdd>'"
+    echo 1>&2 "        ISV[#<ENCYC_VOLUME>]     --ENCYC_VOLUME defaults to 'ISV'"
+    echo 1>&2 "        ISV<yymmdd>              --alias of 'iServer:S<yymmdd>'"
     echo 1>&2 "    SERVER_ADDR (for AJC):"
     echo 1>&2 "        <HOST>[:PORT]            --PORT defaults to '8080'"
     echo 1>&2 "    SERVER_ADDR (for iServer):"
@@ -41,7 +41,7 @@ usage()
     echo 1>&2 "      --AJC execute 6 threads for 12 hours"
     echo 1>&2 "  $PROGRAM iServer sha-perf 1 1i /home/samson/HSIM/iServer/BRS/BRS.sim -V"
     echo 1>&2 "      --iServer sanity on server 'sha-perf:8900', soapserver 'sha-perf:8000', encyclopedia volume 'vol'"
-    echo 1>&2 "  $PROGRAM IS121207 sha-perf 4 6t /home/samson/HSIM/iServer/BRS/BRS.sim --job hs.perfmon"
+    echo 1>&2 "  $PROGRAM ISV121207 sha-perf 4 6t /home/samson/HSIM/iServer/BRS/BRS.sim --job hs.perfmon"
     echo 1>&2 "      --iServer execute 4 threads for 6 ticks, with backgroud job 'vmstat 10 60'"
     echo 1>&2 "  $PROGRAM AJC121207 AJC121122 sha-perf 1 6t SV1/Customer~Dashboard#html.sim -R 3"
     echo 1>&2 "      --AJC execute on AJC121207 and then AJC121122, repeating for 3 times."
@@ -50,28 +50,23 @@ usage()
 
 while [ $# -gt 0 ]; do
     case "$1" in
-        AJC:*)
+        AJC#*)
             SERVER_TYPE=AJC
-            APACHE_DIRS="$APACHE_DIRS `echo '$1' | awk -F: '{print $2}'`"
+            APACHE_DIRS="$APACHE_DIRS `echo '$1' | awk -F# '{print $2}'`"
             ;;
         AJC[0-9][0-9][0-9][0-9][0-9][0-9])
             SERVER_TYPE=AJC
             APACHE_DIRS="$APACHE_DIRS $1"
             ;;
-        iServer:*)
+        ISV#*)
             SERVER_TYPE=iServer
             APACHE_DIRS=iportal
-            ENCYCL_VOL=`echo "$1" | awk -F: '{print $2}'`
+            ENCYCL_VOL=`echo "$1" | awk -F# '{print $2}'`
             ;;
-        IS[0-9][0-9][0-9][0-9][0-9][0-9])
+        ISV[0-9][0-9][0-9][0-9][0-9][0-9])
             SERVER_TYPE=iServer
             APACHE_DIRS=iportal
             ENCYCL_VOL=$1
-            ;;
-        iServer)
-            SERVER_TYPE=iServer
-            APACHE_DIRS=iportal
-            ENCYCL_VOL=vol
             ;;
         *:*)
             HOST=`echo "$1" | awk -F: '{print $1}'`

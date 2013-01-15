@@ -39,6 +39,14 @@ DIR_STACK_BASE=0
 DIR_STACK_CUR=0
 DIR_STACK_TOP=0
 DIR_STACK_DEBUG=0
+builtin_cd()
+{
+    if [ -z "$1" ]; then
+        builtin cd
+    else
+        builtin cd "$1"
+    fi
+}
 cd()
 {
     TD=""
@@ -52,7 +60,7 @@ cd()
     case "$TD" in
         "-")
             if [ "${DIR_STACK[$DIR_STACK_CUR]}" != "$PWD" ]; then
-                builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
+                builtin_cd "${DIR_STACK[$DIR_STACK_CUR]}"
                 [ $DIR_STACK_DEBUG -eq 1 ] && cd @
                 return 0
             fi
@@ -61,7 +69,7 @@ cd()
                 return 1
             fi
             DIR_STACK_CUR=`expr \( $DIR_STACK_CUR + $DIR_STACK_LENGTH - 1 \) % $DIR_STACK_LENGTH`
-            builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
+            builtin_cd "${DIR_STACK[$DIR_STACK_CUR]}"
             [ $DIR_STACK_DEBUG -eq 1 ] && cd @
             ;;
         "+")
@@ -70,7 +78,7 @@ cd()
                 return 1
             fi
             DIR_STACK_CUR=`expr \( $DIR_STACK_CUR + 1 \) % $DIR_STACK_LENGTH`
-            builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
+            builtin_cd "${DIR_STACK[$DIR_STACK_CUR]}"
             [ $DIR_STACK_DEBUG -eq 1 ] && cd @
             ;;
         "!")
@@ -117,7 +125,7 @@ cd()
             elif [ $DIR_STACK_BASE -le $DIR_STACK_TOP -a $DIR_STACK_BASE -le $INDEX -a $INDEX -le $DIR_STACK_TOP ] ||
                 [ $DIR_STACK_BASE -gt $DIR_STACK_TOP -a \( \( 0 -le $INDEX -a $INDEX -le $DIR_STACK_TOP \) -o \( $DIR_STACK_BASE -le $INDEX -a $INDEX -lt $DIR_STACK_LENGTH \) \) ]; then  #4. Valid index => GOTO it
                 DIR_STACK_CUR=$INDEX
-                builtin cd "${DIR_STACK[$DIR_STACK_CUR]}"
+                builtin_cd "${DIR_STACK[$DIR_STACK_CUR]}"
                 [ $DIR_STACK_DEBUG -eq 1 ] && cd @
             else  #5. Invalid index => Error message
                 echo "Error: Invalid DIR_STACK_INDEX:[$INDEX]!" 1>&2
@@ -125,7 +133,7 @@ cd()
             fi
             ;;
         *)
-            builtin cd "$TD" || { [ $DIR_STACK_DEBUG -eq 1 ] && cd @; return;}
+            builtin_cd "$TD" || { [ $DIR_STACK_DEBUG -eq 1 ] && cd @; return;}
             case "$PWD" in
                 ${DIR_STACK[$DIR_STACK_CUR]}|/|$HOME)
                     [ $DIR_STACK_DEBUG -eq 1 ] &&

@@ -16,5 +16,11 @@ EVAL()
 HOST="$1"
 shift
 [ -z "$HOST" ] && { echo 1>&2 "($PROGRAM)Error: HOST is not set"; usage; exit 1;}
-[ "$HOST" = "jinsong" ] && HOST=sha-perf
-EVAL ssh "$HOST" .JS/bin/VMSTAT "$@"
+case "$HOST" in
+    jinsong*)
+        echo "($PROGRAM)Note: perfmon on machine $HOST is not supported yet."
+        ;;
+    *)
+        EVAL ssh "$HOST" .JS/bin/VMSTAT "$@"
+        ;;
+esac

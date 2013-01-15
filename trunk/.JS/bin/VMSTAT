@@ -20,16 +20,19 @@ while [ $# -gt 0 ]; do
             usage; exit 0;;
         --ticklen)
             shift; TICKLEN=$1;; #debug only, if specified must before DURATION to take effect
-        [0-9]|[0-9][0-9]|[0-9][0-9][0-9])
+        [0-9]|[0-9]*[0-9])
             DELAY=$1;;
-        [0-9][smht]|[0-9][0-9][smht]|[0-9][0-9][0-9][smht]|[0-9][0-9][0-9][0-9][smht])
+        [0-9][smht]|[0-9]*[0-9][smht])
             NUM=`echo "$1" | sed -e 's/.$//'`
             case "$1" in
                 *s) DURATION=$NUM;;
                 *m) DURATION=`expr $NUM '*' 60`;;
                 *h) DURATION=`expr $NUM '*' 3600`;;
                 *t) DURATION=`expr $NUM '*' $TICKLEN`;;
-            esac;;
+            esac
+            expr "$DURATION" "*" "1" >/dev/null 2>&1 || { echo 1>&2 "($PROGRAM)Error: Invalid option '$1'"; usage; exit 1;}
+            ;;
+
         -v)
             VERBOSE=1;;
         *)

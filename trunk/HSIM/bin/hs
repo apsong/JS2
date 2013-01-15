@@ -38,12 +38,13 @@ DO_HSIM()
         AJC[0-9][0-9][0-9][0-9][0-9][0-9])
             TEST_BASE=$HSIM_HOME/AJC
             ;;
-        IS[0-9][0-9][0-9][0-9][0-9][0-9])
+        ISV[0-9][0-9][0-9][0-9][0-9][0-9])
             TEST_BASE=$HSIM_HOME/iServer
             ;;
         *)
-            echo 1>&2 "($PROGRAM)Error: Invalid SERVER_TYPE '$SERVER_TYPE'"
-            exit 1
+            TEST_BASE=$HSIM_HOME/iServer
+#            echo 1>&2 "($PROGRAM)Error: Invalid SERVER_TYPE '$SERVER_TYPE'"
+#            exit 1
             ;;
     esac
     TESTCASE=$TEST_BASE/$ARG3/$ARG4.sim
@@ -60,7 +61,7 @@ DO_HSIM()
         "")
             LOG=sanity.log
             EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE 1 1i -V "|" tee $LOG | grep ' | '
-            ERRCNT=`egrep -c ' \| .*error' $LOG`
+            ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
             echo | tee -a $LOG
             echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
