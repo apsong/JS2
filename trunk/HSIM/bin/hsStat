@@ -45,7 +45,7 @@ DO_STAT()
                         }
 
                         END {
-                            printf("%-64s  URL: %6s    Resp: %4s    %CPU: %4s\n", DIR, URL, Resp, CPU)
+                            printf("%-64s  URL: %6s    Resp: %4s    %CPU: %.0f\n", DIR, URL, Resp, CPU)
                         }' hs.log
                 fi
                 ;;
