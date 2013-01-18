@@ -18,4 +18,4 @@ M:/@-6/wr?__dsSessionId=@258HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPO
 M:/@-6/wr?__dsSessionId=@258HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SetFilter> /2.@62 Table AMOUNT 6 gt 30000
 M:/@-6/wr?__dsSessionId=@258HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/BrowseFolder> 
 #M:/@-6/wr?__dsSessionId=@258HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SaveFile> /temp/@257_@4
-M:/@-6/wr?__dsSessionId=@258HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SaveFile> /actu01/sjin/BRS.tmp/@257_@4
+M:/@-6/wr?__dsSessionId=@258HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SaveFile> /tmp/BRS.save/@257_@4

@@ -76,3 +76,5 @@ mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/SV
 
 mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/Transient/SampleBIRTReport/{1,6}.6t
 mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/Transient/rpt1/{1,6}.6t
+
+mkdir -p -v	/tmp/BRS.save
