@@ -68,13 +68,11 @@ mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/IV/IV/9.3t.6t
 mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/BRS/BRS/6.3t.6t
 
 
-mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/IV/IV/6.5t.10t
+mkdir -p -v	$YYMMDD@$HOST/iServer/IV/IV/6.5t.10t
 
-mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/BRS/BRS/6.5t.10t
+mkdir -p -v	$YYMMDD@$HOST/iServer/BRS/BRS/6.5t.10t
 
-mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/SV
+mkdir -p -v	$YYMMDD@$HOST/iServer/SV
 
-mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/Transient/SampleBIRTReport/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/ISV#$HOST/Transient/rpt1/{1,6}.6t
-
-mkdir -p -v	/tmp/BRS.save
+mkdir -p -v	$YYMMDD@$HOST/iServer/Transient/SampleBIRTReport/{1,6}.6t
+mkdir -p -v	$YYMMDD@$HOST/iServer/Transient/rpt1/{1,6}.6t

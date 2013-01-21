@@ -15,9 +15,8 @@ usage()
     echo 1>&2
     echo 1>&2 "    SERVER_TYPE:"
     echo 1>&2 "        AJC#<APACHE_DIR>...      --May be more than one to run in sequence"
-    echo 1>&2 "        AJC<yymmdd>...           --alias of 'AJC:AJC<yymmdd>'"
-    echo 1>&2 "        ISV[#<ENCYC_VOLUME>]     --ENCYC_VOLUME defaults to 'ISV'"
-    echo 1>&2 "        ISV<yymmdd>              --alias of 'iServer:S<yymmdd>'"
+    echo 1>&2 "        AJC<yymmdd>...           --alias of 'AJC#AJC<yymmdd>'"
+    echo 1>&2 "        iServer[#<ENCYC_VOLUME>] --ENCYC_VOLUME defaults to <HOST> with '-' replaced by '_'"
     echo 1>&2 "    SERVER_ADDR (for AJC):"
     echo 1>&2 "        <HOST>[:PORT]            --PORT defaults to '8080'"
     echo 1>&2 "    SERVER_ADDR (for iServer):"
@@ -37,11 +36,11 @@ usage()
     echo 1>&2 "Examples:"
     echo 1>&2 "  $PROGRAM AJC121207 sha-perf 1 1i /home/samson/HSIM/AJC/SV1/Customer~Dashboard#html.sim -V"
     echo 1>&2 "      --AJC sanity on server 'sha-perf:8080'"
-    echo 1>&2 "  $PROGRAM AJC:AJC121207 sha-perf 6 12h /home/samson/HSIM/AJC/SV1/Customer~Dashboard#html.sim"
+    echo 1>&2 "  $PROGRAM AJC#AJC121207 sha-perf 6 12h /home/samson/HSIM/AJC/SV1/Customer~Dashboard#html.sim"
     echo 1>&2 "      --AJC execute 6 threads for 12 hours"
     echo 1>&2 "  $PROGRAM iServer sha-perf 1 1i /home/samson/HSIM/iServer/BRS/BRS.sim -V"
-    echo 1>&2 "      --iServer sanity on server 'sha-perf:8900', soapserver 'sha-perf:8000', encyclopedia volume 'vol'"
-    echo 1>&2 "  $PROGRAM ISV121207 sha-perf 4 6t /home/samson/HSIM/iServer/BRS/BRS.sim --job hs.perfmon"
+    echo 1>&2 "      --iServer sanity on server 'sha-perf:8900', soapserver 'sha-perf:8000', encyclopedia volume 'sha_perf'"
+    echo 1>&2 "  $PROGRAM iServer#sha_perf sha-perf 4 6t /home/samson/HSIM/iServer/BRS/BRS.sim --job hs.perfmon"
     echo 1>&2 "      --iServer execute 4 threads for 6 ticks, with backgroud job 'vmstat 10 60'"
     echo 1>&2 "  $PROGRAM AJC121207 AJC121122 sha-perf 1 6t SV1/Customer~Dashboard#html.sim -R 3"
     echo 1>&2 "      --AJC execute on AJC121207 and then AJC121122, repeating for 3 times."
@@ -58,15 +57,15 @@ while [ $# -gt 0 ]; do
             SERVER_TYPE=AJC
             APACHE_DIRS="$APACHE_DIRS $1"
             ;;
-        ISV#*)
+        iServer#*)
             SERVER_TYPE=iServer
             APACHE_DIRS=iportal
             ENCYCL_VOL=`echo "$1" | awk -F# '{print $2}'`
             ;;
-        ISV[0-9][0-9][0-9][0-9][0-9][0-9])
+        iServer)
             SERVER_TYPE=iServer
             APACHE_DIRS=iportal
-            ENCYCL_VOL=$1
+            ENCYCL_VOL=; #Filled later with HOST
             ;;
         *:*)
             HOST=`echo "$1" | awk -F: '{print $1}'`
@@ -127,6 +126,7 @@ done
 [ -z "$TEST_FILE" ] && { echo 1>&2 "($PROGRAM)Error: TESTCASE is not set"; ERROR=1;}
 [ -n "$ERROR" ] && { echo 1>&2; usage; exit 2;}
 
+[ -z "$ENCYCL_VOL" -a "$SERVER_TYPE" = "iServer" ] && ENCYCL_VOL=`echo $HOST | sed -e 's/-/_/g'`
 [ -z "$PORT" ] && [ "$SERVER_TYPE" = AJC ] && PORT=8080 || PORT=8900
 [ -z "$SOAP_HOST" ] && SOAP_HOST=$HOST
 [ -z "$SOAP_PORT" ] && SOAP_PORT=$PORT

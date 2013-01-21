@@ -35,16 +35,15 @@ DO_HSIM()
     ARG4=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $4}'`
 
     case $SERVER_TYPE in
-        AJC[0-9][0-9][0-9][0-9][0-9][0-9])
+        AJC*)
             TEST_BASE=$HSIM_HOME/AJC
             ;;
-        ISV[0-9][0-9][0-9][0-9][0-9][0-9])
+        iServer*)
             TEST_BASE=$HSIM_HOME/iServer
             ;;
         *)
-            TEST_BASE=$HSIM_HOME/iServer
-#            echo 1>&2 "($PROGRAM)Error: Invalid SERVER_TYPE '$SERVER_TYPE'"
-#            exit 1
+            echo 1>&2 "($PROGRAM)Error: Invalid SERVER_TYPE '$SERVER_TYPE'"
+            exit 1
             ;;
     esac
     TESTCASE=$TEST_BASE/$ARG3/$ARG4.sim
