@@ -1,0 +1,14 @@
+BoldAsFont=no
+FontHeight=11
+Columns=115
+Rows=55
+Transparency=off
+OpaqueWhenFocused=no
+CursorType=block
+Font=Consolas
+Locale=
+Term=xterm
+BackgroundColour=0,0,0
+BackspaceSendsBS=no
+Blue=0,200,255
+BoldBlue=100,100,255
