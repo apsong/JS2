@@ -10,5 +10,5 @@ Locale=
 Term=xterm
 BackgroundColour=0,0,0
 BackspaceSendsBS=no
-Blue=0,200,255
-BoldBlue=100,100,255
+Blue=0,128,255
+BoldBlue=128,128,255

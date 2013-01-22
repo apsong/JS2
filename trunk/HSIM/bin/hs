@@ -30,7 +30,7 @@ ERRSUM=0
 DO_HSIM()
 {
     SERVER_ADDR=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}'`
-    SERVER_TYPE=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}'`
+    SERVER_TYPE=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}' | sed -e 's/\./ /g'`
     ARG3=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $3}'`
     ARG4=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $4}'`
 
