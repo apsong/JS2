@@ -49,7 +49,7 @@ DO_HSIM()
     TESTCASE=$TEST_BASE/$ARG3/$ARG4.sim
     [ ! -f "$TESTCASE" ] && { echo 1>&2 "($PROGRAM)Error: TESTCASE '$TESTCASE' doesn't exist"; exit 1;}
 
-    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}' | sed -e 's/\[.*\]//'`
+    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}' | sed -e 's/\[.*\]//g'`
     case "$ARG5" in
         *[0-9].*[0-9][smhti])
             CLIENT_NUM_DURATION=`echo "$ARG5" | sed -e 's/\./ /g'`
