@@ -134,8 +134,12 @@ done
 
 OLD_PWD=$PWD
 cd $TEST_DIR
-while [ $REPEAT_NUM -gt 0 ]; do
+
+LOOP=1
+while [ $LOOP -le $REPEAT_NUM ]; do
+    [ $REPEAT_NUM -ne 1 ] && { echo; echo "[$LOOP]";}
     for APACHE_DIR in $APACHE_DIRS; do
+        [ "$APACHE_DIR" != "$APACHE_DIRS" ] && echo "[$APACHE_DIR]"
         for DURATION in $DURATIONS; do
             OPTS="-testType SSO -H $HOST -port $PORT"
             [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -soapserver $SOAP_HOST -soapport $SOAP_PORT"
@@ -155,6 +159,6 @@ while [ $REPEAT_NUM -gt 0 ]; do
             [ -n "$JOB" ] && EVAL wait
         done
     done
-    REPEAT_NUM=`expr $REPEAT_NUM '-' 1`
+    LOOP=`expr $LOOP '+' 1`
 done
 
