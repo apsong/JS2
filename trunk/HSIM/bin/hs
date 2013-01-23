@@ -29,10 +29,16 @@ NEWFILE()
 ERRSUM=0
 DO_HSIM()
 {
-    SERVER_ADDR=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}'`
-    SERVER_TYPE=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}' | sed -e 's/\./ /g'`
+    ARG1=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}'`
+    ARG2=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}' | sed -e 's/\./ /g'`
     ARG3=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $3}'`
     ARG4=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $4}'`
+    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}' | sed -e 's/\[.*\]//g'`
+    ARG6=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $6}' | sed -e 's/\./ /g'`
+
+    SERVER_ADDR="$ARG1"
+    [ -n "$ARG6" ] && SERVER_TYPE="$ARG6" || SERVER_TYPE="$ARG2"
+    [ -n "$IN_SANITY_TEST" ] && ARG5="" #Clean up ARG5 so it would be recognized as sanity test later
 
     case $SERVER_TYPE in
         AJC*)
@@ -49,9 +55,8 @@ DO_HSIM()
     TESTCASE=$TEST_BASE/$ARG3/$ARG4.sim
     [ ! -f "$TESTCASE" ] && { echo 1>&2 "($PROGRAM)Error: TESTCASE '$TESTCASE' doesn't exist"; exit 1;}
 
-    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}' | sed -e 's/\[.*\]//g'`
     case "$ARG5" in
-        *[0-9].*[0-9][smhti])
+        *[0-9].*[0-9][smhti]*)
             CLIENT_NUM_DURATION=`echo "$ARG5" | sed -e 's/\./ /g'`
             if [ -z "$OPTS" ]; then
                 LOG=`NEWFILE $PROGRAM.log`
@@ -90,6 +95,7 @@ while [ $# -gt 0 ]; do
     case "$1" in
         -R) shift; OPTS="$OPTS -R $1";;
         AJC*) AJCS="$AJCS $1"; OPTS="$OPTS $1";;
+        -t) IN_SANITY_TEST=1;;
         *) DIRS="$DIRS $1";;
     esac
     shift

@@ -1,6 +1,14 @@
-#! /bin/bash
+#! /bin/sh
 
 PROGRAM=`basename $0`
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM [DIR]... [-O 'hs_OPTIONS']"
+    echo 1>&2 "Examples:"
+    echo 1>&2 "       $PROGRAM     --Traverse directories from current directory and execute 'hs' in each"
+    echo 1>&2 "       $PROGRAM Transient SV/23.SalesbyCustomer#pdf  --Traverse from the given directories"
+    echo 1>&2 "       $PROGRAM SV -O 'AJC121207 -R 3'       --Travers and execute 'hs' with given options"
+}
 
 ##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
 EVAL()
@@ -28,42 +36,48 @@ NEWFILE()
 
 DO_TRAVERSE()
 {
-    local OLD_PWD=`pwd` #Here has to use the bash extension for local variable
-    for DIR do
-        cd $DIR || return 2
-        pwd | awk '{print "#!CMD:[ cd " $0 " ]"}'
-        case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
-            1|2|3) DO_TRAVERSE */;;
-            4) EVAL "hs || hs && hs [0-9]*.*[0-9][smht]$OPTS";; #sanity (try twice) && execute
-            5) EVAL "hs$OPTS";;
-            *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; return 1;;
-        esac
-        cd $OLD_PWD
-        echo
-    done
+    pwd | awk '{print "#!CMD:[ cd " $0 " ]"}'
+    case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
+        1|2|3) $PROGRAM */ -O "$OPTS";;
+        4) EVAL "hs || hs && hs [0-9]*.*[0-9][smht] $OPTS";; #sanity (try twice) && execute
+        5) EVAL "hs $OPTS";;
+        *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; return 1;;
+    esac
+    echo
 }
-
-if [ $# -eq 0 ]; then
-    DO_TRAVERSE .
-else 
-    DO_TRAVERSE "$@"
-fi 2>&1 | tee `NEWFILE $PROGRAM.log`
-
 
 while [ $# -gt 0 ]; do
     case "$1" in
-        -R) shift; OPTS="  -R $1";;
+        --help) usage; exit 0;;
+        -O) shift; OPTS="$1";;
         *) DIRS="$DIRS $1";;
     esac
     shift
 done
 [ -z "$DIRS" ] && DIRS="$PWD"
 
-ORIG_PWD="$PWD"
-for DIR in $DIRS; do
-    echo
-    EVAL cd "$DIR" && DO_HSIM || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
-    cd "$ORIG_PWD"
-done
+MAIN()
+{
+    ORIG_PWD="$PWD"
+    for DIR in $DIRS; do
+        echo
+        cd "$DIR" && DO_TRAVERSE || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
+        cd "$ORIG_PWD"
+    done
+}
+
+if [ -z "$LOG4hsTraverse" ]; then
+    if [ -z "$OPTS" ]; then
+        LOG4hsTraverse=`NEWFILE $PROGRAM.log`
+    else
+        LOG4hsTraverse=`echo $PROGRAM.$OPTS.log | sed -e 's/ //g'`
+        LOG4hsTraverse=`NEWFILE $LOG4hsTraverse`
+    fi
+    export LOG4hsTraverse
+
+    MAIN | tee -a $LOG4hsTraverse
+else
+    MAIN
+fi
 
 exit $ERRSUM
