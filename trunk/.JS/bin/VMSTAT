@@ -12,7 +12,7 @@ usage()
     echo 1>&2 "       $PROGRAM 6t     -- Use default sample DELAY (10 seconds) and run for 6 ticks (600 seconds)"
     echo 1>&2 "       $PROGRAM 5 12h  -- Use sample DELAY (5 seconds) and run for 12 hours"
     echo 1>&2 "       $PROGRAM 3m -v  -- Run for 3 minutes with verbose out for each sample"
-    echo 1>&2 "       $PROGRAM --ticklen 3 1 5t --(Debug only)Reset tick length to be 3 seconds"
+    echo 1>&2 "       $PROGRAM --ticklen 3 1 3t --(Debug only)Reset tick length to be 3 seconds"
 }
 
 while [ $# -gt 0 ]; do
@@ -80,6 +80,6 @@ END {
         average = _sum/(length(keys)-2)
     }
     system("sleep 1")
-    printf("             Average (excluding the first and last tick): CPU = %.0f% (%s)\n", average, substr(_values, 2)) > "/dev/stderr"
+    printf("%57s CPU = %.0f% (%s)\n", "Average:", average, substr(_values, 2)) > "/dev/stderr"
 }
 ' 2>&1 #awk bug? Has to print to /dev/stderr inside then redirect to /dev/stdout outside to avoid block-bufferred IO during ssh
