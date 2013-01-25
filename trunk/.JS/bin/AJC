@@ -1,0 +1,98 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM (start|restart) HEAP_SIZE [MaxPermSize [ReservedCodeCacheSize]]"
+    echo 1>&2 "       $PROGRAM (stop|status)"
+    echo 1>&2 "       $PROGRAM init"
+}
+
+init()
+{
+    case `pwd` in
+        *tomcat*/webapps/AJC[0-9][0-9][0-9][0-9][0-9][0-9])
+            cp -vf ../_AJC/*.rptdesign WEB-INF/repository || exit 2
+            echo
+            cp -vf ../_AJC/jtds-1.2.jar WEB-INF/platform/plugins/org.eclipse.birt.report.data.oda.jdbc_*/drivers || exit 2
+            echo
+            if [ ! -f WEB-INF/web.xml.bak ]; then
+                mv -v WEB-INF/web.xml WEB-INF/web.xml.bak || exit 2
+                cp -vf ../_AJC/web_lnx_shaPerf_sjin.xml WEB-INF/web.xml || exit 2
+            fi
+            echo
+            echo
+            ls WEB-INF/repository/*.rptdesign
+            ls WEB-INF/platform/plugins/org.eclipse.birt.report.data.oda.jdbc_*/drivers/*.jar
+            grep actu01 WEB-INF/web.xml
+            ;;
+        *)
+            echo 1>&2 "Error: 'AJC init' must be executed in TOMCAT_HOME/webapps/AJCxxxxxx"
+            exit 1
+            ;;
+    esac
+}
+start()
+{
+    status || { echo "($PROGRAM)Already started."; return 0;}
+
+    EVAL -n /actu01/sjin/tomcat6/bin/startup.sh "$@"
+    EVAL sleep 5
+
+    i=0; RET=1
+    while [ $i -lt 60 ]; do
+        [ `ps -ef | grep -c [t]omcat` -gt 0 ] && { RET=0; break;}
+        sleep 1; i=`expr $i '+' 1`
+    done
+
+    status
+    echo "($PROGRAM)Started."
+    return $RET
+}
+stop()
+{
+    status && { echo "($PROGRAM)Already stopped."; return 0;}
+
+    EVAL /actu01/sjin/tomcat6/bin/shutdown.sh
+
+    i=0; RET=1
+    while [ $i -lt 60 ]; do
+        [ `ps -ef | grep -c [t]omcat` -eq 0 ] && { RET=0; break;}
+        sleep 1; i=`expr $i '+' 1`
+    done
+
+    status
+    echo "($PROGRAM)Stopped."
+    return $RET
+}
+restart()
+{
+    stop && start "$@"
+}
+status()
+{
+    EVAL ps -ef "|" grep [t]omcat
+    echo
+    return `ps -ef | grep -c [t]omcat`
+}
+
+ACTION="$1"
+shift
+
+case "$ACTION" in
+    start|restart)
+        if [ $# -ge 1 -a $# -le 3 ]; then
+            $ACTION "$@"
+        else
+            usage; exit 1
+        fi;;
+    stop|status|init)
+        if [ $# -eq 0 ]; then
+            $ACTION
+        else
+            usage; exit 1
+        fi;;
+    *)
+        usage; exit 1;;
+esac

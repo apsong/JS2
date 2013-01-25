@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 
 VERBOSE=0
-DELAY=10
+DELAY=5
 TICKLEN=100
 
 usage()
@@ -12,6 +12,7 @@ usage()
     echo 1>&2 "       $PROGRAM 6t     -- Use default sample DELAY (10 seconds) and run for 6 ticks (600 seconds)"
     echo 1>&2 "       $PROGRAM 5 12h  -- Use sample DELAY (5 seconds) and run for 12 hours"
     echo 1>&2 "       $PROGRAM 3m -v  -- Run for 3 minutes with verbose out for each sample"
+    echo 1>&2 "       $PROGRAM --ticklen 3 1 5t --(Debug only)Reset tick length to be 3 seconds"
 }
 
 while [ $# -gt 0 ]; do
@@ -40,7 +41,7 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
-[ -z "$DURATION" ] && { echo 1>&2 "($PROGRAM)Error: DURATION is not set"; exit 2;}
+[ -z "$DURATION" ] && { echo 1>&2 "($PROGRAM)Error: DURATION is not set"; usage; exit 2;}
 
 
 COUNT=`expr $DURATION '/' $DELAY '+' 1`
@@ -56,7 +57,7 @@ vmstat -t -n -S M $DELAY $COUNT | awk -v DELAY=$DELAY -v TICKLEN=$TICKLEN  -v VE
         sum+=us; num++
         values = values " " us
         if ((NR - 4) % (TICKLEN/DELAY) == (TICKLEN/DELAY-1)) {
-            printf("\t\t\t\tTick user cpu: % 3.1f%  (%s )\n", sum/num, values) > "/dev/stderr"
+            printf("\t\t\t\tCPU= %.1f% (%s)\n", sum/num, substr(values, 2)) > "/dev/stderr"
             values_all[sprintf("%05d",NR)] = sprintf("%.1f", sum/num)
             sum=0; num=0; values=""
         }
@@ -65,7 +66,7 @@ vmstat -t -n -S M $DELAY $COUNT | awk -v DELAY=$DELAY -v TICKLEN=$TICKLEN  -v VE
 
 END {
     if (num != 0) {
-        printf("\t\t\t\tTick user cpu: % 3.1f%  (%s )\n", sum/num, values) > "/dev/stderr"
+        printf("\t\t\t\tCPU= %.1f% (%s)\n", sum/num, substr(values, 2)) > "/dev/stderr"
         values_all[sprintf("%05d",NR)] = sprintf("%.1f", sum/num)
     }
     asorti(values_all, keys)
@@ -78,6 +79,7 @@ END {
     } else {
         average = _sum/(length(keys)-2)
     }
-    printf("Average user cpu(excluding the first and last tick): %.1f% (%s )\n", average, _values) > "/dev/stderr"
+    system("sleep 1")
+    printf("             Average (excluding the first and last tick): CPU = %.0f% (%s)\n", average, substr(_values, 2)) > "/dev/stderr"
 }
 ' 2>&1 #awk bug? Has to print to /dev/stderr inside then redirect to /dev/stdout outside to avoid block-bufferred IO during ssh

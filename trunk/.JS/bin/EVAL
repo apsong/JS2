@@ -20,6 +20,10 @@ elif [ "$1" = "-i" ]; then
     if [ `YESNO "execute?"` = YES ]; then
         eval "$@"
     fi
+elif [ "$1" = "-n" ]; then
+    shift
+    echo "#!CMD:[" "$@" "]"
+    "$@"
 else
     echo "#!CMD:[" "$@" "]"
     eval "$@"
