@@ -95,7 +95,7 @@ while [ $# -gt 0 ]; do
             TEST_OPTS=`awk '/#!hsim /{sub("#!hsim ", ""); print}' "$1"` || exit 2
             [ -n "$TEST_OPTS" ] && { echo "($PROGRAM)Note: Use hsim parameter '$TEST_OPTS' from $1";}
             ;;
-        [a-zA-Z_][a-zA-Z_0-9]*)
+        [a-zA-Z_][a-zA-Z_0-9]*|*[0-9].[0-9]*.*[0-9].[0-9]*)
             HOST="$1"
             ;;
         -V)
