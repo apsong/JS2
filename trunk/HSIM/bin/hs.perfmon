@@ -17,7 +17,7 @@ HOST="$1"
 shift
 [ -z "$HOST" ] && { echo 1>&2 "($PROGRAM)Error: HOST is not set"; usage; exit 1;}
 case "$HOST" in
-    jinsong*)
+    jinsong*|*win*)
         echo "($PROGRAM)Note: perfmon on machine $HOST is not supported yet."
         ;;
     *)
