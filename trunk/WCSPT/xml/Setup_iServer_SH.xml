@@ -1,0 +1,308 @@
+<trace ScenarioName="Concurrency Test iServer Setup" 
+    ScenarioDescription="Tuning iServer for Shanghai Test"
+    ScenarioType="System Amin"
+    onerror="exit"
+    loglevel="debug"
+    collectstats="off">
+
+    <variable name="iserver" value=""/>
+    <variable name="serverName" value=""/>
+    <variable name="volume" value="{serverName}"/>
+    <variable name="logLevel" value="6000"/>
+
+
+    <!--SYSTEM LOGIN-->
+    <idapi url="{iserver}">
+        <SystemLogin>
+            <param name="SystemPassword" value=""/>
+            <param name="SystemPasswordEncryptLevel" value="1"/>
+        </SystemLogin>
+        <idapiresponse>
+            <read value="AuthId" into="AuthId"/>
+        </idapiresponse>
+    </idapi>
+    <verify cond="NOT(ISEMPTY({AuthId}))" onfail="exit"/>
+    <log level="always" verbose="true" category="Login as user">administrator</log>
+
+
+
+    <variable name="version" value=""/>
+    <variable name="attribute" value=""/>
+    <variable name="DefaultValue" value=""/>
+    <variable name="CurrentValue" value=""/>
+    <variable name="ResourceGroupName" value=""/>
+    <variable name="MaxFactory" value="1"/>
+    <variable name="MinFactory" value="1"/>
+
+    <!--SET CONFIGURATION ATTRIBUTES FOR SERVER-->
+    <list name="attributeListServer">LogSize,NumLogs,LogLevel</list>
+    <log level="always" verbose="true" category="SCRIPT">SET CONFIGURATION ATTRIBUTES FOR SERVER {serverName}</log>
+    <idapiext url="{iserver}">
+        <SetConfigurationAttributes>
+            <param name="DomainType" value="Template"/>
+            <param name="DomainName" value="{templateName}"/>
+            <param name="ObjectType" value="Template"/>
+            <param name="ObjectName" value="{templateName}"/>
+            <param name="LogSize" value="20000"/>
+            <param name="NumLogs" value="120"/>
+            <param name="LogLevel" value="{logLevel}"/>
+        </SetConfigurationAttributes>
+    </idapiext>
+
+    <log level="always" verbose="true" category="SCRIPT">GET UPDATED CONFIGURATION ATTRIBUTES FOR SERVER {serverName}</log>
+    <for each="attributeListServer" var="attribute">
+        <set var="CurrentValue" value=""/>
+        <idapiext url="{iserver}">
+            <GetConfigurationAttributes>
+                <param name="DomainType" value="Template"/>
+                <param name="DomainName" value="{templateName}"/>
+                <param name="ObjectType" value="Template"/>
+                <param name="ObjectName" value="{templateName}"/>
+                <param name="AttributeNameList" value="{attribute}"/>
+            </GetConfigurationAttributes>
+            <idapiresponse>
+                <read value="CurrentValue" into="CurrentValue"/>
+            </idapiresponse>
+        </idapiext>
+        <log level="always" verbose="true" category="VARIABLE">{attribute} = {CurrentValue}</log>
+    </for>
+
+    <!--SET CONFIGURATION ATTRIBUTES FOR ReportingService-->
+    <list name="attributeListReportingService">LogSize,NumLogs,LogLevel,TransientReportCacheSize,MaxSyncJobRuntime,SyncJobQueueWait,TransientReportTimeOut,SyncJobQueueSize,MaxROXCacheSizePerFactory</list>
+
+    <log level="always" verbose="true" category="SCRIPT">==========SET CONFIGURATION ATTRIBUTES FOR ReportingService ON SERVER {serverName}</log>
+    <idapiext url="{iserver}">
+        <SetConfigurationAttributes>
+            <param name="DomainType" value="Template"/>
+            <param name="DomainName" value="{templateName}"/>
+            <param name="ObjectType" value="ReportingService"/>
+            <param name="LogSize" value="800000"/>
+            <param name="NumLogs" value="10"/>
+            <param name="LogLevel" value="{logLevel}"/>
+            <param name="TransientReportCacheSize" value="1024"/>
+            <param name="MaxSyncJobRuntime" value="200"/>
+            <param name="SyncJobQueueWait" value="360"/>
+            <param name="TransientReportTimeOut" value="10"/>
+            <param name="SyncJobQueueSize" value="900"/>
+            <param name="MaxROXCacheSizePerFactory" value="128"/>
+        </SetConfigurationAttributes>
+    </idapiext>
+
+    <log level="always" verbose="true" category="SCRIPT">GET UPDATED CONFIGURATION ATTRIBUTES FOR ReportingService ON SERVER {serverName}</log>
+    <for each="attributeListReportingService" var="attribute">
+        <set var="CurrentValue" value=""/>
+        <idapiext url="{iserver}">
+            <GetConfigurationAttributes>
+                <param name="DomainType" value="Template"/>
+                <param name="DomainName" value="{templateName}"/>
+                <param name="ObjectType" value="ReportingService"/>
+                <param name="AttributeNameList" value="{attribute}"/>
+            </GetConfigurationAttributes>
+            <idapiresponse>
+                <read value="CurrentValue" into="CurrentValue"/>
+            </idapiresponse>
+        </idapiext>
+        <log level="always" verbose="true" category="VARIABLE">{attribute} = {CurrentValue}</log>
+    </for>
+
+    <!--SET CONFIGURATION ATTRIBUTES FOR ViewingService-->
+    <list name="attributeListViewingService">LogSize,NumLogs,LogLevel,FileCacheTimeout,TotalArchiveMemory,MaxMemoryPerArchive,MaxConcurrentRequests,OnDemandServerViewMessageTimeout</list>
+    <log level="always" verbose="true" category="SCRIPT">==========SET CONFIGURATION ATTRIBUTES FOR ViewingService ON SERVER {serverName}</log>
+    <idapiext url="{iserver}">
+        <SetConfigurationAttributes>
+            <param name="DomainType" value="Template"/>
+            <param name="DomainName" value="{templateName}"/>
+            <param name="ObjectType" value="ViewingService"/>
+            <param name="LogSize" value="20000"/>
+            <param name="NumLogs" value="30"/>
+            <param name="LogLevel" value="{logLevel}"/>
+            <param name="FileCacheTimeout" value="600"/>
+            <param name="TotalArchiveMemory" value="300000"/>
+            <param name="MaxMemoryPerArchive" value="300"/>
+            <param name="MaxConcurrentRequests" value="2000"/>
+            <param name="OnDemandServerViewMessageTimeout" value="999"/>
+        </SetConfigurationAttributes>
+    </idapiext>
+
+    <log level="always" verbose="true" category="SCRIPT">GET UPDATED CONFIGURATION ATTRIBUTES FOR ViewingService ON SERVER {serverName}</log>
+    <for each="attributeListViewingService" var="attribute">
+        <set var="CurrentValue" value=""/>
+        <idapiext url="{iserver}">
+            <GetConfigurationAttributes>
+                <param name="DomainType" value="Template"/>
+                <param name="DomainName" value="{templateName}"/>
+                <param name="ObjectType" value="ViewingService"/>
+                <param name="AttributeNameList" value="{attribute}"/>
+            </GetConfigurationAttributes>
+            <idapiresponse>
+                <read value="CurrentValue" into="CurrentValue"/>
+            </idapiresponse>
+        </idapiext>
+        <log level="always" verbose="true" category="VARIABLE">{attribute} = {CurrentValue}</log>
+    </for>
+
+    <!--SET CONFIGURATION ATTRIBUTES FOR IntegrationService-->
+    <list name="attributeListIntegrationService">LogSize,NumLogs,LogLevel,PagePoolSize,BufferPoolSize</list>
+    <log level="always" verbose="true" category="SCRIPT">==========GET CONFIGURATION ATTRIBUTES FOR IntegrationService ON SERVER {serverName}</log>
+    <idapiext url="{iserver}">
+        <SetConfigurationAttributes>
+            <param name="DomainType" value="Template"/>
+            <param name="DomainName" value="{templateName}"/>
+            <param name="ObjectType" value="IntegrationService"/>
+            <param name="LogSize" value="20000"/>
+            <param name="NumLogs" value="30"/>
+            <param name="LogLevel" value="{logLevel}"/>
+            <param name="PagePoolSize" value="10000"/>
+            <param name="BufferPoolSize" value="131072"/>
+        </SetConfigurationAttributes>
+    </idapiext>
+
+    <log level="always" verbose="true" category="SCRIPT">GET UPDATED CONFIGURATION ATTRIBUTES FOR IntegrationService ON SERVER {serverName}</log>
+    <for each="attributeListIntegrationService" var="attribute">
+        <set var="CurrentValue" value=""/>
+        <idapiext url="{iserver}">
+            <GetConfigurationAttributes>
+                <param name="DomainType" value="Template"/>
+                <param name="DomainName" value="{templateName}"/>
+                <param name="ObjectType" value="IntegrationService"/>
+                <param name="AttributeNameList" value="{attribute}"/>
+            </GetConfigurationAttributes>
+            <idapiresponse>
+                <read value="CurrentValue" into="CurrentValue"/>
+            </idapiresponse>
+        </idapiext>
+        <log level="always" verbose="true" category="VARIABLE">{attribute} = {CurrentValue}</log>
+    </for>
+
+    <!--SET CONFIGURATION ATTRIBUTES FOR CachingService-->
+    <list name="attributeListCachingService">LogSize,NumLogs,LogLevel</list>
+    <log level="always" verbose="true" category="SCRIPT">==========SET CONFIGURATION ATTRIBUTES FOR CachingService ON SERVER {serverName}</log>
+    <idapiext url="{iserver}">
+        <SetConfigurationAttributes>
+            <param name="DomainType" value="Template"/>
+            <param name="DomainName" value="{templateName}"/>
+            <param name="ObjectType" value="CachingService"/>
+            <param name="LogSize" value="20000"/>
+            <param name="NumLogs" value="30"/>
+            <param name="LogLevel" value="{logLevel}"/>
+        </SetConfigurationAttributes>
+    </idapiext>
+
+    <log level="always" verbose="true" category="SCRIPT">GET UPDATED CONFIGURATION ATTRIBUTES FOR CachingService ON SERVER {serverName}</log>
+    <for each="attributeListCachingService" var="attribute">
+        <set var="CurrentValue" value=""/>
+        <idapiext url="{iserver}">
+            <GetConfigurationAttributes>
+                <param name="DomainType" value="Template"/>
+                <param name="DomainName" value="{templateName}"/>
+                <param name="ObjectType" value="CachingService"/>
+                <param name="AttributeNameList" value="{attribute}"/>
+            </GetConfigurationAttributes>
+            <idapiresponse>
+                <read value="CurrentValue" into="CurrentValue"/>
+            </idapiresponse>
+        </idapiext>
+        <log level="always" verbose="true" category="VARIABLE">{attribute} = {CurrentValue}</log>
+    </for>
+
+    <!--Update Resource Group-->
+    <log level="always" verbose="true" category="SCRIPT">==========Update Resource Group</log>
+    <if cond="({version} NE 11)">
+        <set var="ResourceGroupName" value="Default Java View"/>
+    </if>
+    <if cond="({version} EQ 11)">
+        <set var="ResourceGroupName" value="Default BIRT Online"/>
+    </if>
+    <log level="always" verbose="true" category="SCRIPT">==={ResourceGroupName}</log>
+    <variable name="StartArguments" value="-Dcom.sun.management.jmxremote.port=9004 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xmx1024M -XX:MaxPermSize=256m -Djava.awt.headless=true -Djava.protocol.handler.pkgs=com.actuate.javaserver.protocol com.actuate.javaserver.Server"/>
+<!--
+  <idapi url="{iserver}">
+    <SetServerResourceGroupConfiguration>
+      <param name="ServerName" value="{serverName}"/>
+      <param name="ResourceGroupName" value="{ResourceGroupName}"/>
+      <param name="MaxFactory" value="{MaxFactory}"/>
+      <param name="MinFactory" value="{MinFactory}"/>
+    </SetServerResourceGroupConfiguration>
+  </idapi>
+-->
+  <log level="always" verbose="true" category="SCRIPT">MaxFactory={MaxFactory}, MinFactory={MinFactory}</log>
+  <idapi url="{iserver}">
+      <UpdateResourceGroup>
+          <param name="Name" value="{ResourceGroupName}"/>
+          <param name="StartArguments" value="{StartArguments}"/>
+      </UpdateResourceGroup>
+  </idapi>
+  <log level="always" verbose="true" category="SCRIPT">StartArguments={StartArguments}</log>
+
+  <if cond="({version} NE 11)">
+      <set var="ResourceGroupName" value="Default Java Async"/>
+  </if>
+  <if cond="({version} EQ 11)">
+      <set var="ResourceGroupName" value="Default BIRT Factory"/>
+  </if>
+  <log level="always" verbose="true" category="SCRIPT">==={ResourceGroupName}</log>
+  <set var="StartArguments" value="-Xmx512M -XX:MaxPermSize=256m -Djava.awt.headless=true -Djava.protocol.handler.pkgs=com.actuate.javaserver.protocol com.actuate.javaserver.Server"/>
+<!--
+  <idapi url="{iserver}">
+    <SetServerResourceGroupConfiguration>
+      <param name="ServerName" value="{serverName}"/>
+      <param name="ResourceGroupName" value="{ResourceGroupName}"/>
+      <param name="MaxFactory" value="{MaxFactory}"/>
+      <param name="MinFactory" value="{MinFactory}"/>
+    </SetServerResourceGroupConfiguration>
+  </idapi>
+-->
+  <log level="always" verbose="true" category="SCRIPT">MaxFactory={MaxFactory}, MinFactory={MinFactory}</log>
+  <idapi url="{iserver}">
+      <UpdateResourceGroup>
+          <param name="Name" value="{ResourceGroupName}"/>
+          <param name="StartArguments" value="{StartArguments}"/>
+      </UpdateResourceGroup>
+  </idapi>
+  <log level="always" verbose="true" category="SCRIPT">StartArguments={StartArguments}</log>
+
+  <set var="ResourceGroupName" value="Default Sync"/>
+  <log level="always" verbose="true" category="SCRIPT">==={ResourceGroupName}</log>
+<!--
+  <idapi url="{iserver}">
+    <SetServerResourceGroupConfiguration>
+      <param name="ServerName" value="{serverName}"/>
+      <param name="ResourceGroupName" value="{ResourceGroupName}"/>
+      <param name="MaxFactory" value="{MaxFactory}"/>
+      <param name="MinFactory" value="{MinFactory}"/>
+    </SetServerResourceGroupConfiguration>
+  </idapi>
+-->
+  <log level="always" verbose="true" category="SCRIPT">MaxFactory={MaxFactory}, MinFactory={MinFactory}</log>
+
+  <set var="ResourceGroupName" value="Default Async"/>
+  <log level="always" verbose="true" category="SCRIPT">==={ResourceGroupName}</log>
+<!--
+  <idapi url="{iserver}">
+    <SetServerResourceGroupConfiguration>
+      <param name="ServerName" value="{serverName}"/>
+      <param name="ResourceGroupName" value="{ResourceGroupName}"/>
+      <param name="MaxFactory" value="{MaxFactory}"/>
+      <param name="MinFactory" value="{MinFactory}"/>
+    </SetServerResourceGroupConfiguration>
+  </idapi>
+-->
+  <log level="always" verbose="true" category="SCRIPT">MaxFactory={MaxFactory}, MinFactory={MinFactory}</log>
+
+  <set var="MinFactory" value="0"/>
+  <set var="ResourceGroupName" value="Info Object Web Services"/>
+  <log level="always" verbose="true" category="SCRIPT">==={ResourceGroupName}</log>
+<!--
+  <idapi url="{iserver}">
+    <SetServerResourceGroupConfiguration>
+      <param name="ServerName" value="{serverName}"/>
+      <param name="ResourceGroupName" value="{ResourceGroupName}"/>
+      <param name="MaxFactory" value="{MaxFactory}"/>
+      <param name="MinFactory" value="{MinFactory}"/>
+    </SetServerResourceGroupConfiguration>
+  </idapi>
+-->
+  <log level="always" verbose="true" category="SCRIPT">MaxFactory={MaxFactory}, MinFactory={MinFactory}</log>
+</trace>
+
+
