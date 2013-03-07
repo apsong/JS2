@@ -32,32 +32,46 @@ usage()
 
 CP()
 {
-    cp -v "$@"
+    cp -v $1 $2
 }
 
-backup()
+init()
 {
-    if [ ! -f jsrvr32b11.exe ]; then
-        CP jsrvr11.exe jsrvr32b11.exe
-        CP jfctsrvr11.exe jfctsrvr32b11.exe
-        CP jencycsrvr11.exe jencycsrvr32b11.exe
+    BIN=iServer/bin
+    if [ ! -f iServer/bin/jsrvr32b11.exe ]; then
+        CP iServer/bin/jsrvr11.exe iServer/bin/jsrvr32b11.exe
+        CP iServer/bin/jfctsrvr11.exe iServer/bin/jfctsrvr32b11.exe
+        CP iServer/bin/jencycsrvr11.exe iServer/bin/jencycsrvr32b11.exe
+        sed -i -e 's@<AC_JRE64_HOME>.*</AC_JRE64_HOME>@<AC_JRE64_HOME>C:/Program Files (x86)/Common Files/Actuate/11.0/JDK160_64/jre</AC_JRE64_HOME>@' iServer/etc/acpmdconfig.xml
     fi
-    if [ ! -f jsrvr64b11.exe ]; then
-        CP jsrvr11.exe jsrvr64b11.exe
-        CP jfctsrvr11.exe jfctsrvr64b11.exe
-        CP jencycsrvr11.exe jencycsrvr64b11.exe
+    if [ ! -f iServer/bin/jsrvr64b11.exe ]; then
+        CP iServer/bin/jsrvr11.exe iServer/bin/jsrvr64b11.exe
+        CP iServer/bin/jfctsrvr11.exe iServer/bin/jfctsrvr64b11.exe
+        CP iServer/bin/jencycsrvr11.exe iServer/bin/jencycsrvr64b11.exe
+        sed -i -e 's@<AC_JRE64_HOME>.*</AC_JRE64_HOME>@<AC_JRE64_HOME>C:/Program Files (x86)/Common Files/Actuate/11.0/JDK160_64/jre</AC_JRE64_HOME>@' iServer/etc/acpmdconfig.xml
     fi
+    grep -H -T -o "<AC_JRE64_HOME>.*</AC_JRE64_HOME>" iServer/etc/acpmdconfig.xml
 }
 
 rename()
 {
-    CP jsrvr${1}b11.exe jsrvr11.exe
-    CP jfctsrvr${1}b11.exe jfctsrvr11.exe
-    CP jencycsrvr${1}b11.exe jencycsrvr11.exe
+    if [ "$1" = 64 ]; then
+        sed -i -e 's@set AC_JAVA_HOME=.*@set AC_JAVA_HOME=C:/Program Files (x86)/Common Files/Actuate/11.0/JDK160@' setupiServer.bat
+    else
+        sed -i -e 's@set AC_JAVA_HOME=.*@set AC_JAVA_HOME=@' setupiServer.bat
+    fi
+    grep -H -T "set AC_JAVA_HOME=" setupiServer.bat
+    echo
+
+    CP iServer/bin/jsrvr${1}b11.exe iServer/bin/jsrvr11.exe
+    CP iServer/bin/jfctsrvr${1}b11.exe iServer/bin/jfctsrvr11.exe
+    CP iServer/bin/jencycsrvr${1}b11.exe iServer/bin/jencycsrvr11.exe
 }
+
+[ ! -f setupiServer.bat ] && { echo 1>&2 "Error: cannot find 'setupiServer.bat' in current work dir."; exit 2;}
 case "$1" in
     32|64)
-        backup && rename $1;;
+        init && rename $1;;
     *)
         usage; exit 1;;
 esac
