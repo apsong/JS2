@@ -25,19 +25,39 @@ NEWFILE()
     touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
 }
 ##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
-MV()
+usage()
 {
-    mv -v "$@"
+    echo 1>&2 "Usage: $PROGRAM 32|64"
 }
 
-if [ -f jsrvr32b11.exe ]; then
-    MV jsrvr11.exe jsrvr64b11.exe && MV jsrvr32b11.exe jsrvr11.exe
-    MV jfctsrvr11.exe jfctsrvr64b11.exe && MV jfctsrvr32b11.exe jfctsrvr11.exe
-    MV jencycsrvr11.exe jencycsrvr64b11.exe && MV jencycsrvr32b11.exe jencycsrvr11.exe
-elif [ -f jsrvr64b11.exe ]; then
-    MV jsrvr11.exe jsrvr32b11.exe && MV jsrvr64b11.exe jsrvr11.exe
-    MV jfctsrvr11.exe jfctsrvr32b11.exe && MV jfctsrvr64b11.exe jfctsrvr11.exe
-    MV jencycsrvr11.exe jencycsrvr32b11.exe && MV jencycsrvr64b11.exe jencycsrvr11.exe
-else
-    echo 1>&2 "Error: Cannot find jsrvr32b11.exe or jsrvr64b11.exe"
-fi
+CP()
+{
+    cp -v "$@"
+}
+
+backup()
+{
+    if [ ! -f jsrvr32b11.exe ]; then
+        CP jsrvr11.exe jsrvr32b11.exe
+        CP jfctsrvr11.exe jfctsrvr32b11.exe
+        CP jencycsrvr11.exe jencycsrvr32b11.exe
+    fi
+    if [ ! -f jsrvr64b11.exe ]; then
+        CP jsrvr11.exe jsrvr64b11.exe
+        CP jfctsrvr11.exe jfctsrvr64b11.exe
+        CP jencycsrvr11.exe jencycsrvr64b11.exe
+    fi
+}
+
+rename()
+{
+    CP jsrvr${1}b11.exe jsrvr11.exe
+    CP jfctsrvr${1}b11.exe jfctsrvr11.exe
+    CP jencycsrvr${1}b11.exe jencycsrvr11.exe
+}
+case "$1" in
+    32|64)
+        backup && rename $1;;
+    *)
+        usage; exit 1;;
+esac
