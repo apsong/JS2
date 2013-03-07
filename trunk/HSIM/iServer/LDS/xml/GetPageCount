@@ -1,0 +1,26 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<ViewerId>js3</ViewerId>
+<Operation>
+<Target>
+<Id>js3</Id>
+<Type>Document</Type>
+</Target>
+<Operator>GetPageCount</Operator>
+<Oprand>
+<Name>page</Name>
+<Value>$1</Value>
+</Oprand>
+<Oprand>
+<Name>totalpage</Name>
+<Value>$2</Value>
+</Oprand>
+<Oprand>
+<Name>showMargin</Name>
+<Value>false</Value>
+</Oprand>
+</Operation>
+</GetIVUpdatedObjects>
+</Body>
+</Envelope>
