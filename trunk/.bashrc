@@ -1,7 +1,8 @@
 source $HOME/.bash_functions
 
 export HSIM_HOME=$HOME/HSIM
-export PATH=$HOME/.JS/bin:$HSIM_HOME/bin:$PATH
+export WCSPT_HOME=$HOME/WCSPT
+export PATH=$HOME/.JS/bin:$HSIM_HOME/bin:$WCSPT_HOME/bin:$PATH
 export LANG=C
 
 alias ls='ls --color=auto'

@@ -1,0 +1,43 @@
+#! /usr/bin/sh
+
+PROGRAM=`basename $0`
+
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+NEWFILE()
+{
+    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
+
+    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
+
+    mkdir -p .$FILE || exit 101
+    if [ -h $FILE ]; then
+        rm -f $FILE
+    elif [ -e $FILE ]; then
+        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
+        mv $FILE $REAL_FILE.bak
+    fi
+    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
+}
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
+MV()
+{
+    mv -v "$@"
+}
+
+if [ -f jsrvr32b11.exe ]; then
+    MV jsrvr11.exe jsrvr64b11.exe && MV jsrvr32b11.exe jsrvr11.exe
+    MV jfctsrvr11.exe jfctsrvr64b11.exe && MV jfctsrvr32b11.exe jfctsrvr11.exe
+    MV jencycsrvr11.exe jencycsrvr64b11.exe && MV jencycsrvr32b11.exe jencycsrvr11.exe
+elif [ -f jsrvr64b11.exe ]; then
+    MV jsrvr11.exe jsrvr32b11.exe && MV jsrvr64b11.exe jsrvr11.exe
+    MV jfctsrvr11.exe jfctsrvr32b11.exe && MV jfctsrvr64b11.exe jfctsrvr11.exe
+    MV jencycsrvr11.exe jencycsrvr32b11.exe && MV jencycsrvr64b11.exe jencycsrvr11.exe
+else
+    echo 1>&2 "Error: Cannot find jsrvr32b11.exe or jsrvr64b11.exe"
+fi
