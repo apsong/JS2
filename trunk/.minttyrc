@@ -1,7 +1,7 @@
 BoldAsFont=no
 FontHeight=11
 Columns=115
-Rows=55
+Rows=40
 Transparency=off
 OpaqueWhenFocused=no
 CursorType=block
