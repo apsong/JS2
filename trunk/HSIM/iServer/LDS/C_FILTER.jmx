@@ -17,6 +17,11 @@
             <stringProp name="Argument.value">birt01_win</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="RUN_SECONDS" elementType="Argument">
+            <stringProp name="Argument.name">RUN_SECONDS</stringProp>
+            <stringProp name="Argument.value">60</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -1542,7 +1547,7 @@
           </hashTree>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few_x1(1 thread, 600 seconds)" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few_x1 (1 thread)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1553,24 +1558,23 @@
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Few_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">CUSTKEY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
-        </Arguments>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="1743641715">
+              <stringProp name="1987122315">C_FILTER_Few_x1</stringProp>
+              <stringProp name="1845911308">CUSTKEY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
@@ -1623,8 +1627,64 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
+        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few_x1(14 threads, 600 seconds)" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few_x1 (14 threads)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1635,24 +1695,23 @@
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Few_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">CUSTKEY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
-        </Arguments>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="1743641715">
+              <stringProp name="1987122315">C_FILTER_Few_x1</stringProp>
+              <stringProp name="1845911308">CUSTKEY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
@@ -1705,8 +1764,64 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
+        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many_x1 (1)" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many_x1 (1)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1717,24 +1832,23 @@
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Many_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">CUSTKEY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
-        </Arguments>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="1143034181">
+              <stringProp name="-1028234706">C_FILTER_Many_x1</stringProp>
+              <stringProp name="1845911308">CUSTKEY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
@@ -1787,57 +1901,7 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-      </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many_x1 (14)" enabled="false">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">20</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <longProp name="ThreadGroup.start_time">1363830141000</longProp>
-        <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
-        <stringProp name="ThreadGroup.delay">0</stringProp>
-      </ThreadGroup>
-      <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Many_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">CUSTKEY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-          </collectionProp>
-        </Arguments>
-        <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="delimiter">,</stringProp>
-          <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">CUSTKEY.csv</stringProp>
-          <boolProp name="quotedData">false</boolProp>
-          <boolProp name="recycle">true</boolProp>
-          <stringProp name="shareMode">Current thread</stringProp>
-          <boolProp name="stopThread">false</boolProp>
-          <stringProp name="variableNames">PARAM_VALUE</stringProp>
-        </CSVDataSet>
-        <hashTree/>
-        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="RunTest" enabled="true">
-          <collectionProp name="ModuleController.node_path">
-            <stringProp name="-1227702913">WorkBench</stringProp>
-            <stringProp name="1291483892">C_FILTER</stringProp>
-            <stringProp name="-1080308323">RunTest</stringProp>
-          </collectionProp>
-        </ModuleController>
-        <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1867,92 +1931,34 @@
             </value>
           </objProp>
           <stringProp name="filename"></stringProp>
-        </ResultCollector>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_x1(1 thread, 600 seconds)" enabled="false">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <longProp name="ThreadGroup.start_time">1363830141000</longProp>
-        <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
-        <stringProp name="ThreadGroup.delay">0</stringProp>
-      </ThreadGroup>
-      <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Some_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">ORDERPRIORITY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-          </collectionProp>
-        </Arguments>
-        <hashTree/>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="delimiter">,</stringProp>
-          <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">ORDERPRIORITY.csv</stringProp>
-          <boolProp name="quotedData">false</boolProp>
-          <boolProp name="recycle">true</boolProp>
-          <stringProp name="shareMode">Current thread</stringProp>
-          <boolProp name="stopThread">false</boolProp>
-          <stringProp name="variableNames">PARAM_VALUE</stringProp>
-        </CSVDataSet>
-        <hashTree/>
-        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="RunTest" enabled="true">
-          <collectionProp name="ModuleController.node_path">
-            <stringProp name="-1227702913">WorkBench</stringProp>
-            <stringProp name="1291483892">C_FILTER</stringProp>
-            <stringProp name="-1080308323">RunTest</stringProp>
-          </collectionProp>
-        </ModuleController>
-        <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
-          <boolProp name="ResultCollector.error_logging">false</boolProp>
-          <objProp>
-            <name>saveConfig</name>
-            <value class="SampleSaveConfiguration">
-              <time>true</time>
-              <latency>true</latency>
-              <timestamp>true</timestamp>
-              <success>true</success>
-              <label>true</label>
-              <code>true</code>
-              <message>true</message>
-              <threadName>true</threadName>
-              <dataType>true</dataType>
-              <encoding>false</encoding>
-              <assertions>true</assertions>
-              <subresults>true</subresults>
-              <responseData>false</responseData>
-              <samplerData>false</samplerData>
-              <xml>false</xml>
-              <fieldNames>false</fieldNames>
-              <responseHeaders>false</responseHeaders>
-              <requestHeaders>false</requestHeaders>
-              <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-              <assertionsResultsToSave>0</assertionsResultsToSave>
-              <bytes>true</bytes>
-            </value>
-          </objProp>
-          <stringProp name="filename"></stringProp>
-        </ResultCollector>
-        <hashTree/>
-      </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_x1(14 threads, 600 seconds)" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many_x1 (14)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1963,29 +1969,28 @@
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Some_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">ORDERPRIORITY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
-        </Arguments>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="1143034181">
+              <stringProp name="-1028234706">C_FILTER_Many_x1</stringProp>
+              <stringProp name="1845911308">CUSTKEY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">ORDERPRIORITY.csv</stringProp>
+          <stringProp name="filename">CUSTKEY.csv</stringProp>
           <boolProp name="quotedData">false</boolProp>
           <boolProp name="recycle">true</boolProp>
           <stringProp name="shareMode">Current thread</stringProp>
@@ -2033,8 +2038,64 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
+        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary_x1(1 thread, 600 seconds)" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_x1 (1 thread)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -2045,24 +2106,23 @@
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Some_NoSummary_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">ORDERPRIORITY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
-        </Arguments>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="1239721142">
+              <stringProp name="401108857">C_FILTER_Some_x1</stringProp>
+              <stringProp name="-587535662">ORDERPRIORITY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
@@ -2115,8 +2175,64 @@
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
+        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary_x1(14 threads, 600 seconds)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_x1 (14 threads)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -2127,24 +2243,23 @@
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">600</stringProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="RPTDESIGN" elementType="Argument">
-              <stringProp name="Argument.name">RPTDESIGN</stringProp>
-              <stringProp name="Argument.value">C_FILTER_Some_NoSummary_x1</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="PARAM_NAME" elementType="Argument">
-              <stringProp name="Argument.name">PARAM_NAME</stringProp>
-              <stringProp name="Argument.value">ORDERPRIORITY</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
-        </Arguments>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="1239721142">
+              <stringProp name="401108857">C_FILTER_Some_x1</stringProp>
+              <stringProp name="-587535662">ORDERPRIORITY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
           <stringProp name="delimiter">,</stringProp>
@@ -2196,6 +2311,336 @@
           </objProp>
           <stringProp name="filename"></stringProp>
         </ResultCollector>
+        <hashTree/>
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary_x1 (1 thread)" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1363830141000</longProp>
+        <longProp name="ThreadGroup.end_time">1363830141000</longProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
+          </collectionProp>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="775237955">
+              <stringProp name="264442739">C_FILTER_Some_NoSummary_x1</stringProp>
+              <stringProp name="-587535662">ORDERPRIORITY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">ORDERPRIORITY.csv</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">Current thread</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">PARAM_VALUE</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="RunTest" enabled="true">
+          <collectionProp name="ModuleController.node_path">
+            <stringProp name="-1227702913">WorkBench</stringProp>
+            <stringProp name="1291483892">C_FILTER</stringProp>
+            <stringProp name="-1080308323">RunTest</stringProp>
+          </collectionProp>
+        </ModuleController>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary_x1 (14 threads)" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">14</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1363830141000</longProp>
+        <longProp name="ThreadGroup.end_time">1363830141000</longProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="-942556396">RPTDESIGN</stringProp>
+            <stringProp name="967657245">PARAM_NAME</stringProp>
+          </collectionProp>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="775237955">
+              <stringProp name="264442739">C_FILTER_Some_NoSummary_x1</stringProp>
+              <stringProp name="-587535662">ORDERPRIORITY</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">false</boolProp>
+        </UserParameters>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">ORDERPRIORITY.csv</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">Current thread</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">PARAM_VALUE</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="RunTest" enabled="true">
+          <collectionProp name="ModuleController.node_path">
+            <stringProp name="-1227702913">WorkBench</stringProp>
+            <stringProp name="1291483892">C_FILTER</stringProp>
+            <stringProp name="-1080308323">RunTest</stringProp>
+          </collectionProp>
+        </ModuleController>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="jp@gc - PerfMon Metrics Collector" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <longProp name="interval_grouping">1000</longProp>
+          <boolProp name="graph_aggregated">false</boolProp>
+          <stringProp name="include_sample_labels"></stringProp>
+          <stringProp name="exclude_sample_labels"></stringProp>
+          <collectionProp name="metricConnections">
+            <collectionProp name="1477381120">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="66952">CPU</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="1065676050">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="2112896831">Disks I/O</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+            <collectionProp name="-823333201">
+              <stringProp name="1180709214">${HOST}</stringProp>
+              <stringProp name="1600768">4444</stringProp>
+              <stringProp name="-1993889503">Memory</stringProp>
+              <stringProp name="0"></stringProp>
+            </collectionProp>
+          </collectionProp>
+        </kg.apc.jmeter.perfmon.PerfMonCollector>
         <hashTree/>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
