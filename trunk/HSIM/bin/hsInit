@@ -83,6 +83,3 @@ mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A_COUNT_M_x{1,100}/{1,14}.6t
 mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A_COUNTDISTINCT_D_x{1,100}/{1,14}.6t
 mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A_COUNTDISTINCT_M_x{1,100}/{1,14}.6t
 mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/B_JOIN_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C_FILTER_Few_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C_FILTER_Many_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C_FILTER_Some_x{1,100}/{1,14}.6t

@@ -121,7 +121,7 @@
         </collectionProp>
       </kg.apc.jmeter.perfmon.PerfMonCollector>
       <hashTree/>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -359,11 +359,11 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="C_FILTER_Some" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="C_FILTER_Some" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">10</stringProp>
+          <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
@@ -499,20 +499,6 @@
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="fromDashboard" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">fromDashboard</stringProp>
-                <stringProp name="Argument.value">true</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="showBanner" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">showBanner</stringProp>
-                <stringProp name="Argument.value">false</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
               <elementProp name="postback" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">postback</stringProp>
@@ -530,7 +516,7 @@
               <elementProp name="selectedTab" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">selectedTab</stringProp>
-                <stringProp name="Argument.value">${RUN_DELAY}</stringProp>
+                <stringProp name="Argument.value">0</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -548,66 +534,10 @@
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="changedParamterName" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">changedParamterName</stringProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="changedConversionOptions" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">changedConversionOptions</stringProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="windowName" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">windowName</stringProp>
-                <stringProp name="Argument.value">2A${RUN_DELAY}${RUN_DELAY}419${RUN_DELAY}FF${RUN_DELAY}1${RUN_DELAY}742A8B5${RUN_DELAY}C5C2EB873${RUN_DELAY}A545</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="__from" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">__from</stringProp>
-                <stringProp name="Argument.value">requestPage</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
               <elementProp name="locale" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">locale</stringProp>
                 <stringProp name="Argument.value">en_US</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="__executableName" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">__executableName</stringProp>
-                <stringProp name="Argument.value">/C_FILTER_Some_x1.rptdesign</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="doframe" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">doframe</stringProp>
-                <stringProp name="Argument.value">false</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="maincontainerParameterGroupID${RUN_DELAY}ParameterID${RUN_DELAY}" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">maincontainerParameterGroupID${RUN_DELAY}ParameterID${RUN_DELAY}</stringProp>
-                <stringProp name="Argument.value">1-URGENT</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="__newWindow" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">__newWindow</stringProp>
-                <stringProp name="Argument.value">false</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -657,31 +587,26 @@
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+            <collectionProp name="CookieManager.cookies">
+              <elementProp name="JSESSIONID" elementType="Cookie" testname="JSESSIONID">
+                <stringProp name="Cookie.value">${jsessionid}</stringProp>
+                <stringProp name="Cookie.domain">${HOST}</stringProp>
+                <stringProp name="Cookie.path">/</stringProp>
+                <boolProp name="Cookie.secure">false</boolProp>
+                <longProp name="Cookie.expires">0</longProp>
+                <boolProp name="Cookie.path_specified">true</boolProp>
+                <boolProp name="Cookie.domain_specified">true</boolProp>
+              </elementProp>
+            </collectionProp>
+            <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+          </CookieManager>
+          <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Content-Type" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Language" elementType="Header">
-                <stringProp name="Header.name">Accept-Language</stringProp>
-                <stringProp name="Header.value">zh-cn,zh;q=${RUN_DELAY}.8,en-us;q=${RUN_DELAY}.5,en;q=${RUN_DELAY}.3</stringProp>
-              </elementProp>
-              <elementProp name="Accept" elementType="Header">
-                <stringProp name="Header.name">Accept</stringProp>
-                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=${RUN_DELAY}.9,*/*;q=${RUN_DELAY}.8</stringProp>
-              </elementProp>
-              <elementProp name="User-Agent" elementType="Header">
-                <stringProp name="Header.name">User-Agent</stringProp>
-                <stringProp name="Header.value">Mozilla/5.${RUN_DELAY} (Windows NT 6.1; WOW64; rv:19.${RUN_DELAY}) Gecko/2${RUN_DELAY}1${RUN_DELAY}${RUN_DELAY}1${RUN_DELAY}1 Firefox/19.${RUN_DELAY}</stringProp>
-              </elementProp>
-              <elementProp name="Referer" elementType="Header">
-                <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${HOST}:89${RUN_DELAY}${RUN_DELAY}/iportal/executereport.do?__requesttype=immediate&amp;__executableName=%2fC%5fFILTER%5fSome%5fx1%2erptdesign&amp;__vp=birt${RUN_DELAY}1%5fwin&amp;fromDashboard=true&amp;showBanner=false&amp;locale=en_US&amp;__saveOutput=false&amp;__token=2A${RUN_DELAY}${RUN_DELAY}419${RUN_DELAY}FF${RUN_DELAY}1${RUN_DELAY}742A8B5${RUN_DELAY}C5C2EB873${RUN_DELAY}A545&amp;windowName=2A${RUN_DELAY}${RUN_DELAY}419${RUN_DELAY}FF${RUN_DELAY}1${RUN_DELAY}742A8B5${RUN_DELAY}C5C2EB873${RUN_DELAY}A545&amp;__from=requestPage</stringProp>
-              </elementProp>
-              <elementProp name="Accept-Encoding" elementType="Header">
-                <stringProp name="Header.name">Accept-Encoding</stringProp>
-                <stringProp name="Header.value">gzip, deflate</stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
@@ -706,20 +631,63 @@
             <stringProp name="Sample.scope">children</stringProp>
           </RegexExtractor>
           <hashTree/>
-          <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
-            <collectionProp name="CookieManager.cookies">
-              <elementProp name="JSESSIONID" elementType="Cookie" testname="JSESSIONID">
-                <stringProp name="Cookie.value">${jsessionid}</stringProp>
-                <stringProp name="Cookie.domain">${HOST}</stringProp>
-                <stringProp name="Cookie.path">/</stringProp>
-                <boolProp name="Cookie.secure">false</boolProp>
-                <longProp name="Cookie.expires">0</longProp>
-                <boolProp name="Cookie.path_specified">true</boolProp>
-                <boolProp name="Cookie.domain_specified">true</boolProp>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="false">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Content-Type" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">zh-cn,zh;q=${RUN_DELAY}.8,en-us;q=${RUN_DELAY}.5,en;q=${RUN_DELAY}.3</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=${RUN_DELAY}.9,*/*;q=${RUN_DELAY}.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.${RUN_DELAY} (Windows NT 6.1; WOW64; rv:19.${RUN_DELAY}) Gecko/2${RUN_DELAY}1${RUN_DELAY}${RUN_DELAY}1${RUN_DELAY}1 Firefox/19.${RUN_DELAY}</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${HOST}:8900/iportal/executereport.do?__requesttype=immediate&amp;__executableName=%2fC%5fFILTER%5fSome%5fx1%2erptdesign&amp;__vp=birt${RUN_DELAY}1%5fwin&amp;fromDashboard=true&amp;showBanner=false&amp;locale=en_US&amp;__saveOutput=false&amp;__token=2A${RUN_DELAY}${RUN_DELAY}419${RUN_DELAY}FF${RUN_DELAY}1${RUN_DELAY}742A8B5${RUN_DELAY}C5C2EB873${RUN_DELAY}A545&amp;windowName=2A${RUN_DELAY}${RUN_DELAY}419${RUN_DELAY}FF${RUN_DELAY}1${RUN_DELAY}742A8B5${RUN_DELAY}C5C2EB873${RUN_DELAY}A545&amp;__from=requestPage</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
               </elementProp>
             </collectionProp>
-            <boolProp name="CookieManager.clearEachIteration">false</boolProp>
-          </CookieManager>
+          </HeaderManager>
+          <hashTree/>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="false">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Content-Type" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Language" elementType="Header">
+                <stringProp name="Header.name">Accept-Language</stringProp>
+                <stringProp name="Header.value">zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3</stringProp>
+              </elementProp>
+              <elementProp name="Accept" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</stringProp>
+              </elementProp>
+              <elementProp name="User-Agent" elementType="Header">
+                <stringProp name="Header.name">User-Agent</stringProp>
+                <stringProp name="Header.value">Mozilla/5.0 (Windows NT 6.1; WOW64; rv:19.0}) Gecko/20100101 Firefox/19.0</stringProp>
+              </elementProp>
+              <elementProp name="Referer" elementType="Header">
+                <stringProp name="Header.name">Referer</stringProp>
+                <stringProp name="Header.value">http://${HOST}:8900/iportal/executereport.do?__requesttype=immediate&amp;__executableName=%2fC%5fFILTER%5fSome%5fx1%2erptdesign&amp;__vp=birt${RUN_DELAY}1%5fwin&amp;fromDashboard=true&amp;showBanner=false&amp;locale=en_US&amp;__saveOutput=false&amp;__token=2A${RUN_DELAY}${RUN_DELAY}419${RUN_DELAY}FF${RUN_DELAY}1${RUN_DELAY}742A8B5${RUN_DELAY}C5C2EB873${RUN_DELAY}A545&amp;windowName=2A${RUN_DELAY}${RUN_DELAY}419${RUN_DELAY}FF${RUN_DELAY}1${RUN_DELAY}742A8B5${RUN_DELAY}C5C2EB873${RUN_DELAY}A545&amp;__from=requestPage</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/iportal/iv?" enabled="true">
@@ -749,7 +717,39 @@
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+            <collectionProp name="CookieManager.cookies">
+              <elementProp name="JSESSIONID" elementType="Cookie" testname="JSESSIONID">
+                <stringProp name="Cookie.value">${jsessionid}</stringProp>
+                <stringProp name="Cookie.domain">${HOST}</stringProp>
+                <stringProp name="Cookie.path">/</stringProp>
+                <boolProp name="Cookie.secure">false</boolProp>
+                <longProp name="Cookie.expires">0</longProp>
+                <boolProp name="Cookie.path_specified">true</boolProp>
+                <boolProp name="Cookie.domain_specified">true</boolProp>
+              </elementProp>
+            </collectionProp>
+            <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+          </CookieManager>
+          <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Content-Type" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">text/xml; charset=utf-8</stringProp>
+              </elementProp>
+              <elementProp name="soapaction" elementType="Header">
+                <stringProp name="Header.name">soapaction</stringProp>
+                <stringProp name="Header.value">&quot;&quot;</stringProp>
+              </elementProp>
+              <elementProp name="request-type" elementType="Header">
+                <stringProp name="Header.name">request-type</stringProp>
+                <stringProp name="Header.value">SOAP</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="false">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="Content-Type" elementType="Header">
                 <stringProp name="Header.name">Content-Type</stringProp>
@@ -793,7 +793,7 @@
               </elementProp>
               <elementProp name="Referer" elementType="Header">
                 <stringProp name="Header.name">Referer</stringProp>
-                <stringProp name="Header.value">http://${HOST}:89${RUN_DELAY}${RUN_DELAY}/iportal/iv?__report=%2f%24%24%24Transient%2f115${RUN_DELAY}%2eRPTDOCUMENT&amp;__design=%2fC%5fFILTER%5fSome%5fx1%2erptdesign&amp;connectionHandle=bAq%2by9HJrv6%2bASENxVq8RL21WvOI%2fw6jmbZwg7PYF19Cq3${RUN_DELAY}57d%2bJTeUKSSPpu8CJ4DK9kPvy%2fS%2fRy1Dq9fHP6nqNJSdFYxGZZKntZXA7A${RUN_DELAY}XEa8F2n%2b%2bHphFgkpWxQEDNkamy5hpTqtKFcFUqMu5K%2fti9a3QUlAaaG${RUN_DELAY}eLmAm6yicGAcxuSwhrVuKVsdZ2QBYc2wtbdi%2b6KSCTQeG5TUZNAJCkoE1hMX9gnXr%2fT2zo8gdZ5JGq6Ov9GSfluAWVnYKaahrzLMqx8vGrLgJRk2WVIg%3d%3d&amp;__vp=birt${RUN_DELAY}1%5fwin&amp;__asattachment=false</stringProp>
+                <stringProp name="Header.value">http://${HOST}:8900/iportal/iv?__report=%2f%24%24%24Transient%2f1150%2eRPTDOCUMENT&amp;__design=%2fC%5fFILTER%5fSome%5fx1%2erptdesign&amp;connectionHandle=bAq%2by9HJrv6%2bASENxVq8RL21WvOI%2fw6jmbZwg7PYF19Cq3057d%2bJTeUKSSPpu8CJ4DK9kPvy%2fS%2fRy1Dq9fHP6nqNJSdFYxGZZKntZXA7A0XEa8F2n%2b%2bHphFgkpWxQEDNkamy5hpTqtKFcFUqMu5K%2fti9a3QUlAaaG0eLmAm6yicGAcxuSwhrVuKVsdZ2QBYc2wtbdi%2b6KSCTQeG5TUZNAJCkoE1hMX9gnXr%2fT2zo8gdZ5JGq6Ov9GSfluAWVnYKaahrzLMqx8vGrLgJRk2WVIg%3d%3d&amp;__vp=birt01%5fwin&amp;__asattachment=false</stringProp>
               </elementProp>
               <elementProp name="request-type" elementType="Header">
                 <stringProp name="Header.name">request-type</stringProp>
@@ -802,20 +802,42 @@
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
-            <collectionProp name="CookieManager.cookies">
-              <elementProp name="JSESSIONID" elementType="Cookie" testname="JSESSIONID">
-                <stringProp name="Cookie.value">${jsessionid}</stringProp>
-                <stringProp name="Cookie.domain">${HOST}</stringProp>
-                <stringProp name="Cookie.path">/</stringProp>
-                <boolProp name="Cookie.secure">false</boolProp>
-                <longProp name="Cookie.expires">0</longProp>
-                <boolProp name="Cookie.path_specified">true</boolProp>
-                <boolProp name="Cookie.domain_specified">true</boolProp>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="false">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Content-Type" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">text/xml; charset=utf-8</stringProp>
+              </elementProp>
+              <elementProp name="standalone" elementType="Header">
+                <stringProp name="Header.name">standalone</stringProp>
+                <stringProp name="Header.value">true</stringProp>
+              </elementProp>
+              <elementProp name="Pragma" elementType="Header">
+                <stringProp name="Header.name">Pragma</stringProp>
+                <stringProp name="Header.value">no-cache</stringProp>
+              </elementProp>
+              <elementProp name="Cache-Control" elementType="Header">
+                <stringProp name="Header.name">Cache-Control</stringProp>
+                <stringProp name="Header.value">no-cache</stringProp>
+              </elementProp>
+              <elementProp name="soapaction" elementType="Header">
+                <stringProp name="Header.name">soapaction</stringProp>
+                <stringProp name="Header.value">&quot;&quot;</stringProp>
+              </elementProp>
+              <elementProp name="Accept-Encoding" elementType="Header">
+                <stringProp name="Header.name">Accept-Encoding</stringProp>
+                <stringProp name="Header.value">gzip, deflate</stringProp>
+              </elementProp>
+              <elementProp name="X-Requested-With" elementType="Header">
+                <stringProp name="Header.name">X-Requested-With</stringProp>
+                <stringProp name="Header.value">XMLHttpRequest</stringProp>
+              </elementProp>
+              <elementProp name="request-type" elementType="Header">
+                <stringProp name="Header.name">request-type</stringProp>
+                <stringProp name="Header.value">SOAP</stringProp>
               </elementProp>
             </collectionProp>
-            <boolProp name="CookieManager.clearEachIteration">false</boolProp>
-          </CookieManager>
+          </HeaderManager>
           <hashTree/>
         </hashTree>
       </hashTree>
@@ -1191,7 +1213,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Dummy2" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Dummy2" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1568,7 +1590,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Dummy" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Dummy" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
