@@ -1,5 +1,6 @@
 #! /usr/bin/sh
 
+mkdir -p 100
 for SRC in `ls *_x1.rptdesign`; do
     DST=`echo $SRC | sed -e 's/_x1/_x100/'`
     echo sed -e 's/1\.data/100.data/g' -e 's@Data Object/.1@&00@g' $SRC ">" 100/$DST
