@@ -17,14 +17,9 @@
             <stringProp name="Argument.value">birt01_win</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="RUN_SECONDS" elementType="Argument">
-            <stringProp name="Argument.name">RUN_SECONDS</stringProp>
-            <stringProp name="Argument.value">90</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="RUN_DELAY" elementType="Argument">
-            <stringProp name="Argument.name">RUN_DELAY</stringProp>
-            <stringProp name="Argument.value">90</stringProp>
+          <elementProp name="SF" elementType="Argument">
+            <stringProp name="Argument.name">SF</stringProp>
+            <stringProp name="Argument.value">x1</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -68,7 +63,7 @@
               <elementProp name="inputfile" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">inputfile</stringProp>
-                <stringProp name="Argument.value">/${RPTDESIGN}.rptdesign</stringProp>
+                <stringProp name="Argument.value">/${RPTDESIGN}_${SF}.rptdesign</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -335,31 +330,48 @@
             </hashTree>
           </hashTree>
         </hashTree>
-        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="MainTest" enabled="true">
-          <boolProp name="TransactionController.parent">true</boolProp>
-        </TransactionController>
+        <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Runtime Controller" enabled="true">
+          <stringProp name="RunTime.seconds">400</stringProp>
+        </RunTime>
         <hashTree>
-          <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="View" enabled="true">
-            <collectionProp name="ModuleController.node_path">
-              <stringProp name="-1227702913">WorkBench</stringProp>
-              <stringProp name="1291483892">C_FILTER</stringProp>
-              <stringProp name="2666181">View</stringProp>
-            </collectionProp>
-          </ModuleController>
-          <hashTree/>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="__MAIN__" enabled="true">
+            <boolProp name="TransactionController.parent">true</boolProp>
+          </TransactionController>
+          <hashTree>
+            <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="View" enabled="true">
+              <collectionProp name="ModuleController.node_path">
+                <stringProp name="-1227702913">WorkBench</stringProp>
+                <stringProp name="1291483892">C_FILTER</stringProp>
+                <stringProp name="2666181">View</stringProp>
+              </collectionProp>
+            </ModuleController>
+            <hashTree/>
+          </hashTree>
         </hashTree>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 120" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">120000</stringProp>
+        </TestAction>
+        <hashTree/>
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 5" enabled="false">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">5000</stringProp>
+        </TestAction>
+        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few_x1 (1)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few (1)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -370,8 +382,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-1023145841">
-              <stringProp name="774942038">C1_FILTER_Few_x1</stringProp>
+            <collectionProp name="-999254448">
+              <stringProp name="-426428734">C1_FILTER_Few</stringProp>
               <stringProp name="1845911308">CUSTKEY</stringProp>
             </collectionProp>
           </collectionProp>
@@ -398,17 +410,17 @@
         </ModuleController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few_x1 (M)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few (M)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">14</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -419,8 +431,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-1023145841">
-              <stringProp name="774942038">C1_FILTER_Few_x1</stringProp>
+            <collectionProp name="-999254448">
+              <stringProp name="-426428734">C1_FILTER_Few</stringProp>
               <stringProp name="1845911308">CUSTKEY</stringProp>
             </collectionProp>
           </collectionProp>
@@ -447,17 +459,17 @@
         </ModuleController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many_x1 (1)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many (1)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -468,8 +480,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="586582039">
-              <stringProp name="-461651806">C2_FILTER_Many_x1</stringProp>
+            <collectionProp name="257166191">
+              <stringProp name="-627587338">C2_FILTER_Many</stringProp>
               <stringProp name="1845911308">CUSTKEY</stringProp>
             </collectionProp>
           </collectionProp>
@@ -496,17 +508,17 @@
         </ModuleController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many_x1 (M)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Many (M)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">14</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -517,8 +529,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-1796047642">
-              <stringProp name="-461651806">C2_FILTER_Many_x1</stringProp>
+            <collectionProp name="257166191">
+              <stringProp name="-627587338">C2_FILTER_Many</stringProp>
               <stringProp name="1845911308">CUSTKEY</stringProp>
             </collectionProp>
           </collectionProp>
@@ -545,17 +557,17 @@
         </ModuleController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_x1 (1)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some (1)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -566,8 +578,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-2113626598">
-              <stringProp name="457157580">C3_FILTER_Some_x1</stringProp>
+            <collectionProp name="-1685556889">
+              <stringProp name="-920798196">C3_FILTER_Some</stringProp>
               <stringProp name="-587535662">ORDERPRIORITY</stringProp>
             </collectionProp>
           </collectionProp>
@@ -594,17 +606,17 @@
         </ModuleController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_x1 (M)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some (M)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">14</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -615,8 +627,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-2113626598">
-              <stringProp name="457157580">C3_FILTER_Some_x1</stringProp>
+            <collectionProp name="-1685556889">
+              <stringProp name="-920798196">C3_FILTER_Some</stringProp>
               <stringProp name="-587535662">ORDERPRIORITY</stringProp>
             </collectionProp>
           </collectionProp>
@@ -643,17 +655,17 @@
         </ModuleController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary_x1 (1)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary (1)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -664,8 +676,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-924639775">
-              <stringProp name="-197224667">C4_FILTER_Some_NoSummary_x1</stringProp>
+            <collectionProp name="1041480979">
+              <stringProp name="-733399213">C4_FILTER_Some_NoSummary</stringProp>
               <stringProp name="-587535662">ORDERPRIORITY</stringProp>
             </collectionProp>
           </collectionProp>
@@ -692,17 +704,17 @@
         </ModuleController>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary_x1 (M)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Some_NoSummary (M)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">14</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1363830141000</longProp>
         <longProp name="ThreadGroup.end_time">1363830141000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration">${RUN_SECONDS}</stringProp>
         <stringProp name="ThreadGroup.delay">${RUN_DELAY}</stringProp>
       </ThreadGroup>
@@ -713,8 +725,8 @@
             <stringProp name="967657245">PARAM_NAME</stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="-924639775">
-              <stringProp name="-197224667">C4_FILTER_Some_NoSummary_x1</stringProp>
+            <collectionProp name="1041480979">
+              <stringProp name="-733399213">C4_FILTER_Some_NoSummary</stringProp>
               <stringProp name="-587535662">ORDERPRIORITY</stringProp>
             </collectionProp>
           </collectionProp>
