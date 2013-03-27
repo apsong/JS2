@@ -68,8 +68,9 @@ DO_HSIM()
             EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE $CLIENT_NUM_DURATION --job hs.perfmon $OPTS "|" tee -a $LOG
             ;;
         "")
-            LOG=sanity.log
-            EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE 1 1i -V $AJCS "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
+            LOG=`NEWFILE sanity.log`
+            [ -z "$SANITY_CLIENT_NUM" ] && SANITY_CLIENT_NUM=1
+            EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE $SANITY_CLIENT_NUM 1i -V $AJCS "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
             ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
             echo | tee -a $LOG
@@ -96,6 +97,7 @@ while [ $# -gt 0 ]; do
         -R) shift; OPTS="$OPTS -R $1";;
         AJC*) AJCS="$AJCS $1"; OPTS="$OPTS $1";;
         -t) IN_SANITY_TEST=1;;
+        -T) IN_SANITY_TEST=1; shift; SANITY_CLIENT_NUM=$1;;
         *) DIRS="$DIRS $1";;
     esac
     shift
