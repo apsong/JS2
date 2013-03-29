@@ -1,0 +1,64 @@
+#! /usr/bin/tclsh
+
+set HEAD [subst {
+\{|border="1" cellspacing="0" cellpadding="4" width="30%"
+|-
+|align = "center"|'''Test Case'''
+|align = "center"|'''Database'''
+|align = "center"|'''Threads'''
+|align = "center"|'''Reports /second'''
+|align = "center"|'''Time(second) /report'''
+|align = "center"|'''CPU(%)'''
+|align = "center"|'''Threads'''
+|align = "center"|'''Reports /second'''
+|align = "center"|'''Time(second) /report'''
+|align = "center"|'''CPU(%)'''
+|align = "left"|'''____________________Comment____________________'''}]
+
+set BODY {
+|-
+|align = "left"| ${TESTCASE}
+|align = "center"| ${DB}
+|align = "center"| ${THREADS_1}
+|align = "center"| ${REPORTS_1}
+|align = "center"| ${SECONDS_1}
+|align = "center"| ${CPU_1}
+|align = "center"| ${THREADS_M}
+|align = "center"| ${REPORTS_M}
+|align = "center"| ${SECONDS_M}
+|align = "center"| ${CPU_M}
+|}
+set TAIL "|\}"
+
+puts $HEAD
+
+set TESTS {}
+while {[gets stdin line]>=0} {
+    if {[llength $line] < 7} { continue }
+    if {[regexp {/([^/]+)_x([0-9]+)/([0-9]+)\.[0-9]+[thms]$} [lindex $line 0] {} TESTCASE SF THREADS]} {
+        regsub -- {^(.)} $TESTCASE {\1.} TESTCASE
+        regsub -- {_} $TESTCASE {-} TESTCASE
+        set DB "tpch_sf_$SF"
+        set V [list $THREADS [lindex $line 2] [lindex $line 4] [lindex $line 6]]
+        set T [expr {$THREADS == 1 ? 1 : "M"}]
+        set $TESTCASE${DB}(THREADS_$T) $THREADS
+        set $TESTCASE${DB}(REPORTS_$T) [lindex $line 2]
+        set $TESTCASE${DB}(SECONDS_$T) [lindex $line 4]
+        set $TESTCASE${DB}(CPU_$T) [lindex $line 6]
+        if {[lsearch $TESTS "$TESTCASE $DB"] == -1} {
+            lappend TESTS "$TESTCASE $DB"
+        }
+    }
+}
+
+foreach TEST $TESTS {
+    foreach {TESTCASE DB} $TEST {break}
+    if {[catch {set $TESTCASE${DB}(T1)} T1]} {set T1 -}
+    foreach V {THREADS_1 REPORTS_1 SECONDS_1 CPU_1 THREADS_M REPORTS_M SECONDS_M CPU_M} {
+        if {[catch {set $TESTCASE${DB}($V)} $V]} {
+            set $V -
+        }
+    }
+    puts [subst $BODY]
+}
+puts $TAIL
