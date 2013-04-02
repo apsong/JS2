@@ -331,7 +331,7 @@
           </hashTree>
         </hashTree>
         <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Runtime Controller" enabled="true">
-          <stringProp name="RunTime.seconds">400</stringProp>
+          <stringProp name="RunTime.seconds">600</stringProp>
         </RunTime>
         <hashTree>
           <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="__MAIN__" enabled="true">
@@ -351,7 +351,7 @@
         <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 120" enabled="true">
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
-          <stringProp name="ActionProcessor.duration">120000</stringProp>
+          <stringProp name="ActionProcessor.duration">300000</stringProp>
         </TestAction>
         <hashTree/>
         <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 5" enabled="false">
