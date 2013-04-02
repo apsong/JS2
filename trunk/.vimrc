@@ -16,7 +16,7 @@ if !has("gui_running")
     set t_Sb=1%dm
 endif
 
-autocmd BufReadPost * 
-\ if line("'\"")>0&&line("'\"")<=line("$") |
-\   exe "normal g'\"" |
-\ endif
+autocmd BufReadPost *
+    \ if line("'\"")>0&&line("'\"")<=line("$") |
+    \   exe "normal g'\"" |
+    \ endif
