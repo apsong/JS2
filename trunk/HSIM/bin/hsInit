@@ -83,8 +83,9 @@ mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A3_COUNT_M_x{1,100}/{1,14}.6t
 mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A4_COUNTDISTINCT_D_x{1,100}/{1,14}.6t
 mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A5_COUNTDISTINCT_M_x{1,100}/{1,14}.6t
 mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/B1_JOIN_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C1_FILTER_Few_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C2_FILTER_Many_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C3_FILTER_Some_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C4_FILTER_Some_NoSummary_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/M1_SUM_xTab_x{1,100}/{1,14}.6t
+#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C1_FILTER_Few_x{1,100}/{1,14}.6t
+#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C2_FILTER_Many_x{1,100}/{1,14}.6t
+#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C3_FILTER_Some_x{1,100}/{1,14}.6t
+#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C4_FILTER_Some_NoSummary_x{1,100}/{1,14}.6t
+mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/M1_xTab_by_INT_STRING_x{1,100}/{1,14}.6t
+mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/M1_xTab_by_STRING_YEAR_x{1,100}/{1,14}.6t
