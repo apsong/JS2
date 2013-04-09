@@ -310,10 +310,9 @@
             </RegexExtractor>
             <hashTree/>
           </hashTree>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop 5" enabled="true">
-            <boolProp name="LoopController.continue_forever">true</boolProp>
-            <stringProp name="LoopController.loops">5</stringProp>
-          </LoopController>
+          <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Runtime Controller" enabled="true">
+            <stringProp name="RunTime.seconds">100</stringProp>
+          </RunTime>
           <hashTree>
             <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Sanity" enabled="true">
               <boolProp name="TransactionController.parent">true</boolProp>
@@ -331,7 +330,7 @@
           </hashTree>
         </hashTree>
         <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Runtime Controller" enabled="true">
-          <stringProp name="RunTime.seconds">600</stringProp>
+          <stringProp name="RunTime.seconds">500</stringProp>
         </RunTime>
         <hashTree>
           <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="__MAIN__" enabled="true">
@@ -351,7 +350,7 @@
         <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 120" enabled="true">
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
-          <stringProp name="ActionProcessor.duration">300000</stringProp>
+          <stringProp name="ActionProcessor.duration">120000</stringProp>
         </TestAction>
         <hashTree/>
         <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 5" enabled="false">

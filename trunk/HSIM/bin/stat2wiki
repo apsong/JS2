@@ -44,7 +44,7 @@ while {[gets stdin line]>=0} {
         set $TESTCASE${DB}(THREADS_$T) $THREADS
         set $TESTCASE${DB}(REPORTS_$T) [lindex $line 2]
         set $TESTCASE${DB}(SECONDS_$T) [lindex $line 4]
-        set $TESTCASE${DB}(CPU_$T) [lindex $line 6]
+        set $TESTCASE${DB}(CPU_$T) "[lindex $line 6]%"
         if {[lsearch $TESTS "$TESTCASE $DB"] == -1} {
             lappend TESTS "$TESTCASE $DB"
         }
