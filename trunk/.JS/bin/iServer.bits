@@ -37,7 +37,6 @@ CP()
 
 init()
 {
-    BIN=iServer/bin
     if [ ! -f iServer/bin/jsrvr32b11.exe ]; then
         CP iServer/bin/jsrvr11.exe iServer/bin/jsrvr32b11.exe
         CP iServer/bin/jfctsrvr11.exe iServer/bin/jfctsrvr32b11.exe

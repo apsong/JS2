@@ -1,0 +1,76 @@
+#! /usr/bin/sh
+
+PROGRAM=`basename $0`
+
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+NEWFILE()
+{
+    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
+
+    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
+
+    mkdir -p .$FILE || exit 101
+    if [ -h $FILE ]; then
+        rm -f $FILE
+    elif [ -e $FILE ]; then
+        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
+        mv $FILE $REAL_FILE.bak
+    fi
+    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
+}
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM 32|64"
+}
+
+CP()
+{
+    cp -v $1 $2
+}
+
+init()
+{
+    if [ ! -f iHub/bin/jsrvr32b11.exe ]; then
+        CP iHub/bin/jsrvr11.exe iHub/bin/jsrvr32b11.exe
+        CP iHub/bin/jfctsrvr11.exe iHub/bin/jfctsrvr32b11.exe
+        CP iHub/bin/jencycsrvr11.exe iHub/bin/jencycsrvr32b11.exe
+        sed -i -e 's@<AC_JRE64_HOME>.*</AC_JRE64_HOME>@<AC_JRE64_HOME>C:/Program Files (x86)/Common Files/Actuate/11.0/JDK160_64/jre</AC_JRE64_HOME>@' iHub/etc/acpmdconfig.xml
+    fi
+    if [ ! -f iHub/bin/jsrvr64b11.exe ]; then
+        CP iHub/bin/jsrvr11.exe iHub/bin/jsrvr64b11.exe
+        CP iHub/bin/jfctsrvr11.exe iHub/bin/jfctsrvr64b11.exe
+        CP iHub/bin/jencycsrvr11.exe iHub/bin/jencycsrvr64b11.exe
+        sed -i -e 's@<AC_JRE64_HOME>.*</AC_JRE64_HOME>@<AC_JRE64_HOME>C:/Program Files (x86)/Common Files/Actuate/11.0/JDK160_64/jre</AC_JRE64_HOME>@' iHub/etc/acpmdconfig.xml
+    fi
+    grep -H -T -o "<AC_JRE64_HOME>.*</AC_JRE64_HOME>" iHub/etc/acpmdconfig.xml
+}
+
+rename()
+{
+    if [ "$1" = 64 ]; then
+        sed -i -e 's@set AC_JAVA_HOME=.*@set AC_JAVA_HOME=C:/Program Files (x86)/Common Files/Actuate/11.0/JDK160@' setupiHub.bat
+    else
+        sed -i -e 's@set AC_JAVA_HOME=.*@set AC_JAVA_HOME=@' setupiHub.bat
+    fi
+    grep -H -T "set AC_JAVA_HOME=" setupiHub.bat
+    echo
+
+    CP iHub/bin/jsrvr${1}b11.exe iHub/bin/jsrvr11.exe
+    CP iHub/bin/jfctsrvr${1}b11.exe iHub/bin/jfctsrvr11.exe
+    CP iHub/bin/jencycsrvr${1}b11.exe iHub/bin/jencycsrvr11.exe
+}
+
+[ ! -f setupiHub.bat ] && { echo 1>&2 "Error: cannot find 'setupiHub.bat' in current work dir."; exit 2;}
+case "$1" in
+    32|64)
+        init && rename $1;;
+    *)
+        usage; exit 1;;
+esac
