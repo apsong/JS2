@@ -59,6 +59,7 @@ rename()
     else
         sed -i -e 's@set AC_JAVA_HOME=.*@set AC_JAVA_HOME=@' setupiHub.bat
     fi
+    unix2dos setupiHub.bat
     grep -H -T "set AC_JAVA_HOME=" setupiHub.bat
     echo
 
