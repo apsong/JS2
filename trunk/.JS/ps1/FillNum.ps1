@@ -5,12 +5,9 @@ function Release-Ref ($ref) {
     [System.GC]::WaitForPendingFinalizers()
 }
 
-$HASH = @{}
 $csv = "I:\【数据管理】\人员信息总表.csv"
-import-csv $csv | ForEach-Object -process {
-    $HASH[$_.Name + $_.Phone] = $_
-}
-"${csv}: " + $HASH.Count
+$SUMMARY = (import-csv $csv)
+"${csv}: " + $SUMMARY.Count
 #$HASH.Values | Where-Object { $_.Name -eq "万红卫" }
 
 
@@ -19,53 +16,66 @@ $excel = new-object -comobject excel.application
 $excel.Visible = $True 
 $excel.DisplayAlerts = $False
 
-Get-ChildItem "I:\【数据管理】\报名表" -Recurse -Include *.xls | ForEach-Object -process {
+Get-ChildItem "I:\【数据管理】\报名表" -Recurse -Include *.xls, *.xlsx | ForEach-Object -process {
     $file = $_
-    
+    $file.FullName
     $workbook = $excel.Workbooks.Open($file)
+    $NameRow=4;  $NameCol=2; $PhoneRow1=7; $PhoneRow2=8; $PhoneCol=8; $EmailRow=6; 
     if ($workbook.Worksheets.Count -eq 1) { #Old format
-        $NameRow=4;  $NameCol=2; $PhoneCol=8; $FofaRow=12; $FofaCol=2; $ShuyuanRow=13; $ShuyuanCol=3; $XfslRow=14; $XfslCol=4; $PtslRow=14; $PtslCol=8
+        $EmailCol=7; $FofaRow=12; $FofaCol=2; $ShuyuanRow=13; $ShuyuanCol=3; $XfslRow=14; $XfslCol=4; $PtslRow=14; $PtslCol=8
     } else { #New format
-        $NameRow=4;  $NameCol=2; $PhoneCol=8; $FofaRow=13; $FofaCol=2; $ShuyuanRow=14; $ShuyuanCol=2; $XfslRow=15; $XfslCol=4; $PtslRow=15; $PtslCol=8
+        $EmailCol=5; $FofaRow=13; $FofaCol=2; $ShuyuanRow=14; $ShuyuanCol=2; $XfslRow=15; $XfslCol=4; $PtslRow=15; $PtslCol=8
     }
     
     $worksheet = $workbook.Worksheets.Item(1)
-    $XFSL = 0
-    $PTSL = 0
     
+    $Name = $worksheet.Cells.Item($NameRow,$NameCol).Value()
+    $Phone1 = $worksheet.Cells.Item($PhoneRow1,$PhoneCol).Value()
+    $Phone2 = $worksheet.Cells.Item($PhoneRow2,$PhoneCol).Value()
+    $Email = $worksheet.Cells.Item($EmailRow,$EmailCol).Value(); if ($Email.Length -lt 5) { $Email = "INVALID_EMAIL" }
     $WORD = $worksheet.Cells.Item($FofaRow,$FofaCol).Value();    if ($WORD -eq $null) { $WORD = 0 } else { $WORD = $WORD.Length }
     $WORD2 = $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).Value();   if ($WORD2 -eq $null) { $WORD2 = 0 } else { $WORD2 = $WORD2.Length }
-    foreach ($PhoneRow in 7..8) {
-        $ID = $worksheet.Cells.Item($NameRow,$NameCol).Value() + $worksheet.Cells.Item($PhoneRow,$PhoneCol).Value()
-        if ($HASH[$ID] -ne $null) {
-            $XFSL = $HASH[$ID].XFSL
-            $PTSL = $HASH[$ID].PTSL
-            $worksheet.Cells.Item($XfslRow,$XfslCol) = $XFSL
-            $worksheet.Cells.Item($PtslRow,$PtslCol) = $PTSL
-            break
-        }
+
+    $XFSL,$PTSL = ($SUMMARY | Where-Object { $_.Name -eq $Name -and ($_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*") } | Measure-Object -Sum XFSL,PTSL | %{$_.Sum})
+    if ($XFSL -eq $null -or $PTSL -eq $null) {
+        $XFSL = 0
+        $PTSL = 0
+        
+        "Warning: No good hit! Partly hit results for $Name/$Phone1/$Phone2/$Email are: "
+        $SUMMARY | Where-Object { $_.Name -eq $Name -or $_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*" }
     }
-    $LastDate = $HASH[$ID].LastDate; if ($LastDate -eq $null -or $LastDate -eq "") { $LastDate = 0 }
+    
+    $worksheet.Cells.Item($XfslRow,$XfslCol) = $XFSL
+    $worksheet.Cells.Item($PtslRow,$PtslCol) = $PTSL
+    $LastDate = $result.LastDate; if ($LastDate -eq $null -or $LastDate -eq "") { $LastDate = 0 }
+    $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).WrapText = $True
+    $worksheet.Cells.Item($PtslRow,$PtslCol).HorizontalAlignment = -4108
     
     $now = (Get-Date -UFormat "%Y%m%d")
     $last = (Get-Date -UFormat "%Y%m%d" -Date $LastDate)
+    $newName = $Name + $file.Extension; if ($file.Name -like "*-松江*") { $newName = "(松江)$newName" }
     if ($WORD -lt 250 -or $WORD2 -eq 0) {
-        $dest = $file.DirectoryName + ".不足字数\[${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]" + ($file.name -replace '\[.*\]', "")
+        $dest = $file.DirectoryName + ".不足字数\[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } elseif ($XFSL -eq 0 -or $PTSL -eq 0) {
-        $dest = $file.DirectoryName + ".不足沙龙\[${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]" + ($file.name -replace '\[.*\]', "")
+        $dest = $file.DirectoryName + ".不足沙龙\[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } else {
-        $dest = $file.DirectoryName + ".合格\[${now}]" + ($file.name -replace '\[.*\]', "")
+        $dest = $file.DirectoryName + ".合格\[${now}]$newName"
     }
-    $file.name + " -> $dest"
-    $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).WrapText = $True
-    $worksheet.Cells.Item($PtslRow,$PtslCol).HorizontalAlignment = -4108
+    "`t`t`t`t`t`t`t`t-> $dest"
     
     $workbook.Save()
     $workbook.Close()
     $file.MoveTo($dest)
 }
 $excel.Quit()
+Release-Ref($excel)
 
-#Release all the objects used above
-$a = Release-Ref($workbook)
-$a = Release-Ref($excel)
+
+if (1) {
+    Get-ChildItem I:\【数据管理】\报名表.合格\*.zip | rm
+    $files = (Get-ChildItem I:\【数据管理】\报名表.合格\*$now*.xls*)
+    if ($files.Count -gt 0) {
+        $zip = "I:\【数据管理】\报名表.合格\[${now}]_菩提书院初级修学报名表" + $files.Count + "份.zip"
+        d:\bin\7z a $zip $files
+    }
+}

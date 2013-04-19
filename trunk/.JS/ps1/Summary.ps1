@@ -21,7 +21,7 @@ $worksheet.SaveAs($csv, $xlCSV)
 $excel.Quit()
 
 $a = Release-Ref($worksheet)
-$a = Release-Ref($workbook) 
+$a = Release-Ref($workbook)
 $a = Release-Ref($excel)
 
 $temp = (Get-Content $csv)
@@ -30,8 +30,8 @@ $temp | Out-File $csv -Encoding Unicode
 
 
 $HASH = @{}
-$header = "Name","faming","Sex","Phone","Email","Date","Subject","Address","Action","Applied","Sent","Received","Uploaded"
 $row = 0
+$header = "Name","faming","Sex","Phone","Email","Date","Subject","Address","Action","Applied","Sent","Received","Uploaded"
 import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -process {
     if ($_.Action -eq "²Î¼ÓÑ§·ðÉ³Áú") {
         $xfsl = 1; $ptsl = 0;
@@ -42,6 +42,7 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
     }
     
     $ID=$_.Name + $_.Phone
+    $_.Email = $_.Email.ToLower()
     $person = $HASH[$ID]
     if ($person -eq $null) {
         $person = new-object psobject -property @{
@@ -60,14 +61,18 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
     } else {
         $person.XFSL += $xfsl
         $person.PTSL += $ptsl
-        if ($person.Email -eq $null -and $_.Email -ne $null) { $person.Email = $_.Email }
+        if ($_.Email -ne $null -and $_.Email -ne "" -and $person.Email -ne $null -and $person.Email -ne "" -and $person.Email.IndexOf($_.Email) -lt 0) {
+            $person.Email += "|" + $_.Email
+            $ID + ": " + $person.Email
+        }
         if ($xfsl + $ptsl -gt 0 -and $person.LastDate -lt $_.Date) { $person.LastDate = $_.Date }
         if ($person.Applied -eq $null -and $_.Applied -ne $null) { $person.Applied = $_.Applied }
         if ($person.Sent -eq $null -and $_.Sent -ne $null) { $person.Sent = $_.Sent }
         if ($person.Received -eq $null -and $_.Received -ne $null) { $person.Received = $_.Received }
     }
-    
-    "[row: " + (++$row) + "]"
+    $row++
     #$person
 }
-$HASH.values | Select-Object Name,Phone,Email,XFSL,PTSL,LastDate,Applied,Sent,Received | export-csv -noTypeInformation -encoding Unicode $SUMMARY
+"[$row rows are processed]"
+$HASH.values | Select-Object Name,Phone,Email,XFSL,PTSL,LastDate,Applied,Sent,Received `
+        | export-csv -noTypeInformation -encoding Unicode $SUMMARY
