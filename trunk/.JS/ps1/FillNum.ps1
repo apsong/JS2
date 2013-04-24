@@ -40,9 +40,13 @@ Get-ChildItem "I:\【数据管理】\报名表" -Recurse -Include *.xls, *.xlsx | ForEach
     if ($XFSL -eq $null -or $PTSL -eq $null) {
         $XFSL = 0
         $PTSL = 0
-        
-        "Warning: No good hit! Partly hit results for $Name/$Phone1/$Phone2/$Email are: "
-        $SUMMARY | Where-Object { $_.Name -eq $Name -or $_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*" }
+    }
+    if ($XFSL -eq 0 -or $PTSL -eq 0) {    
+        $similar = ($SUMMARY | Where-Object { $_.Name -eq $Name -or $_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*" })
+        if ($similar.Count -gt 0) {
+            "Warning: No good hit! Partly hit results for $Name/$Phone1/$Phone2/$Email are: " + $similar.Count
+            $similar
+        }
     }
     
     $worksheet.Cells.Item($XfslRow,$XfslCol) = $XFSL

@@ -17,6 +17,8 @@ $excel.DisplayAlerts = $False
 $xlCSV = 6
 $workbook = $excel.Workbooks.Open($xls) 
 $worksheet = $workbook.Worksheets.Item(1)
+$worksheet.Hyperlinks.Delete()
+$workbook.Save()
 $worksheet.SaveAs($csv, $xlCSV)
 $excel.Quit()
 
@@ -73,6 +75,6 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
     $row++
     #$person
 }
-"[$row rows are processed]"
+"[$row rows are processed, " + $HASH.Count + " rows are generated.]"
 $HASH.values | Select-Object Name,Phone,Email,XFSL,PTSL,LastDate,Applied,Sent,Received `
         | export-csv -noTypeInformation -encoding Unicode $SUMMARY
