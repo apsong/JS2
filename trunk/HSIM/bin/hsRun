@@ -32,6 +32,7 @@ usage()
     echo 1>&2 "    -V                           --Print out all messages exchanged between the test client and server"
     echo 1>&2 "    --job <CMD>                  --Runs 'CMD HOST DURATION' in the background when $PROGRAM is running"
     echo 1>&2 "    -R <REPEAT_NUM>              --Repeat for <REPEAT_NUM> times"
+    echo 1>&2 "    -D <DELAY>                   --Delay for <DELAY> seconds after each run"
     echo 1>&2
     echo 1>&2 "Examples:"
     echo 1>&2 "  $PROGRAM AJC121207 sha-perf 1 1i /home/samson/HSIM/AJC/SV1/Customer~Dashboard#html.sim -V"
@@ -109,6 +110,10 @@ while [ $# -gt 0 ]; do
             shift
             REPEAT_NUM="$1"
             ;;
+        -D)
+            shift
+            DELAY="$1"
+            ;;
         --help)
             usage; exit 0
             ;;
@@ -151,12 +156,13 @@ while [ $LOOP -le $REPEAT_NUM ]; do
             [ -n "$VERBOSE" ] && OPTS="$OPTS -V"
 
 #OPTS="$OPTS -T 60"
-            [ -n "$JOB" ] && EVAL $JOB $HOST ${DURATION}s "2>&1" "&"
+            [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"
             echo "#!CMD:[ cd $TEST_DIR; HsimD.exe $OPTS 2>&1 ]"
             HsimD.exe $OPTS 2>&1
             cat error.log >> $OLD_PWD/error.log; rm -f error.log
             mv error.log.* $OLD_PWD 2>/dev/null
             [ -n "$JOB" ] && EVAL wait
+            [ -n "$DELAY" ] && EVAL sleep $DELAY
         done
     done
     LOOP=`expr $LOOP '+' 1`

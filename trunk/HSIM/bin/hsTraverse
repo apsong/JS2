@@ -7,7 +7,7 @@ usage()
     echo 1>&2 "Examples:"
     echo 1>&2 "       $PROGRAM     --Traverse directories from current directory and execute 'hs' in each"
     echo 1>&2 "       $PROGRAM Transient SV/23.SalesbyCustomer#pdf  --Traverse from the given directories"
-    echo 1>&2 "       $PROGRAM SV -O 'AJC121207 -R 3'       --Travers and execute 'hs' with given options"
+    echo 1>&2 "       $PROGRAM SV -O 'AJC121207 -R 3 -D 60' --Travers and execute 'hs' with given options"
 }
 
 ##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
