@@ -3,11 +3,12 @@
 PROGRAM=`basename $0`
 usage()
 {
-    echo 1>&2 "Usage: $PROGRAM [DIR]... [-O 'hs_OPTIONS']"
+    echo 1>&2 "Usage: $PROGRAM [DIR]... [-R REPEAT] [-D DELAY]"
     echo 1>&2 "Examples:"
-    echo 1>&2 "       $PROGRAM     --Traverse directories from current directory and execute 'hs' in each"
+    echo 1>&2 "       $PROGRAM                 --Traverse from current directory and execute 'hs' in each"
     echo 1>&2 "       $PROGRAM Transient SV/23.SalesbyCustomer#pdf  --Traverse from the given directories"
-    echo 1>&2 "       $PROGRAM SV -O 'AJC121207 -R 3 -D 60' --Travers and execute 'hs' with given options"
+    echo 1>&2 "       $PROGRAM SV -R 3 -D 60               --Traverse from dir 'SV', execute for 3 times,"
+    echo 1>&2 "                                              and delay 60 seconds after each execution"
 }
 
 ##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
@@ -38,8 +39,8 @@ DO_TRAVERSE()
 {
     pwd | awk '{print "#!CMD:[ cd " $0 " ]"}'
     case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
-        1|2|3) $PROGRAM */ -O "$OPTS";;
-        4) EVAL "hs || hs && hs [0-9]*.*[0-9][smht] $OPTS";; #sanity (try twice) && execute
+        1|2|3) $PROGRAM */ $OPTS;;
+        4) EVAL "hs || hs && hs [0-9]*.*[0-9][smhti] $OPTS";; #sanity (try twice) && execute
         5) EVAL "hs $OPTS";;
         *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; return 1;;
     esac
@@ -49,7 +50,9 @@ DO_TRAVERSE()
 while [ $# -gt 0 ]; do
     case "$1" in
         --help) usage; exit 0;;
-        -O) shift; OPTS="$1";;
+        -R) shift; OPTS="$OPTS -R $1";;
+        -D) shift; OPTS="$OPTS -D $1";;
+        -*) usage; exit 1;;
         *) DIRS="$DIRS $1";;
     esac
     shift

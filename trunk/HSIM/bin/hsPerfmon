@@ -9,6 +9,7 @@ if {$argc < 2} {
 set HOST [lindex $argv 0]
 set PORT [lindex $argv 1]
 set SECONDS [lindex $argv 2]
+if {$SECONDS <= 0} {exit 0} ;#Something like 'hs 1.10i'
 set TICKLEN [lindex $argv 3]
 if {$TICKLEN == ""} {set TICKLEN 100}
 
@@ -73,6 +74,9 @@ puts $chan "exit"
 while {[gets $chan line] >= 0} {}
 close $chan
 
+after 1000
 set averages [lrange $averages 1 end-1]
-puts [format "Average from Tick 2 to Tick %.0f(when all users are active): CPU = %2.1f  %s" \
-        [expr {$SECONDS*1.0/$TICKLEN-1}] [CPU2average $average] ($averages)/[llength $averages]]
+if {[llength $averages] > 0} {
+    puts [format "Average from Tick 2 to Tick %.0f(when all users are active): CPU = %2.1f  %s" \
+            [expr {$SECONDS*1.0/$TICKLEN-1}] [CPU2average $averages] ($averages)/[llength $averages]]
+}

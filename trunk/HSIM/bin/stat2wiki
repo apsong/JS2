@@ -8,11 +8,11 @@ set HEAD [subst {
 |align = "center"|'''Threads'''
 |align = "center"|'''Reports /second'''
 |align = "center"|'''Time(second) /report'''
-|align = "center"|'''CPU(%)'''
+|align = "center"|'''CPU'''
 |align = "center"|'''Threads'''
 |align = "center"|'''Reports /second'''
 |align = "center"|'''Time(second) /report'''
-|align = "center"|'''CPU(%)'''
+|align = "center"|'''CPU'''
 |align = "left"|'''____________________Comment____________________'''}]
 
 set BODY {
