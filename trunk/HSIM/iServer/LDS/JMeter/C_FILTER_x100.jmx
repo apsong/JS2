@@ -781,7 +781,7 @@
             <bytes>true</bytes>
           </value>
         </objProp>
-        <stringProp name="filename">C:\cygwin\github\JS2\trunk\HSIM\iServer\LDS\JMeter\C_FILTER_x100.csv</stringProp>
+        <stringProp name="filename"></stringProp>
         <boolProp name="useGroupName">true</boolProp>
       </ResultCollector>
       <hashTree/>

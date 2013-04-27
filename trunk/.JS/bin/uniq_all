@@ -1,0 +1,13 @@
+#! /usr/bin/tclsh
+while {[gets stdin line] >= 0} {
+    set line [string trim $line]
+    if {$line == ""} {
+        continue
+    }
+    if {[info exists lines($line)]} {
+        continue
+    }
+    set lines($line) 1
+    puts $line
+}
+

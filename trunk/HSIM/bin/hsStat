@@ -38,14 +38,17 @@ DO_STAT()
                     awk -v DIR=`pwd | sed -e 's/^.*@//'` '
                         /):/ {
                             if ($12 == "CPU") {
-                                CPU=$14;
+                                CPU=$14
                             } else {
                                 URL=gensub(",", "", "g", $14); Resp=$16
                             }
                         }
+                        /Error page received/ {
+                            ERROR++
+                        }
 
                         END {
-                            printf("%-64s  URL: %6s    Resp: %5s    %CPU: %.1f\n", DIR, URL, Resp, CPU)
+                            printf("%-64s  URL: %6s    Resp: %5s    %%CPU: %4s    ERROR: %d\n", DIR, URL, Resp, CPU, ERROR)
                         }' hs.log
                 fi
                 ;;
