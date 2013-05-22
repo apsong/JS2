@@ -5,8 +5,8 @@ function Release-Ref ($ref) {
     [System.GC]::WaitForPendingFinalizers()
 }
 
-$XLS = (Get-ChildItem I:\【数据管理】\人员信息总表*.xls | Sort-Object | Select-Object -last 1).FullName
-$CSV = $XLS.Replace(".xls", ".csv")
+$XLS = (Get-ChildItem I:\【数据管理】\人员信息总表*.xlsx | Sort-Object | Select-Object -last 1).FullName
+$CSV = $XLS.Replace(".xlsx", ".csv")
 $SUMMARY = "I:\【数据管理】\人员信息总表.csv"
 
 if (1) {
@@ -33,8 +33,10 @@ $temp | Out-File $csv -Encoding Unicode
 
 $HASH = @{}
 $row = 0
-$header = "Name","faming","Sex","Phone","Email","Date","Subject","Address","Action","Applied","Sent","Received","Uploaded"
+$header = "Name","Phone","Email","Date","Address","Subject","Action","Applied","Sent","Received","Uploaded"
 import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -process {
+    if ($_.Date -ne $null -and $_.Date -ne "") { $_.Date = [DateTime]$_.Date }
+    
     if ($_.Action -eq "参加学佛沙龙") {
         $xfsl = 1; $ptsl = 0;
     } elseif ($_.Action -eq "参加菩提沙龙") {
@@ -42,7 +44,7 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
     } else {
         $xfsl = 0; $ptsl = 0
     }
-    
+            
     $ID=$_.Name + $_.Phone
     $_.Email = $_.Email.ToLower()
     $person = $HASH[$ID]
@@ -61,20 +63,27 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
         if ($xfsl + $ptsl -eq 0) { $person.LastDate = $null }
         $HASH[$ID] = $person
     } else {
+        #if ($person.Name -eq "忻汉能") { $_; $person; }
+        
         $person.XFSL += $xfsl
         $person.PTSL += $ptsl
-        if ($_.Email -ne $null -and $_.Email -ne "" -and $person.Email -ne $null -and $person.Email -ne "" -and $person.Email.IndexOf($_.Email) -lt 0) {
-            $person.Email += "|" + $_.Email
-            $ID + ": " + $person.Email
+        if ($_.Email -ne $null -and $_.Email -ne "") {
+            if ($person.Email -ne $null -and $person.Email -ne "" -and $person.Email.IndexOf($_.Email) -lt 0) {
+                $person.Email += "|" + $_.Email
+                $ID + ": " + $person.Email
+            } else {
+                $person.Email = $_.Email
+            }
         }
         if ($xfsl + $ptsl -gt 0 -and $person.LastDate -lt $_.Date) { $person.LastDate = $_.Date }
-        if ($person.Applied -eq $null -and $_.Applied -ne $null) { $person.Applied = $_.Applied }
-        if ($person.Sent -eq $null -and $_.Sent -ne $null) { $person.Sent = $_.Sent }
-        if ($person.Received -eq $null -and $_.Received -ne $null) { $person.Received = $_.Received }
+        if ($_.Applied -eq "是") { $person.Applied = "是" }
+        if ($_.Sent -eq "是") { $person.Sent = "是" }
+        if ($_.Received -eq "是") { $person.Received = "是" }
+        
+        #if ($person.Name -eq "忻汉能") { $_; $person }
     }
     $row++
-    #$person
 }
 "[$row rows are processed, " + $HASH.Count + " rows are generated.]"
-$HASH.values | Select-Object Name,Phone,Email,XFSL,PTSL,LastDate,Applied,Sent,Received `
+$HASH.values | Select-Object Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent,Received `
         | export-csv -noTypeInformation -encoding Unicode $SUMMARY

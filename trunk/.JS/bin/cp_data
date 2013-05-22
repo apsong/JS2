@@ -1,6 +1,0 @@
-#! /usr/bin/sh
-
-for T in A B C D; do
-    cp -v 001/${T}001.data ${T}1.data
-    cp -v 001/${T}001.data ${T}100.data
-done

@@ -16,7 +16,7 @@ $excel = new-object -comobject excel.application
 $excel.Visible = $True 
 $excel.DisplayAlerts = $False
 
-Get-ChildItem "I:\【数据管理】\报名表" -Recurse -Include *.xls, *.xlsx | ForEach-Object -process {
+Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object -process {
     $file = $_
     $file.FullName
     $workbook = $excel.Workbooks.Open($file)
@@ -36,7 +36,8 @@ Get-ChildItem "I:\【数据管理】\报名表" -Recurse -Include *.xls, *.xlsx | ForEach
     $WORD = $worksheet.Cells.Item($FofaRow,$FofaCol).Value();    if ($WORD -eq $null) { $WORD = 0 } else { $WORD = $WORD.Length }
     $WORD2 = $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).Value();   if ($WORD2 -eq $null) { $WORD2 = 0 } else { $WORD2 = $WORD2.Length }
 
-    $XFSL,$PTSL = ($SUMMARY | Where-Object { $_.Name -eq $Name -and ($_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*") } | Measure-Object -Sum XFSL,PTSL | %{$_.Sum})
+    $match = ($SUMMARY | Where-Object { $_.Name -eq $Name -and ($_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*") })
+    $XFSL,$PTSL = ($match | Measure-Object -Sum XFSL,PTSL | %{$_.Sum})
     if ($XFSL -eq $null -or $PTSL -eq $null) {
         $XFSL = 0
         $PTSL = 0
@@ -51,17 +52,17 @@ Get-ChildItem "I:\【数据管理】\报名表" -Recurse -Include *.xls, *.xlsx | ForEach
     
     $worksheet.Cells.Item($XfslRow,$XfslCol) = $XFSL
     $worksheet.Cells.Item($PtslRow,$PtslCol) = $PTSL
-    $LastDate = $result.LastDate; if ($LastDate -eq $null -or $LastDate -eq "") { $LastDate = 0 }
+    $LastDate = ($match | Sort-Object -Property LastDate | Select-Object -Last 1).LastDate; if ($LastDate -eq $null -or $LastDate -eq "") { $LastDate = 0 }
     $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).WrapText = $True
     $worksheet.Cells.Item($PtslRow,$PtslCol).HorizontalAlignment = -4108
-    
+
     $now = (Get-Date -UFormat "%Y%m%d")
     $last = (Get-Date -UFormat "%Y%m%d" -Date $LastDate)
-    $newName = $Name + $file.Extension; if ($file.Name -like "*-松江*") { $newName = "(松江)$newName" }
+    $newName = $Name + $file.Extension; if ($file.Name -like "*(松江)*") { $newName = "(松江)$newName" }
     if ($WORD -lt 250 -or $WORD2 -eq 0) {
-        $dest = $file.DirectoryName + ".不足字数\[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
+        $dest = $file.DirectoryName + "\不足字数[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } elseif ($XFSL -eq 0 -or $PTSL -eq 0) {
-        $dest = $file.DirectoryName + ".不足沙龙\[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
+        $dest = $file.DirectoryName + "\不足沙龙[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } else {
         $dest = $file.DirectoryName + ".合格\[${now}]$newName"
     }
@@ -77,7 +78,7 @@ Release-Ref($excel)
 
 if (1) {
     Get-ChildItem I:\【数据管理】\报名表.合格\*.zip | rm
-    $files = (Get-ChildItem I:\【数据管理】\报名表.合格\*$now*.xls*)
+    $files = (Get-ChildItem I:\【数据管理】\报名表.合格\*.xls*)
     if ($files.Count -gt 0) {
         $zip = "I:\【数据管理】\报名表.合格\[${now}]_菩提书院初级修学报名表" + $files.Count + "份.zip"
         d:\bin\7z a $zip $files
