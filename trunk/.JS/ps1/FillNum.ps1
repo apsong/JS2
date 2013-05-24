@@ -52,19 +52,21 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     
     $worksheet.Cells.Item($XfslRow,$XfslCol) = $XFSL
     $worksheet.Cells.Item($PtslRow,$PtslCol) = $PTSL
+    $FirstDate = ($match | Sort-Object -Property FirstDate | Select-Object -First 1).FirstDate; if ($FirstDate -eq $null -or $FirstDate -eq "") { $FirstDate = 0 }
     $LastDate = ($match | Sort-Object -Property LastDate | Select-Object -Last 1).LastDate; if ($LastDate -eq $null -or $LastDate -eq "") { $LastDate = 0 }
     $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).WrapText = $True
     $worksheet.Cells.Item($PtslRow,$PtslCol).HorizontalAlignment = -4108
 
     $now = (Get-Date -UFormat "%Y%m%d")
+    $first = (Get-Date -UFormat "%Y%m%d" -Date $FirstDate)
     $last = (Get-Date -UFormat "%Y%m%d" -Date $LastDate)
     $newName = $Name + $file.Extension; if ($file.Name -like "*(松江)*") { $newName = "(松江)$newName" }
     if ($WORD -lt 250 -or $WORD2 -eq 0) {
-        $dest = $file.DirectoryName + "\不足字数[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
+        $dest = $file.DirectoryName + "\不足字数[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } elseif ($XFSL -eq 0 -or $PTSL -eq 0) {
-        $dest = $file.DirectoryName + "\不足沙龙[${now}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
+        $dest = $file.DirectoryName + "\不足沙龙[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } else {
-        $dest = $file.DirectoryName + ".合格\[${now}]$newName"
+        $dest = $file.DirectoryName + ".合格\[${first}]$newName"
     }
     "`t`t`t`t`t`t`t`t-> $dest"
     

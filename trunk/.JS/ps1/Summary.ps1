@@ -55,6 +55,7 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
             Email= $_.Email
             XFSL = $xfsl
             PTSL = $ptsl
+            FirstDate = $_.Date
             LastDate = $_.Date
             Applied = $_.Applied
             Sent = $_.Sent
@@ -75,6 +76,7 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
                 $person.Email = $_.Email
             }
         }
+        if ($xfsl + $ptsl -gt 0 -and $person.FirstDate -gt $_.Date) { $person.FirstDate = $_.Date }
         if ($xfsl + $ptsl -gt 0 -and $person.LastDate -lt $_.Date) { $person.LastDate = $_.Date }
         if ($_.Applied -eq "是") { $person.Applied = "是" }
         if ($_.Sent -eq "是") { $person.Sent = "是" }
@@ -85,5 +87,5 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
     $row++
 }
 "[$row rows are processed, " + $HASH.Count + " rows are generated.]"
-$HASH.values | Select-Object Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent,Received `
+$HASH.values | Select-Object Name,Phone,Applied,Email,FirstDate,LastDate,XFSL,PTSL,Sent,Received `
         | export-csv -noTypeInformation -encoding Unicode $SUMMARY
