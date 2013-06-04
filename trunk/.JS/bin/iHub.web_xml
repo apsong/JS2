@@ -1,0 +1,8 @@
+#! /usr/bin/sh
+
+for WEB_XML in `find -regex ".*/iportal/.*/web.xml"`; do
+    [ ! -f $WEB_XML.orig ] && cp -v $WEB_XML $WEB_XML.orig
+    sed -i -e 's/\<20\>/300/' $WEB_XML
+    dos2unix $WEB_XML
+    diff $WEB_XML.orig $WEB_XML
+done
