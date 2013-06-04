@@ -16,6 +16,8 @@ $excel = new-object -comobject excel.application
 $excel.Visible = $True 
 $excel.DisplayAlerts = $False
 
+$now = (Get-Date -UFormat "%Y%m%d")
+    
 Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object -process {
     $file = $_
     $file.FullName
@@ -57,7 +59,6 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).WrapText = $True
     $worksheet.Cells.Item($PtslRow,$PtslCol).HorizontalAlignment = -4108
 
-    $now = (Get-Date -UFormat "%Y%m%d")
     $first = (Get-Date -UFormat "%Y%m%d" -Date $FirstDate)
     $last = (Get-Date -UFormat "%Y%m%d" -Date $LastDate)
     $newName = $Name + $file.Extension; if ($file.Name -like "*(松江)*") { $newName = "(松江)$newName" }
