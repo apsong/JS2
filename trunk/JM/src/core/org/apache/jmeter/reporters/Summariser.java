@@ -127,51 +127,64 @@ public class Summariser extends AbstractTestElement
     private static class Totals {
 
         /** Time of last summary (to prevent double reporting) */
-        private long last = 0;
+        private long last = 0;   //The time of last outInterval occurred
+        private long next = 0;   //The time of next outInterval in schedule
+        private long second = 0; //The begin time of the second INTERVAL
+        private long beforeLast = 0; //The time of the one before "last"
 
         private final RunningSample delta = new RunningSample("DELTA",0);
-
         private final RunningSample total = new RunningSample("TOTAL",0);
         private RunningSample lastTotal = null;
-        
-        private int numberOfDelta = 0;
 
         /**
          * Add the delta values to the total values and clear the delta
          */
-        private void moveDelta() {
-        	if (numberOfDelta != 0) {
-        		lastTotal = new RunningSample(total);
-        		total.addSample(delta);
-        		delta.clear();
-        	}
-        	numberOfDelta ++;
+        private void moveDelta(long now) {
+        	beforeLast = last;
+        	last = now;
+			if (second == 0) { //First Interval
+				second = now;
+			} else {
+				lastTotal = new RunningSample(total);
+				total.addSample(delta);
+				delta.clear();
+			}
+            while (next - now < 1000) { next += INTERVAL; }
         }
     }
 
-    private static void outTick(RunningSample s) {
-    	System.out.printf("%tT  Throughput=% 6.2f  RespT=% 5.2f  Busy=% 2d  MinT=% 5.2f  MaxT=% 5.2f  Error= %d%n", Calendar.getInstance(),
+    private static void outInterval(Calendar now, RunningSample s) {
+    	System.out.printf("%tT  Throughput=% 6.2f  RespT=% 5.2f  Busy=% 2d  MinT=% 5.2f  MaxT=% 5.2f  Error= %d%n", now,
     			s.getRate(), s.getAverage()/1000.0, JMeterContextService.getThreadCounts().activeThreads, s.getMin()/1000.0, s.getMax()/1000.0, s.getErrorCount());
     }
     
-    private void outSummary(Totals myTotals) {
+    private void outSummary(Calendar now, Totals myTotals) {
+    	if (myTotals == null) {
+    		System.out.println("Average unavailable due to insufficient sample result.");
+    		return;
+    	}
+    	
     	Calendar begin = Calendar.getInstance();
     	Calendar end = Calendar.getInstance();
     	RunningSample summary = new RunningSample("SUMMARY",0);;
     	
 		synchronized (myTotals) {
-			begin.setTimeInMillis(myTotals.last - (myTotals.numberOfDelta - 1) * INTERVAL);
-			if (System.currentTimeMillis() > myTotals.last + INTERVAL / 2) {
+			begin.setTimeInMillis(myTotals.second);
+			if (now.getTimeInMillis() > myTotals.last + INTERVAL / 2) {
 				summary.addSample(myTotals.total);
 				end.setTimeInMillis(myTotals.last);
 			} else {
 				summary.addSample(myTotals.lastTotal);
-				end.setTimeInMillis(myTotals.last - INTERVAL);
+				end.setTimeInMillis(myTotals.beforeLast);
 			}
 		}
 		
-    	System.out.printf("Average from %tT to %tT(when all users are active): Throughput= %.2f  RespT= %.2f%n",
+		if (end.getTimeInMillis() - begin.getTimeInMillis() < 1000) {
+			System.out.println("Average unavailable due to insufficient sample result.");
+		} else {
+			System.out.printf("Average of (%tT , %tT]: Throughput= %.2f  RespT= %.2f%n",
     				begin, end, summary.getRate(), summary.getAverage()/1000.0);
+		}
     }
     /**
      * Accumulates the sample in two SampleResult objects - one for running
@@ -183,7 +196,7 @@ public class Summariser extends AbstractTestElement
     public void sampleOccurred(SampleEvent e) {
         SampleResult s = e.getResult();
 
-        long now = System.currentTimeMillis();
+        Calendar now = Calendar.getInstance();
 
         RunningSample myDelta = null;
         boolean reportNow = false;
@@ -198,18 +211,16 @@ public class Summariser extends AbstractTestElement
                 myTotals.delta.addSample(s);
             }
 
-            if (now >= myTotals.last + INTERVAL) {
+            if (now.getTimeInMillis() >= myTotals.next) {
                 reportNow = true;
 
                 // copy the data to minimize the synch time
                 myDelta = new RunningSample(myTotals.delta);
-                myTotals.moveDelta();
-                
-                while ((myTotals.last - now) / 1000 < 0) { myTotals.last += INTERVAL; }
+                myTotals.moveDelta(now.getTimeInMillis());
             }
         }
         if (reportNow) {
-            outTick(myDelta);
+            outInterval(now, myDelta);
         }
     }
 
@@ -266,13 +277,13 @@ public class Summariser extends AbstractTestElement
             myTotals = accumulators.get(myName);
             if (myTotals == null){
                 myTotals = new Totals();
-                myTotals.last = System.currentTimeMillis();
+                myTotals.next = System.currentTimeMillis() + INTERVAL;
                 accumulators.put(myName, myTotals);
             }
             instanceCount++;
         }
 
-        System.out.printf("%tT  %s%n", Calendar.getInstance(), "===== begin =====");
+        System.out.printf("%tT  %s%n", Calendar.getInstance(), "<Test started>");
     }
 
     /**
@@ -290,18 +301,19 @@ public class Summariser extends AbstractTestElement
                 totals = accumulators.entrySet();
             }
         }
-    	System.out.printf("%tT  %s%n", Calendar.getInstance(), "====== end ======");
         if (totals == null) {// We're not done yet
+        	outSummary(null, null);
             return;
         }
         for(Map.Entry<String, Totals> entry : totals){
             Totals total = entry.getValue();
+            Calendar now = Calendar.getInstance();
             // Only print final delta if there were some samples in the delta
             // and there has been at least one sample reported previously
-            if (System.currentTimeMillis() - total.last > INTERVAL/10 && total.delta.getNumSamples() > 0 && total.total.getNumSamples() > 0) {
-                outTick(total.delta);
+            if (now.getTimeInMillis() - total.last > INTERVAL/10 && total.delta.getNumSamples() > 0 && total.total.getNumSamples() > 0) {
+                outInterval(now, total.delta);
             }
-            outSummary(total);
+            outSummary(now, total);
         }
     }
 }
