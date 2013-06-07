@@ -30,7 +30,11 @@
 # Add Mac-specific property - should be ignored elsewhere (Bug 47064)
 #java $JVM_ARGS -jar `cygpath -w /d/JMeter-2.9/bin/ApacheJMeter.jar` -n -Jsummariser.interval=10 "$@"
 #| egrep "^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]|^Average"
-java $JVM_ARGS \
+for ARG; do
+    ARGS="$ARGS `cygpath -w -- $ARG`"
+done
+EVAL java $JVM_ARGS \
     -jar `cygpath -w $JMETER_HOME/bin/ApacheJMeter.jar` \
     -p `cygpath -w $JM_HOME/etc/jmeter_cmd.properties` \
-    -n "$@"
+    -n \
+    $ARGS

@@ -18,8 +18,16 @@
 
 package org.apache.jmeter.reporters;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -66,8 +74,11 @@ public class Summariser extends AbstractTestElement
 
     private static final long serialVersionUID = 233L;
     /** interval between summaries (in seconds) default 1 minutes */
-    private static final long INTERVAL = JMeterUtils.getPropDefault("summariser.interval", 60) * 1000; //$NON-NLS-1$
-
+    private static final long INTERVAL = JMeterUtils.getPropDefault("jm.interval", 60) * 1000; //$NON-NLS-1$
+    private static final String HOST = JMeterUtils.getPropDefault("jm.host", "<UNDEFINED_HOST>");
+    private static final int PORT = JMeterUtils.getPropDefault("jm.port", 4444);
+	private final static int OUTPUT_WIDTH = JMeterUtils.getPropDefault("jm.output_width", 105);
+    private PerfMonThread perfmon = null;
 
     /**
      * Lock used to protect accumulators update + instanceCount update
@@ -153,14 +164,16 @@ public class Summariser extends AbstractTestElement
         }
     }
 
-    private static void outInterval(Calendar now, RunningSample s) {
-    	System.out.printf("%tT  Throughput=% 6.2f  RespT=% 5.2f  Busy=% 2d  MinT=% 5.2f  MaxT=% 5.2f  Error= %d%n", now,
-    			s.getRate(), s.getAverage()/1000.0, JMeterContextService.getThreadCounts().activeThreads, s.getMin()/1000.0, s.getMax()/1000.0, s.getErrorCount());
+    private void outInterval(Calendar now, RunningSample s) {
+    	PerfMonRecords record = (perfmon == null) ? PerfMonRecords.INVALID : perfmon.outRecords();
+    	System.out.printf("%tT  Throughput=%6.2f  RespT=%5.2f  CPU%%=%3.0f  DiskQ=%3.0f  Busy=%2d  MinT=%5.2f  MaxT=%5.2f  Error= %d%n", now,
+    			s.getRate(), s.getAverage()/1000.0, record.cpu, record.dql, JMeterContextService.getThreadCounts().activeThreads,
+    			s.getMin()/1000.0, s.getMax()/1000.0, s.getErrorCount());
     }
     
     private void outSummary(Calendar now, Totals myTotals) {
     	if (myTotals == null) {
-    		System.out.println("Average unavailable due to insufficient sample result.");
+    		System.out.println("Average unavailable due to no sample result.");
     		return;
     	}
     	
@@ -182,8 +195,9 @@ public class Summariser extends AbstractTestElement
 		if (end.getTimeInMillis() - begin.getTimeInMillis() < 1000) {
 			System.out.println("Average unavailable due to insufficient sample result.");
 		} else {
-			System.out.printf("Average of (%tT , %tT]: Throughput= %.2f  RespT= %.2f%n",
-    				begin, end, summary.getRate(), summary.getAverage()/1000.0);
+			float aveCPU = (perfmon == null) ? -1 : perfmon.averageCPU();
+			System.out.printf("%tT  <Test ended> Average of (%tT , %tT]: Throughput= %.2f  RespT= %.2f  CPU%%= %.0f%n",
+    				Calendar.getInstance(), begin, end, summary.getRate(), summary.getAverage()/1000.0, aveCPU);
 		}
     }
     /**
@@ -283,7 +297,16 @@ public class Summariser extends AbstractTestElement
             instanceCount++;
         }
 
-        System.out.printf("%tT  %s%n", Calendar.getInstance(), "<Test started>");
+        String msg = String.format("PerfMon(CPU, DiskQ) on %s:%d.", HOST, PORT);
+        try {
+			perfmon = new PerfMonThread(HOST, PORT);
+			perfmon.start();
+		} catch (UnknownHostException e) {
+			msg = String.format("Failed to PerfMon on %s:%d - %s: %s", HOST, PORT, e.getClass().getSimpleName(), e.getMessage());
+		} catch (IOException e) {
+			msg = String.format("Failed to PerfMon on %s:%d - %s: %s", HOST, PORT, e.getClass().getSimpleName(), e.getMessage());
+		}
+        System.out.printf("%tT  <Test started> %s%n", Calendar.getInstance(), msg);
     }
 
     /**
@@ -294,6 +317,14 @@ public class Summariser extends AbstractTestElement
      */
     @Override
     public void testEnded(String host) {
+    	if (perfmon != null) {
+    		perfmon.terminate();
+    		try {
+				perfmon.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+    	}
         Set<Entry<String, Totals>> totals = null;
         synchronized (lock) {
             instanceCount--;
@@ -315,5 +346,157 @@ public class Summariser extends AbstractTestElement
             }
             outSummary(now, total);
         }
+    }
+    
+
+    private static class PerfMonRecords {
+    	private List<Float> CPUs = null;
+    	private List<Float> DQLs = null;
+    	public float cpu = -1;
+    	public float dql = -1;
+    	public static PerfMonRecords INVALID = new PerfMonRecords(-1, -1);
+    	
+    	private void init() {
+    		CPUs = new ArrayList<Float>((int)INTERVAL/1000);
+    		DQLs = new ArrayList<Float>((int)INTERVAL/1000);
+    	}
+    	public PerfMonRecords() {
+    		init();
+    	}
+    	private PerfMonRecords(List<Float> CPUs, List<Float> DQLs) {
+    		this.CPUs = CPUs;
+    		this.DQLs = DQLs;
+    	}
+    	private PerfMonRecords(float cpu, float dql) {
+    		this.cpu = cpu;
+    		this.dql = dql;
+    	}
+
+    	public PerfMonRecords popRecords() {
+    		PerfMonRecords ret = new PerfMonRecords(CPUs, DQLs);
+    		init();
+    		return ret;
+    	}
+    	
+    	public void add(String cpu_dql_line) {
+			if (cpu_dql_line != null) {
+				String[] values = cpu_dql_line.split("\t");
+				cpu = Float.parseFloat(values[0]);
+				dql = Float.parseFloat(values[1]);
+				assert (cpu >= 0 && dql >= 0);
+				CPUs.add(cpu);
+				DQLs.add(dql);
+			}
+    	}
+    	
+    	public static String formatValues(List<Float> values, String name, String format, String separator) {
+    		StringBuilder sb = new StringBuilder(String.format("%7s:  (", name));
+    		int lineStart = 0;
+			for (float value : values) {
+				String str = String.format(format, value);
+				if (sb.length() - lineStart + str.length() + 1 > OUTPUT_WIDTH) {
+					sb.append(System.getProperty("line.separator"));
+					lineStart = sb.length();
+					sb.append("           ");
+				}
+				sb.append(str);
+				if (sb.length() - lineStart != OUTPUT_WIDTH) {
+					sb.append(separator);
+				}
+			}
+    		sb.append(")/").append(values.size());
+			return sb.toString();
+    	}
+    	public static float average(List<Float> values) {
+    		if (values.size() == 0) {
+    			return -1;
+    		}
+    		
+    		float sum = 0;
+			for (float value : values) {
+				sum += value;
+			}
+			return sum / values.size();
+    	}
+    }
+    
+    private static class PerfMonThread extends Thread {
+    	private Socket socket = null;
+    	private PrintWriter pw = null;
+    	private BufferedReader br = null;
+    	private boolean terminate = false;
+    	private PerfMonRecords records = new PerfMonRecords();
+
+    	private int numOfSum = -1; //-1 means ignore the first result
+    	private float sumCPU = 0;
+    	private float lastCPU = 0;
+    	public float averageCPU() {
+    		if (numOfSum >= 2) {
+    			return (sumCPU - lastCPU)/(numOfSum -1);
+    		} else {
+    			return -1;
+    		}
+    	}
+    	
+    	public PerfMonThread(String host, int port) throws UnknownHostException, IOException {
+    		super("PerfMonThread@" + host + ":" + "port");
+			socket = new Socket(host, port);
+			pw = new PrintWriter(socket.getOutputStream(), true);
+			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			pw.println("test");
+			br.readLine();
+    	}
+    	
+    	@Override
+    	public void run() {
+			pw.println("metrics:cpu\tdisks");
+			
+    		while (!terminate) {	
+    			String line = null;
+				try {
+					if (!br.ready()) {
+						try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+						continue;
+					}
+					line = br.readLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+					break;
+				}
+				records.add(line);
+    		}
+    		
+    		try {
+				while (br.readLine() != null) {}
+				br.close();
+				pw.close();
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	
+    	public void terminate() {
+    		pw.println("exit");
+    		terminate = true;
+    	}
+    	
+    	public PerfMonRecords outRecords() {
+    		PerfMonRecords old = records.popRecords();
+    		old.cpu = PerfMonRecords.average(old.CPUs);
+    		old.dql = PerfMonRecords.average(old.DQLs);
+    		System.out.println(PerfMonRecords.formatValues(old.CPUs, "CPU", "%2.0f", " "));
+    		if (old.dql >= 0.5) {
+        		System.out.println(PerfMonRecords.formatValues(old.DQLs, "DiskQ", "%2.0f", " "));
+    		}
+    		
+    		numOfSum ++;
+    		if (numOfSum >= 1) {
+    			sumCPU += old.cpu;
+    			lastCPU = old.cpu;
+    		}
+    		
+    		return old;
+    	}
     }
 }
