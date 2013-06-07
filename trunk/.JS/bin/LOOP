@@ -1,0 +1,21 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM LOOP_NUM COMMAND ARGS..."
+    exit 0;
+}
+case "$1" in
+    [1-9]|[1-9]*[0-9])
+        LOOP_NUM=$1; shift;;
+    *)
+        usage; exit 1;;
+esac
+
+NUM=1
+while [ $NUM -le $LOOP_NUM ]; do
+    echo "[$NUM]"
+    eval "$@"
+    NUM=`expr $NUM + 1`
+done

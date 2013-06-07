@@ -100,7 +100,6 @@ DO_HSIM()
 
 while [ $# -gt 0 ]; do
     case "$1" in
-        -R) shift; OPTS="$OPTS -R $1";;
         -D) shift; OPTS="$OPTS -D $1";;
         AJC*) AJCS="$AJCS $1"; OPTS="$OPTS $1";;
         -t) IN_SANITY_TEST=1;;

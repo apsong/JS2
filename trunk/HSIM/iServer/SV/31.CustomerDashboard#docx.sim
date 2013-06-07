@@ -1,14 +1,12 @@
-#@(1 1 50)
-#@(2 0 299)
-#S:/@-6/login.do?__vp=@-5&userid=TestUser@2&password=999999&locale=en_US&loginpostback=true&targetpage=/@-6/getfolderitems.do&redirect= {(JSESSIONID=@257; Path)}
-#S:/@-6/iv?__locale=en_US&__vp=@-5&closex=true&__report=%2FTestDirIDAPI%2Ftest@@300%2Frpt50.rptdocument&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp> {(connectionHandle=@258&)}
-#Don't cache connectionHandle
-#M:/@-6/iv?__locale=en_US&__vp=@-5&closex=true&__report=%2FTestDirIDAPI%2Ftest@@300%2Frpt50.rptdocument&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page @1 true 50
-#Cache connectionHandle
-#M:/@-6/iv?connectionHandle=@258&__locale=en_US&__vp=@-5&closex=true&__report=%2FTestDirIDAPI%2Ftest@@300%2Frpt50.rptdocument&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page @1 true 50
 
 
-#for TED 53397
-S:/@-6/loginservlet?__vp=@-5&userid=administrator&password=&locale=en_US&loginpostback=true&targetpage=/@-6/getfolderitems.do&redirect= {(JSESSIONID=@257; Path)}
-S:/@-6/iv?__locale=en_US&__vp=@-5&closex=true&__report=%2FCustomer%20Dashboard.rptdocument&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp> {(connectionHandle=@258&)}
-M:/@-6/iv?connectionHandle=@258&__locale=en_US&__vp=@-5&closex=true&__report=%2FCustomer%20Dashboard.rptdocument&__format=docx&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/GetPage> page 1 true 1
+@(1 1 100)
+
+
+
+#part-3(sv, office)
+
+
+S:/@-6/loginservlet?__vp=@-5&userid=Administrator&password=&locale=en_US&timezone=America%2FLos_Angeles&loginpostback=true&targetpage=/@-6/getfolderitems.do&redirect= {(JSESSIONID=@257; Path)}
+S:/@-6/iv?__locale=en_US&__vp=@-5&closex=true&__report=%2FCustomer%20Dashboard.rptdocument&viewerId=js3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp> {(connectionHandle=@258&);(<IVSessionID>@259</IVSessionID>)}
+M:/@-6/iv?connectionHandle=@258&__vp=@-5&__locale=en_US&closex=true&__report=%2FCustomer%20Dashboard.rptdocument&__format=docx&__ivsessionid=@259&__persistentdocumentname=%2FCustomer%20Dashboard.rptdocument&viewerId=js3HEAD:Content-Type: application/x-www-form-urlencoded\r\nCookie: JSESSIONID=@257POST:<./options/docx>
