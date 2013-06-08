@@ -3,19 +3,17 @@
 PROGRAM=`basename $0`
 usage()
 {
-    echo 1>&2 "Usage: $PROGRAM YYMMDD HOST [-f]"
-    echo 1>&2 "       $PROGRAM 121207 sha-perf     --Initialize new directory 121207@sha-perf"
-    echo 1>&2 "       $PROGRAM 121207 sha-perf -f  --Reinitialize directory 121207@sha-perf"
+    echo 1>&2 "Usage: $PROGRAM YYMMDD HOST TARGET... [-f]"
+    echo 1>&2 "       TARGET: AJC|iServer|iHub"
+    echo 1>&2 "       $PROGRAM 121207 sha-perf AJC      --Initialize new directory 121207@sha-perf"
+    echo 1>&2 "       $PROGRAM 121207 sha-perf iHub -f  --Reinitialize directory 121207@sha-perf"
 }
 
 while [ $# -gt 0 ]; do
     case "$1" in
+        AJC|iServer|iHub) TARGETS="$TARGETS $1";;
         [0-9][0-9][0-9][0-9][0-9][0-9]) YYMMDD="$1";;
         [a-zA-Z]*) HOST="$1";;
-        [0-9][0-9][0-9][0-9][0-9][0-9]@[a-zA-Z]*)
-            YYMMDD=`echo $1 | sed -e 's/@.*$//'`
-            HOST=`echo $1 | sed -e 's/^.*@//' -e 's@/*$@@'`
-            ;;
         -f) OVERRIDE=1;;
         --help) usage; exit 0;;
         *) echo 1>&2 "Error: Invalid option '$1'"; usage; exit 1;;
@@ -25,73 +23,105 @@ done
 
 [ -n "$YYMMDD" ] || { echo 1>&2 "Error: YYMMDD is not set!"; usage; exit 2;}
 [ -n "$HOST" ] || { echo 1>&2 "Error: HOST is not set!"; usage; exit 2;}
-[ -d "$YYMMDD@$HOST" -a -z "$OVERRIDE" ] && { echo 1>&2 "Error: '$YYMMDD@$HOST' already exists. Remove it first, or use option '-f' if need reinit."; exit 3;}
+[ -n "$TARGETS" ] || { echo 1>&2 "Error: TARGET is not set!"; usage; exit 4;}
 
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/10.CrosstabSampleRevenue#html/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/11.CustomerDashboard#html/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/12.CustomerOrderHistory#html/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/13.SalesbyCustomer#html/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/14.SalesbyTerritory#html/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/15.Top5SalesPerformers#html/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/16.20-customer25x100r-nogroup#html/{1,7}.6t
+function mkCommon()
+{
+    TARGET=$1
 
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/20.CrosstabSampleRevenue#pdf/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/21.CustomerDashboard#pdf/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/22.CustomerOrderHistory#pdf/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/23.SalesbyCustomer#pdf/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/24.SalesbyTerritory#pdf/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/25.Top5SalesPerformers#pdf/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/26.20-customer25x100r-nogroup#pdf/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/10.CrosstabSampleRevenue#html/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/11.CustomerDashboard#html/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/12.CustomerOrderHistory#html/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/13.SalesbyCustomer#html/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/14.SalesbyTerritory#html/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/15.Top5SalesPerformers#html/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/16.20-customer25x100r-nogroup#html/{1,7}.6t
 
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/30.CustomerDashboard#doc/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/31.CustomerDashboard#docx/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/32.CustomerDashboard#xls/{1,5}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/33.CustomerDashboard#xlsx/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/34.CustomerDashboard#ppt/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/35.CustomerDashboard#pptx/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/36.CustomerDashboard#ps/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/37.CustomerDashboard#xhtml/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/20.CrosstabSampleRevenue#pdf/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/21.CustomerDashboard#pdf/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/22.CustomerOrderHistory#pdf/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/23.SalesbyCustomer#pdf/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/24.SalesbyTerritory#pdf/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/25.Top5SalesPerformers#pdf/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/26.20-customer25x100r-nogroup#pdf/{1,4}.6t
 
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/40.20-customer25x100r-nogroup#doc/1.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/41.20-customer25x100r-nogroup#docx/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/42.20-customer25x100r-nogroup#xls/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/43.20-customer25x100r-nogroup#xlsx/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/44.20-customer25x100r-nogroup#ppt/{1,7}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/45.20-customer25x100r-nogroup#pptx/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/46.20-customer25x100r-nogroup#ps/{1,4}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/SV/47.20-customer25x100r-nogroup#xhtml/{1,5}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/30.CustomerDashboard#doc/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/31.CustomerDashboard#docx/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/32.CustomerDashboard#xls/{1,5}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/33.CustomerDashboard#xlsx/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/34.CustomerDashboard#ppt/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/35.CustomerDashboard#pptx/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/36.CustomerDashboard#ps/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/37.CustomerDashboard#xhtml/{1,6}.6t
 
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/CrosstabSampleRevenue/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/CustomerDashboard/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/CustomerOrderHistory/{1,6}.6t
-#mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/SalesbyCustomer/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/SalesbyTerritory/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/Top5SalesPerformers/{1,6}.6t
-#mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/Transient/20-customer25x100r-nogroup/{1,7}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/40.20-customer25x100r-nogroup#doc/1.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/41.20-customer25x100r-nogroup#docx/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/42.20-customer25x100r-nogroup#xls/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/43.20-customer25x100r-nogroup#xlsx/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/44.20-customer25x100r-nogroup#ppt/{1,7}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/45.20-customer25x100r-nogroup#pptx/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/46.20-customer25x100r-nogroup#ps/{1,4}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/SV/47.20-customer25x100r-nogroup#xhtml/{1,5}.6t
 
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/IV/IV/9.3t.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/CrosstabSampleRevenue/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/CustomerDashboard/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/CustomerOrderHistory/{1,6}.6t
+#mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/SalesbyCustomer/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/SalesbyTerritory/{1,6}.6t
+    mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/Top5SalesPerformers/{1,6}.6t
+#mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/20-customer25x100r-nogroup/{1,7}.6t
+}
 
-mkdir -p -v	$YYMMDD@$HOST/AJC$YYMMDD/BRS/BRS/6.3t.6t
+for TARGET in $TARGETS; do
+    if [ -d "$YYMMDD@$HOST.$TARGET" -a -z "$OVERRIDE" ]; then
+        echo 1>&2 "Error: '$YYMMDD@$HOST.$TARGET' already exists. Remove it first, or use option '-f' to override."
+        exit 5
+    fi
 
+    mkCommon $TARGET
 
-mkdir -p -v	$YYMMDD@$HOST/iServer/IV/IV/6.5t.10t
+    case "$TARGET" in
+        AJC)
+            mkdir -p -v	$YYMMDD@$HOST.$TARGET/IV/IV/9.3t.6t
+            mkdir -p -v	$YYMMDD@$HOST.$TARGET/BRS/BRS/6.3t.6t
+            ;;
+        iServer|iHub)
+            mkdir -p -v	$YYMMDD@$HOST.$TARGET/IV/IV/6.5t.10t
+            mkdir -p -v	$YYMMDD@$HOST.$TARGET/BRS/BRS/6.5t.10t
+            mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/SampleBIRTReport/{1,6}.6t
+            mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/rpt1/{1,6}.6t
+            ;;
+    esac
 
-mkdir -p -v	$YYMMDD@$HOST/iServer/BRS/BRS/6.5t.10t
+    if [ "$TARGET" = "iHub" ]; then #LDS
+        for X in x1 x100; do
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A1_SUM_M_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A2_COUNT_D_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A3_COUNT_M_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A4_COUNTDISTINCT_D_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A5_COUNTDISTINCT_M_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/B1_JOIN_$X/{1,14}.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C1_FILTER_Few_$X/{1,14}.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C2_FILTER_Many_$X/{1,14}.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C3_FILTER_Some_$X/{1,14}.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C4_FILTER_Some_NoSummary_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M1_Simple_xTab_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M2_Nation_Year_xTab_$X/{1,14}.6t
+        done
+    fi
 
-mkdir -p -v	$YYMMDD@$HOST/iServer/SV
-
-mkdir -p -v	$YYMMDD@$HOST/iServer/Transient/SampleBIRTReport/{1,6}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/Transient/rpt1/{1,6}.6t
-
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A1_SUM_M_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A2_COUNT_D_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A3_COUNT_M_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A4_COUNTDISTINCT_D_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/A5_COUNTDISTINCT_M_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/B1_JOIN_x{1,100}/{1,14}.6t
-#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C1_FILTER_Few_x{1,100}/{1,14}.6t
-#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C2_FILTER_Many_x{1,100}/{1,14}.6t
-#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C3_FILTER_Some_x{1,100}/{1,14}.6t
-#mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/C4_FILTER_Some_NoSummary_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/M1_Simple_xTab_x{1,100}/{1,14}.6t
-mkdir -p -v	$YYMMDD@$HOST/iServer/LDS/M2_Nation_Year_xTab_x{1,100}/{1,14}.6t
+    if [ "$TARGET" = "iServer" ]; then #LDS for 11SP4, _x1 only
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A1_SUM_M_x1/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A2_COUNT_D_x1/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A3_COUNT_M_x1/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A4_COUNTDISTINCT_D_x1/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A5_COUNTDISTINCT_M_x1/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_B1_JOIN_x1/1.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C1_FILTER_Few_x1/1.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C2_FILTER_Many_x1/1.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C3_FILTER_Some_x1/1.6t
+            #mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C4_FILTER_Some_NoSummary_x1/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_M1_Simple_xTab_x1/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_M2_Nation_Year_xTab_x1/1.6t
+    fi
+done

@@ -1,0 +1,7 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target><Id>$1</Id><Type>$2</Type></Target>
+<Operator>AddColumn</Operator>
+<Data><ColumnDefs><ColumnDef><Index>$3</Index><Expr>$4</Expr></ColumnDef><ColumnDef><Index>$5</Index><Expr>$6</Expr></ColumnDef><ColumnDef><Index>$7</Index><Expr>$8</Expr></ColumnDef><ColumnDef><Index>$9</Index><Expr>$10</Expr></ColumnDef></ColumnDefs></Data></Operation></GetUpdatedObjects></Body></Envelope>

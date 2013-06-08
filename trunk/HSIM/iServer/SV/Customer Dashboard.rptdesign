@@ -1,0 +1,2535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="author">Actuate</property>
+    <property name="comments">Copyright (c) 2007 &lt;&lt;Your Company Name here>></property>
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.2.v20121022-1705 Build &lt;3.7.2.v20121022-1705></property>
+    <text-property name="title">Customer Sales Dashboard</text-property>
+    <html-property name="description">This is a Customer Sales Dashboard report that displays at a glance various metrics related to sales.</html-property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">7</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <text-property name="displayName">Customer Sales Dashboard</text-property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">fixed layout</property>
+    <parameters>
+        <scalar-parameter name="currentYear" id="586">
+            <property name="hidden">true</property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">2005</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">true</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Classic Models" id="775">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">net.sourceforge.jtds.jdbc.Driver</property>
+            <property name="odaURL">jdbc:jtds:sqlserver://birt01-win:1433;databaseName=ClassicModels</property>
+            <property name="odaUser">sa</property>
+            <encrypted-property name="odaPassword" encryptionID="jce">b3f83cad20fba5bc</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Total Sales By Product Line" id="7">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">pl</property>
+                    <property name="alias">Product Line</property>
+                    <text-property name="displayName">pl</text-property>
+                    <text-property name="heading">pl</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">yrs</property>
+                    <property name="alias">Year</property>
+                    <text-property name="displayName">yrs</text-property>
+                    <text-property name="heading">yrs</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Sale Amount</property>
+                    <text-property name="displayName">Sale Amount</text-property>
+                    <text-property name="heading">Sale Amount</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">Product Line</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Year</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">Sale Amount</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Classic Models</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">pl</property>
+                    <property name="nativeName">pl</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">yrs</property>
+                    <property name="nativeName">yrs</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">Sale Amount</property>
+                    <property name="nativeName">Sale Amount</property>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select pl, yrs, sum(qty*prc) as "Sale Amount" from
+(
+   SELECT dbo.Products.productLine,
+   year (dbo.Orders.orderDate),
+   dbo.OrderDetails.quantityOrdered,
+   dbo.OrderDetails.priceEach
+   FROM 
+   dbo.OrderDetails, 
+   dbo.Products,
+   dbo.Orders
+   WHERE  
+   dbo.OrderDetails.productCode = dbo.Products.productCode
+   and
+   dbo.Orders.orderNumber = dbo.OrderDetails.orderNumber
+)
+ord (pl, yrs, qty, prc)
+group by pl, yrs]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Historical Sales" id="378">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">orderDate</property>
+                    <text-property name="displayName">orderDate</text-property>
+                    <text-property name="heading">orderDate</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Year</property>
+                    <text-property name="displayName">Year</text-property>
+                    <text-property name="heading">Year</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">TOTALUNITSSOLD</property>
+                    <text-property name="displayName">TOTALUNITSSOLD</text-property>
+                    <text-property name="heading">TOTALUNITSSOLD</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">TOTALREVENUE</property>
+                    <text-property name="displayName">TOTALREVENUE</text-property>
+                    <text-property name="heading">TOTALREVENUE</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">orderDate</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Year</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">TOTALUNITSSOLD</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">TOTALREVENUE</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Classic Models</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">orderDate</property>
+                    <property name="nativeName">orderDate</property>
+                    <property name="dataType">date-time</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Year</property>
+                    <property name="nativeName">Year</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">TOTALUNITSSOLD</property>
+                    <property name="nativeName">TOTALUNITSSOLD</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">TOTALREVENUE</property>
+                    <property name="nativeName">TOTALREVENUE</property>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT dbo.Orders.orderDate, YEAR (dbo.Orders.orderDate) as "Year",
+       SUM (dbo.OrderDetails.quantityOrdered) AS "TOTALUNITSSOLD",
+       SUM (dbo.OrderDetails.priceEach*dbo.OrderDetails.quantityOrdered) AS "TOTALREVENUE"
+FROM   dbo.OrderDetails, dbo.Orders
+WHERE  dbo.OrderDetails.orderNumber = dbo.Orders.orderNumber
+GROUP BY dbo.Orders.orderDate
+ORDER by dbo.Orders.orderDate]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Total Sales By Customer" id="672">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">CUSTOMERNAME</property>
+                    <text-property name="displayName">CUSTOMERNAME</text-property>
+                    <text-property name="heading">CUSTOMERNAME</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">CURRENTYEARSALES</property>
+                    <text-property name="displayName">CURRENTYEARSALES</text-property>
+                    <text-property name="heading">CURRENTYEARSALES</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">PRIORYEARSALES</property>
+                    <text-property name="displayName">PRIORYEARSALES</text-property>
+                    <text-property name="heading">PRIORYEARSALES</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">is-true</property>
+                    <expression name="expr" type="javascript">(row["CURRENTYEARSALES"] > 0) &amp;&amp; (row["PRIORYEARSALES"]> 0)</expression>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">param_1</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">1</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">params["currentYear"].value</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">param_2</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">1</property>
+                    <property name="position">2</property>
+                    <expression name="defaultValue" type="javascript">params["currentYear"].value</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">CUSTOMERNAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">CURRENTYEARSALES</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">PRIORYEARSALES</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Classic Models</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">CUSTOMERNAME</property>
+                    <property name="nativeName">CUSTOMERNAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">CURRENTYEARSALES</property>
+                    <property name="nativeName">CURRENTYEARSALES</property>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">PRIORYEARSALES</property>
+                    <property name="nativeName">PRIORYEARSALES</property>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT CUSTOMERNAME, sum (CYSALES) as CURRENTYEARSALES, sum (PYSALES) as PRIORYEARSALES
+FROM
+(
+	SELECT dbo.Customers.customerName, 0.0, dbo.OrderDetails.quantityOrdered * dbo.OrderDetails.priceEach
+	FROM dbo.Customers, dbo.Orders, dbo.OrderDetails
+	WHERE dbo.Customers.customerNumber = dbo.Orders.customerNumber
+	AND	 dbo.Orders.orderNumber = dbo.OrderDetails.orderNumber
+	AND YEAR(dbo.Orders.orderDate) = ?
+	UNION
+	SELECT dbo.Customers.customerName, dbo.OrderDetails.quantityOrdered * dbo.OrderDetails.priceEach, 0.0
+	FROM dbo.Customers, dbo.Orders, dbo.OrderDetails
+	WHERE dbo.Customers.customerNumber = dbo.Orders.customerNumber
+	AND	 dbo.Orders.orderNumber = dbo.OrderDetails.orderNumber
+	AND YEAR(dbo.Orders.orderDate) = ?
+)
+ORD (CUSTOMERNAME, CYSALES, PYSALES)
+GROUP BY
+	CUSTOMERNAME]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>1</design:nativeDataTypeCode>
+          <design:precision>38</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>1</design:nativeDataTypeCode>
+          <design:precision>38</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Total Sales By Territory" id="509">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">terr</property>
+                    <property name="alias">Territory</property>
+                    <text-property name="displayName">terr</text-property>
+                    <text-property name="heading">terr</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">yr</property>
+                    <property name="alias">Year</property>
+                    <text-property name="displayName">yr</text-property>
+                    <text-property name="heading">yr</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">SaleAmount</property>
+                    <text-property name="displayName">SaleAmount</text-property>
+                    <text-property name="heading">SaleAmount</text-property>
+                </structure>
+            </list-property>
+            <list-property name="filter">
+                <structure>
+                    <property name="operator">ge</property>
+                    <expression name="expr" type="javascript">row["yr"]</expression>
+                    <simple-property-list name="value1">
+                        <value type="javascript">params["currentYear"] - 1</value>
+                    </simple-property-list>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">Territory</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Year</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">SaleAmount</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Classic Models</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">terr</property>
+                    <property name="nativeName">terr</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">yr</property>
+                    <property name="nativeName">yr</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">SaleAmount</property>
+                    <property name="nativeName">SaleAmount</property>
+                    <property name="dataType">float</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select terr, yr, sum (qty * prc) as SaleAmount from
+(
+   select 
+   dbo.Offices.territory,
+   year (dbo.Orders.orderDate) as "Year", 
+   dbo.OrderDetails.quantityOrdered,
+   dbo.OrderDetails.priceEach
+   from 
+   dbo.Offices,
+   dbo.Orders, 
+   dbo.OrderDetails,
+   dbo.Employees,
+   dbo.Customers
+   where 
+   dbo.OrderDetails.orderNumber = 
+      dbo.Orders.orderNumber
+   and
+   dbo.Customers.customerNumber =
+      dbo.Orders.customerNumber
+   and
+   dbo.Customers.salesRepEmployeeNumber =
+      dbo.Employees.employeeNumber
+   and
+   dbo.Employees.officeCode =
+      dbo.Offices.officeCode
+)
+terrsales (terr, yr, qty, prc)
+group by terr, yr]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>TERR</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>TERR</design:label>
+            <design:formattingHints>
+              <design:displaySize>10</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>YR</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>YR</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>3</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>8</design:nativeDataTypeCode>
+            <design:precision>15</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>3</design:label>
+            <design:formattingHints>
+              <design:displaySize>22</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+    </design:resultSetDefinitions>
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Year</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          </design:attributes>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>QUANTITYORDERED</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+          </design:attributes>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>PRICEEACH</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>8</design:nativeDataTypeCode>
+          </design:attributes>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>TERRITORY</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          </design:attributes>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="crosstab" id="4">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">us-letter</property>
+            <property name="topMargin">0.25in</property>
+            <property name="leftMargin">0.25in</property>
+            <property name="bottomMargin">0.25in</property>
+            <property name="rightMargin">0.25in</property>
+            <property name="backgroundColor">white</property>
+            <property name="headerHeight">0.25in</property>
+            <property name="footerHeight">0.25in</property>
+            <page-footer>
+                <grid id="18">
+                    <property name="width">8in</property>
+                    <column id="19"/>
+                    <column id="373"/>
+                    <column id="20"/>
+                    <row id="21">
+                        <cell id="22">
+                            <property name="paddingTop">1pt</property>
+                            <property name="paddingLeft">10pt</property>
+                            <text id="374">
+                                <property name="fontFamily">"Verdana"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="color">#34598D</property>
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of format="MMMM d, yyyy">new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="372">
+                            <label id="774">
+                                <property name="backgroundAttachment">scroll</property>
+                                <property name="backgroundPositionX">0%</property>
+                                <property name="backgroundPositionY">0%</property>
+                                <property name="backgroundRepeat">repeat</property>
+                                <property name="fontFamily">"Verdana"</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="fontWeight">normal</property>
+                                <property name="fontStyle">normal</property>
+                                <property name="fontVariant">normal</property>
+                                <property name="color">#34598D</property>
+                                <property name="textLineThrough">none</property>
+                                <property name="textOverline">none</property>
+                                <property name="textUnderline">none</property>
+                                <property name="borderBottomColor">black</property>
+                                <property name="borderBottomStyle">none</property>
+                                <property name="borderBottomWidth">medium</property>
+                                <property name="borderLeftColor">black</property>
+                                <property name="borderLeftStyle">none</property>
+                                <property name="borderLeftWidth">medium</property>
+                                <property name="borderRightColor">black</property>
+                                <property name="borderRightStyle">none</property>
+                                <property name="borderRightWidth">medium</property>
+                                <property name="borderTopColor">black</property>
+                                <property name="borderTopStyle">none</property>
+                                <property name="borderTopWidth">medium</property>
+                                <property name="marginTop">0pt</property>
+                                <property name="marginLeft">0pt</property>
+                                <property name="marginBottom">0pt</property>
+                                <property name="marginRight">0pt</property>
+                                <property name="paddingTop">1pt</property>
+                                <property name="paddingLeft">1pt</property>
+                                <property name="paddingBottom">1pt</property>
+                                <property name="paddingRight">1pt</property>
+                                <property name="textAlign">center</property>
+                                <property name="letterSpacing">normal</property>
+                                <property name="lineHeight">normal</property>
+                                <property name="orphans">2</property>
+                                <property name="textTransform">none</property>
+                                <property name="whiteSpace">normal</property>
+                                <property name="widows">2</property>
+                                <property name="wordSpacing">normal</property>
+                                <property name="display">block</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
+                                <property name="pageBreakInside">auto</property>
+                                <property name="showIfBlank">false</property>
+                                <property name="canShrink">false</property>
+                                <text-property name="text">www.birt-exchange.com</text-property>
+                            </label>
+                        </cell>
+                        <cell id="24">
+                            <property name="paddingTop">1pt</property>
+                            <property name="paddingRight">5pt</property>
+                            <property name="textAlign">right</property>
+                            <grid id="388">
+                                <property name="marginTop">0pt</property>
+                                <property name="canShrink">false</property>
+                                <property name="height">0.4479166667in</property>
+                                <column id="401">
+                                    <property name="width">0.38in</property>
+                                </column>
+                                <column id="389">
+                                    <property name="width">0.25in</property>
+                                </column>
+                                <column id="390">
+                                    <property name="width">0.2in</property>
+                                </column>
+                                <column id="391">
+                                    <property name="width">0.25in</property>
+                                </column>
+                                <row id="392">
+                                    <cell id="400">
+                                        <property name="paddingTop">1pt</property>
+                                        <property name="paddingBottom">1pt</property>
+                                        <property name="paddingRight">2pt</property>
+                                        <label id="399">
+                                            <property name="fontFamily">"Verdana"</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="color">#34598D</property>
+                                            <property name="paddingTop">1pt</property>
+                                            <text-property name="text">Page</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="393">
+                                        <property name="paddingTop">1pt</property>
+                                        <property name="paddingLeft">2pt</property>
+                                        <property name="paddingBottom">1pt</property>
+                                        <property name="paddingRight">2pt</property>
+                                        <auto-text id="394">
+                                            <property name="fontFamily">"Verdana"</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="color">#34598D</property>
+                                            <property name="paddingTop">1pt</property>
+                                            <property name="type">page-number</property>
+                                        </auto-text>
+                                    </cell>
+                                    <cell id="395">
+                                        <property name="paddingTop">1pt</property>
+                                        <property name="paddingLeft">2pt</property>
+                                        <property name="paddingRight">2pt</property>
+                                        <text id="396">
+                                            <property name="fontFamily">"Verdana"</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="color">#34598D</property>
+                                            <property name="textAlign">center</property>
+                                            <property name="contentType">plain</property>
+                                            <text-property name="content"><![CDATA[of]]></text-property>
+                                        </text>
+                                    </cell>
+                                    <cell id="397">
+                                        <property name="paddingTop">1pt</property>
+                                        <property name="paddingLeft">2pt</property>
+                                        <auto-text id="398">
+                                            <property name="fontFamily">"Verdana"</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="color">#34598D</property>
+                                            <property name="textAlign">left</property>
+                                            <property name="type">total-page</property>
+                                        </auto-text>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid name="Header" id="754">
+            <property name="borderBottomColor">#34598D</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1px</property>
+            <property name="marginTop">0pt</property>
+            <property name="width">100%</property>
+            <column id="755">
+                <property name="width">0.55in</property>
+            </column>
+            <column id="756">
+                <property name="width">3.2in</property>
+            </column>
+            <column id="757">
+                <property name="width">3.75in</property>
+            </column>
+            <row id="758">
+                <property name="backgroundColor">#FFFFFF</property>
+                <cell id="759">
+                    <property name="paddingTop">3pt</property>
+                    <property name="paddingLeft">3pt</property>
+                    <property name="paddingBottom">3pt</property>
+                    <property name="textAlign">center</property>
+                    <property name="verticalAlign">middle</property>
+                    <image id="760">
+                        <property name="height">36px</property>
+                        <property name="width">36px</property>
+                        <property name="source">embed</property>
+                        <property name="imageName">classic-models-blue-logo-75x75.png</property>
+                    </image>
+                </cell>
+                <cell id="761">
+                    <property name="paddingRight">0pt</property>
+                    <property name="verticalAlign">bottom</property>
+                    <text name="NewText1" id="762">
+                        <property name="fontFamily">"Verdana"</property>
+                        <property name="fontSize">10pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="color">#34598D</property>
+                        <property name="paddingRight">5pt</property>
+                        <property name="textAlign">left</property>
+                        <property name="contentType">html</property>
+                        <text-property name="content"><![CDATA[Classic Models, Inc<BR>
+2207 Bridgepointe Parkway<BR>
+San Mateo, CA 94404
+]]></text-property>
+                    </text>
+                </cell>
+                <cell id="763">
+                    <property name="paddingRight">0pt</property>
+                    <property name="textAlign">right</property>
+                    <property name="verticalAlign">bottom</property>
+                    <label id="764">
+                        <property name="fontFamily">"Verdana"</property>
+                        <property name="fontSize">18pt</property>
+                        <property name="fontWeight">bold</property>
+                        <property name="color">#34598D</property>
+                        <property name="textAlign">right</property>
+                        <text-property name="text">Customer Sales Dashboard</text-property>
+                    </label>
+                </cell>
+            </row>
+        </grid>
+        <image id="776">
+            <property name="height">0.3125in</property>
+            <property name="width">1.0520833333333333in</property>
+            <property name="source">embed</property>
+            <property name="imageName">A.gif</property>
+        </image>
+        <grid name="Container Grid" id="522">
+            <property name="width">100%</property>
+            <column id="523">
+                <property name="width">3in</property>
+            </column>
+            <column id="524"/>
+            <row id="525">
+                <cell id="526">
+                    <grid name="Revenue History Header" id="352">
+                        <property name="width">100%</property>
+                        <column id="353"/>
+                        <row id="358">
+                            <cell id="359">
+                                <property name="borderBottomColor">#34598D</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="paddingTop">5pt</property>
+                                <label id="360">
+                                    <property name="fontFamily">"Verdana"</property>
+                                    <property name="fontSize">12pt</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="color">#34598D</property>
+                                    <property name="textAlign">left</property>
+                                    <text-property name="text">REVENUE HISTORY</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="527">
+                    <grid name="Top 5 Customers Header" id="535">
+                        <property name="width">100%</property>
+                        <column id="536"/>
+                        <row id="541">
+                            <property name="backgroundColor">#FFFFFF</property>
+                            <cell id="542">
+                                <property name="borderBottomColor">#34598D</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="paddingTop">5pt</property>
+                                <label id="543">
+                                    <property name="fontFamily">"Verdana"</property>
+                                    <property name="fontSize">12pt</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="color">#34598D</property>
+                                    <property name="textAlign">left</property>
+                                    <text-property name="text">TOP 5 CUSTOMERS</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+            <row id="528">
+                <cell id="529">
+                    <extended-item extensionName="Chart" name="Revenue History" id="379">
+                        <xml-property name="xmlRepresentation"><![CDATA[<ActuateChart version="2.5.3">
+ <ChartWithAxes version="2.5.3" type="Bar Chart" subType="Side-by-side" units="Points" orientation="0">
+  <block>
+   <children _type="TitleBlock" visible="false">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <label>
+     <caption value="Bar Chart Title">
+      <font size="16.0" bold="true">
+       <alignment _body="1,"/>
+      </font>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </label>
+   </children>
+   <children _type="Plot">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <background _body=",255,255,255,255"/>
+    <clientArea>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </clientArea>
+   </children>
+   <children _type="Legend" visible="false">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <clientArea>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </clientArea>
+    <text value=""/>
+    <separator>
+     <color _nil="1"/>
+    </separator>
+    <title>
+     <caption value=""/>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </title>
+   </children>
+   <bounds _body=",,207.0,576.0"/>
+   <outline>
+    <color _nil="1"/>
+   </outline>
+   <background _body=",255,255,255,255"/>
+  </block>
+  <sampleData>
+   <baseSampleData dataSetRepresentation="01/05/2000,02/01/2000,04/12/2000"/>
+   <orthogonalSampleData dataSetRepresentation="5.0,4.0,12.0"/>
+   <orthogonalSampleData dataSetRepresentation="10.0,8.0,24.0" seriesDefinitionIndex="1"/>
+  </sampleData>
+  <emptyMessage>
+   <caption value="">
+    <font>
+     <alignment _body=",0"/>
+    </font>
+   </caption>
+   <background _body=",0,255,255,255"/>
+   <outline visible="false">
+    <color _body=",255,0,0,0"/>
+   </outline>
+   <insets _body="0.0,2.0,0.0,3.0"/>
+  </emptyMessage>
+  <axes type="3">
+   <title>
+    <caption value="X-Axis Title">
+     <font size="14.0" bold="true">
+      <alignment _body="1,"/>
+     </font>
+    </caption>
+    <background _nil="1"/>
+    <outline>
+     <color _nil="1"/>
+    </outline>
+   </title>
+   <associatedAxes>
+    <title visible="true">
+     <caption value="Total Revenue">
+      <font name="Verdana" size="10.0" rotation="-1.0">
+       <alignment _body="1,"/>
+      </font>
+     </caption>
+     <background _body=",255,254,254,254"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+     <shadowColor _body=",255,254,254,254"/>
+    </title>
+    <seriesDefinitions sorting="0">
+     <query definition=""/>
+     <seriesPalette>
+      <entries _type="Gradient">
+       <startColor _body=",255,224,195,142"/>
+       <endColor _body=",255,254,254,153"/>
+      </entries>
+      <entries _type="Gradient">
+       <startColor _body=",255,254,254,254"/>
+       <endColor _body=",255,51,51,51"/>
+      </entries>
+      <entries _body=",255,232,172,57"/>
+      <entries _body=",255,128,255,128"/>
+      <entries _body=",255,64,128,128"/>
+      <entries _body=",255,128,128,192"/>
+      <entries _body=",255,170,85,85"/>
+      <entries _body=",255,128,128,0"/>
+     </seriesPalette>
+     <series _type="BarSeries" seriesIdentifier="Total Revenue" translucent="true">
+      <label>
+       <caption value="">
+        <font name="Verdana" size="8.0"/>
+       </caption>
+       <background _nil="1"/>
+       <outline>
+        <color _nil="1"/>
+       </outline>
+       <insets _body=",0.0,,0.0"/>
+      </label>
+      <dataDefinition definition="row[&quot;TOTALREVENUE&quot;]"/>
+      <dataPoint separator=", ">
+       <components type="1">
+        <formatSpecifier _type="NumberFormatSpecifier" prefix="$" suffix="" fractionDigits="0"/>
+       </components>
+      </dataPoint>
+      <triggers condition="6">
+       <action type="1">
+        <value _type="TooltipValue" text="" delay="200"/>
+       </action>
+      </triggers>
+      <triggers condition="6">
+       <action type="1">
+        <value _type="TooltipValue" text="" delay="200"/>
+       </action>
+      </triggers>
+      <triggers condition="6">
+       <action type="1">
+        <value _type="TooltipValue" text="" delay="200"/>
+       </action>
+      </triggers>
+      <triggers condition="2">
+       <action>
+        <value _type="URLValue" baseUrl="&lt;structure name=&quot;action&quot;&gt;&#10;    &lt;property name=&quot;linkType&quot;&gt;drill-through&lt;/property&gt;&#10;    &lt;property name=&quot;reportName&quot;&gt;Monthly Revenue Analysis.rptdesign&lt;/property&gt;&#10;    &lt;property name=&quot;targetWindow&quot;&gt;_blank&lt;/property&gt;&#10;    &lt;property name=&quot;targetFileType&quot;&gt;report-design&lt;/property&gt;&#10;    &lt;list-property name=&quot;paramBindings&quot;&gt;&#10;        &lt;structure&gt;&#10;            &lt;property name=&quot;paramName&quot;&gt;currentMonth&lt;/property&gt;&#10;            &lt;expression name=&quot;expression&quot;&gt;BirtDateTime.month(row[&quot;ORDERDATE&quot;])&lt;/expression&gt;&#10;        &lt;/structure&gt;&#10;        &lt;structure&gt;&#10;            &lt;property name=&quot;paramName&quot;&gt;currentYear&lt;/property&gt;&#10;            &lt;expression name=&quot;expression&quot;&gt;BirtDateTime.year(row[&quot;ORDERDATE&quot;])&lt;/expression&gt;&#10;        &lt;/structure&gt;&#10;    &lt;/list-property&gt;&#10;&lt;/structure&gt;&#10;" baseParameterName="" valueParameterName="" seriesParameterName=""/>
+       </action>
+      </triggers>
+      <curveFitting _nil="1"/>
+      <riserOutline _body=",255,0,0,0"/>
+     </series>
+     <grouping groupingInterval="2.0"/>
+    </seriesDefinitions>
+    <lineAttributes>
+     <color _body=",255,0,0,0"/>
+    </lineAttributes>
+    <label>
+     <caption value="">
+      <font name="SansSerif"/>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </label>
+    <formatSpecifier _type="NumberFormatSpecifier" prefix="$" suffix="" fractionDigits="0"/>
+    <majorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes>
+      <color _body=",,0,0,0"/>
+     </tickAttributes>
+    </majorGrid>
+    <minorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes visible="true">
+      <color _nil="1"/>
+     </tickAttributes>
+    </minorGrid>
+    <scale>
+     <max _type="NumberDataElement" value="1200000.0"/>
+    </scale>
+    <origin>
+     <value _nil="1"/>
+    </origin>
+   </associatedAxes>
+   <associatedAxes titlePosition="3" labelPosition="3" primaryAxis="false">
+    <title visible="true">
+     <caption value="Total Units Sold">
+      <font name="Verdana" size="10.0" rotation="-1.0">
+       <alignment _body="1,"/>
+      </font>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </title>
+    <seriesDefinitions sorting="0">
+     <query definition=""/>
+     <seriesPalette>
+      <entries _type="Gradient">
+       <startColor _body=",255,254,254,254"/>
+       <endColor _body=",255,51,51,51"/>
+      </entries>
+      <entries _body=",255,242,88,106"/>
+      <entries _body=",255,232,172,57"/>
+      <entries _body=",255,128,255,128"/>
+      <entries _body=",255,64,128,128"/>
+      <entries _body=",255,128,128,192"/>
+      <entries _body=",255,170,85,85"/>
+      <entries _type="Gradient">
+       <startColor _body=",255,224,195,142"/>
+       <endColor _body=",255,254,254,153"/>
+      </entries>
+     </seriesPalette>
+     <series _type="LineSeries" seriesIdentifier="Total Units Sold" paletteLineColor="true">
+      <label>
+       <caption value="">
+        <font name="Verdana" size="8.0"/>
+       </caption>
+       <background _nil="1"/>
+       <outline>
+        <color _nil="1"/>
+       </outline>
+       <insets _body=",0.0,,0.0"/>
+      </label>
+      <dataDefinition definition="row[&quot;TOTALUNITSSOLD&quot;]"/>
+      <dataPoint separator=", ">
+       <components type="1">
+        <formatSpecifier _type="NumberFormatSpecifier" prefix="" suffix="" fractionDigits="0"/>
+       </components>
+      </dataPoint>
+      <triggers condition="6">
+       <action type="1">
+        <value _type="TooltipValue" text="" delay="200"/>
+       </action>
+      </triggers>
+      <triggers condition="6">
+       <action type="1">
+        <value _type="TooltipValue" text="" delay="200"/>
+       </action>
+      </triggers>
+      <triggers condition="6">
+       <action type="1">
+        <value _type="TooltipValue" text="" delay="200"/>
+       </action>
+      </triggers>
+      <triggers condition="2">
+       <action>
+        <value _type="URLValue" baseUrl="&lt;structure name=&quot;action&quot;&gt;&#10;    &lt;property name=&quot;linkType&quot;&gt;drill-through&lt;/property&gt;&#10;    &lt;property name=&quot;reportName&quot;&gt;Monthly Revenue Analysis.rptdesign&lt;/property&gt;&#10;    &lt;property name=&quot;targetWindow&quot;&gt;_blank&lt;/property&gt;&#10;    &lt;property name=&quot;targetFileType&quot;&gt;report-design&lt;/property&gt;&#10;    &lt;list-property name=&quot;paramBindings&quot;&gt;&#10;        &lt;structure&gt;&#10;            &lt;property name=&quot;paramName&quot;&gt;currentMonth&lt;/property&gt;&#10;            &lt;expression name=&quot;expression&quot;&gt;BirtDateTime.month(row[&quot;ORDERDATE&quot;])&lt;/expression&gt;&#10;        &lt;/structure&gt;&#10;        &lt;structure&gt;&#10;            &lt;property name=&quot;paramName&quot;&gt;currentYear&lt;/property&gt;&#10;            &lt;expression name=&quot;expression&quot;&gt;BirtDateTime.year(row[&quot;ORDERDATE&quot;])&lt;/expression&gt;&#10;        &lt;/structure&gt;&#10;    &lt;/list-property&gt;&#10;&lt;/structure&gt;&#10;" baseParameterName="" valueParameterName="" seriesParameterName=""/>
+       </action>
+      </triggers>
+      <curveFitting _nil="1"/>
+      <markers type="2" size="4" visible="true">
+       <outline visible="false"/>
+      </markers>
+      <lineAttributes>
+       <color _nil="1"/>
+      </lineAttributes>
+     </series>
+     <grouping groupingInterval="2.0"/>
+    </seriesDefinitions>
+    <lineAttributes>
+     <color _body=",255,0,0,0"/>
+    </lineAttributes>
+    <label>
+     <caption value="">
+      <font name="SansSerif" size="8.0"/>
+      <color _body=",255,0,0,0"/>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </label>
+    <formatSpecifier _type="NumberFormatSpecifier" prefix="" suffix="" fractionDigits="0"/>
+    <majorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes>
+      <color _body=",,0,0,0"/>
+     </tickAttributes>
+    </majorGrid>
+    <minorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes visible="true">
+      <color _nil="1"/>
+     </tickAttributes>
+    </minorGrid>
+    <scale>
+     <min _type="NumberDataElement"/>
+     <max _type="NumberDataElement" value="11000.0"/>
+    </scale>
+    <origin type="1">
+     <value _nil="1"/>
+    </origin>
+   </associatedAxes>
+   <seriesDefinitions>
+    <query definition=""/>
+    <seriesPalette>
+     <entries _type="Gradient">
+      <startColor _body=",255,224,195,142"/>
+      <endColor _body=",255,254,254,153"/>
+     </entries>
+     <entries _type="Gradient">
+      <startColor _body=",255,254,254,254"/>
+      <endColor _body=",255,51,51,51"/>
+     </entries>
+     <entries _body=",255,232,172,57"/>
+     <entries _body=",255,128,255,128"/>
+     <entries _body=",255,64,128,128"/>
+     <entries _body=",255,128,128,192"/>
+     <entries _body=",255,170,85,85"/>
+     <entries _body=",255,128,128,0"/>
+    </seriesPalette>
+    <series seriesIdentifier="">
+     <label>
+      <caption value=""/>
+      <background _nil="1"/>
+      <outline>
+       <color _nil="1"/>
+      </outline>
+     </label>
+     <dataDefinition definition="row[&quot;ORDERDATE&quot;]"/>
+     <dataPoint separator=", ">
+      <components type="1"/>
+     </dataPoint>
+     <curveFitting _nil="1"/>
+    </series>
+    <grouping enabled="true" groupingUnit="5" groupType="1"/>
+   </seriesDefinitions>
+   <lineAttributes>
+    <color _body=",255,0,0,0"/>
+   </lineAttributes>
+   <label>
+    <caption value="">
+     <font name="SansSerif"/>
+    </caption>
+    <background _nil="1"/>
+    <outline>
+     <color _nil="1"/>
+    </outline>
+   </label>
+   <formatSpecifier _type="JavaDateFormatSpecifier" pattern="MMMM"/>
+   <majorGrid>
+    <lineAttributes>
+     <color _nil="1"/>
+    </lineAttributes>
+    <tickAttributes>
+     <color _nil="1"/>
+    </tickAttributes>
+   </majorGrid>
+   <minorGrid>
+    <lineAttributes>
+     <color _nil="1"/>
+    </lineAttributes>
+    <tickAttributes>
+     <color _nil="1"/>
+    </tickAttributes>
+   </minorGrid>
+   <origin>
+    <value _nil="1"/>
+   </origin>
+  </axes>
+  <rotation>
+   <angles/>
+  </rotation>
+ </ChartWithAxes>
+</ActuateChart>
+]]></xml-property>
+                        <property name="outputFormat">PNG</property>
+                        <list-property name="action">
+                            <structure>
+                                <property name="targetWindow">_blank</property>
+                                <property name="linkType">drill-through</property>
+                                <property name="targetFileType">report-design</property>
+                                <property name="reportName">Monthly Revenue Analysis.rptdesign</property>
+                                <list-property name="paramBindings">
+                                    <structure>
+                                        <property name="paramName">currentMonth</property>
+                                        <simple-property-list name="expression">
+                                            <value>BirtDateTime.month(row["ORDERDATE"])</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="paramName">currentYear</property>
+                                        <simple-property-list name="expression">
+                                            <value>BirtDateTime.year(row["ORDERDATE"])</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                            </structure>
+                        </list-property>
+                        <property name="altText">Revenue History</property>
+                        <property name="dataSet">Historical Sales</property>
+                        <property name="height">8in</property>
+                        <property name="width">2.875in</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">ORDERDATE</property>
+                                <expression name="expression" type="javascript">dataSetRow["orderDate"]</expression>
+                                <property name="dataType">date-time</property>
+                            </structure>
+                            <structure>
+                                <property name="name">TOTALREVENUE</property>
+                                <expression name="expression">dataSetRow["TOTALREVENUE"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
+                            <structure>
+                                <property name="name">TOTALUNITSSOLD</property>
+                                <expression name="expression">dataSetRow["TOTALUNITSSOLD"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                        </list-property>
+                    </extended-item>
+                </cell>
+                <cell id="530">
+                    <property name="paddingTop">1pt</property>
+                    <property name="textAlign">center</property>
+                    <property name="verticalAlign">top</property>
+                    <table name="Top 5 Customers" id="673">
+                        <property name="fontFamily">"Verdana"</property>
+                        <property name="marginTop">0pt</property>
+                        <property name="width">100%</property>
+                        <property name="dataSet">Total Sales By Customer</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">CUSTOMERNAME</property>
+                                <expression name="expression">dataSetRow["CUSTOMERNAME"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">CURRENTYEARSALES</property>
+                                <expression name="expression">dataSetRow["CURRENTYEARSALES"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
+                            <structure>
+                                <property name="name">PRIORYEARSALES</property>
+                                <expression name="expression">dataSetRow["PRIORYEARSALES"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
+                            <structure>
+                                <property name="name">%Change</property>
+                                <expression name="expression">(row["CURRENTYEARSALES"] - row["PRIORYEARSALES"]) /row["PRIORYEARSALES"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
+                        </list-property>
+                        <expression name="bookmark">"Top_5_Customers"</expression>
+                        <property name="pageBreakInterval">50</property>
+                        <list-property name="sort">
+                            <structure>
+                                <expression name="key">row["CURRENTYEARSALES"]</expression>
+                                <property name="direction">desc</property>
+                            </structure>
+                        </list-property>
+                        <list-property name="filter">
+                            <structure>
+                                <property name="operator">top-n</property>
+                                <expression name="expr">row["CURRENTYEARSALES"]</expression>
+                                <simple-property-list name="value1">
+                                    <value>5</value>
+                                </simple-property-list>
+                            </structure>
+                        </list-property>
+                        <column id="708"/>
+                        <column id="711"/>
+                        <column id="712"/>
+                        <column id="716"/>
+                        <column id="720"/>
+                        <header>
+                            <row id="674">
+                                <property name="backgroundColor">#34598D</property>
+                                <property name="fontSize">10pt</property>
+                                <property name="color">#FFFFFF</property>
+                                <cell id="677">
+                                    <label id="613">
+                                        <text-property name="text">Customer</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="683">
+                                    <label id="614">
+                                        <property name="textAlign">right</property>
+                                        <text-property name="text">Prior Year</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="685">
+                                    <label id="615">
+                                        <property name="textAlign">right</property>
+                                        <text-property name="text">This Year</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="713">
+                                    <label id="616">
+                                        <property name="textAlign">right</property>
+                                        <text-property name="text">% Change</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="717">
+                                    <label id="617">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Trend</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="687">
+                                <property name="fontSize">8pt</property>
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#E8F5FD</property>
+                                        <expression name="testExpr">row.__rownum%2</expression>
+                                        <simple-property-list name="value1">
+                                            <value>0</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#D2E3F3</property>
+                                        <expression name="testExpr">row.__rownum%2</expression>
+                                        <simple-property-list name="value1">
+                                            <value>1</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                                <cell id="690">
+                                    <data id="691">
+                                        <method name="onRender"><![CDATA[if (reportContext.getOutputFormat() == "pdf")
+{
+   this.action = null;
+}]]></method>
+                                        <property name="resultSetColumn">CUSTOMERNAME</property>
+                                        <list-property name="action">
+                                            <structure>
+                                                <property name="linkType">drill-through</property>
+                                                <property name="reportName">Customer Order History.rptdesign</property>
+                                                <property name="targetWindow">_blank</property>
+                                                <property name="targetFileType">report-design</property>
+                                                <list-property name="paramBindings">
+                                                    <structure>
+                                                        <property name="paramName">Customer</property>
+                                                        <simple-property-list name="expression">
+                                                            <value>row["CUSTOMERNAME"]</value>
+                                                        </simple-property-list>
+                                                    </structure>
+                                                </list-property>
+                                            </structure>
+                                        </list-property>
+                                    </data>
+                                </cell>
+                                <cell id="696">
+                                    <data id="697">
+                                        <structure name="numberFormat">
+                                            <property name="category">Currency</property>
+                                            <property name="pattern">$#,##0</property>
+                                        </structure>
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">PRIORYEARSALES</property>
+                                    </data>
+                                </cell>
+                                <cell id="698">
+                                    <data id="699">
+                                        <structure name="numberFormat">
+                                            <property name="category">Currency</property>
+                                            <property name="pattern">$#,##0</property>
+                                        </structure>
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">CURRENTYEARSALES</property>
+                                    </data>
+                                </cell>
+                                <cell id="714">
+                                    <data id="737">
+                                        <structure name="numberFormat">
+                                            <property name="category">Percent</property>
+                                            <property name="pattern">#,##0%</property>
+                                        </structure>
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">%Change</property>
+                                    </data>
+                                </cell>
+                                <cell id="718">
+                                    <property name="textAlign">center</property>
+                                    <image id="638">
+                                        <method name="onRender"><![CDATA[if (row["%Change"] > 0)
+   this.imageName = "Up Trend Green Button 16x16.png";
+else if ( row["%Change"] < 0)
+   this.imageName = "Down Trend Red Button 16x16.png";
+else
+   this.imageName = "Neutral Trend Orange Button 16x16.png";]]></method>
+                                        <property name="source">embed</property>
+                                        <property name="imageName">Neutral Trend Orange Button 16x16.png</property>
+                                    </image>
+                                </cell>
+                            </row>
+                        </detail>
+                    </table>
+                    <grid name="Territory Sales Header" id="560">
+                        <property name="width">100%</property>
+                        <column id="561"/>
+                        <row id="566">
+                            <property name="backgroundColor">#FFFFFF</property>
+                            <cell id="567">
+                                <property name="borderBottomColor">#34598D</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="paddingTop">5pt</property>
+                                <label id="568">
+                                    <property name="fontFamily">"Verdana"</property>
+                                    <property name="fontSize">12pt</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="color">#34598D</property>
+                                    <property name="paddingTop">1pt</property>
+                                    <property name="textAlign">left</property>
+                                    <text-property name="text">REVENUE BY TERRITORY</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                    <extended-item extensionName="Chart" name="Sales by Territory" id="772">
+                        <xml-property name="xmlRepresentation"><![CDATA[<ActuateChart version="2.5.3">
+ <ChartWithAxes version="2.5.3" type="Bar Chart" subType="Side-by-side" dimension="2" units="Points">
+  <description value="">
+   <font>
+    <alignment/>
+   </font>
+  </description>
+  <block>
+   <children _type="TitleBlock" visible="false">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <label>
+     <caption value="Bar Chart Title">
+      <font size="16.0" bold="true">
+       <alignment _body="1,"/>
+      </font>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </label>
+   </children>
+   <children _type="Plot">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <clientArea>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </clientArea>
+   </children>
+   <children _type="Legend" visible="false" itemType="1">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <clientArea>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </clientArea>
+    <text value=""/>
+    <separator>
+     <color _nil="1"/>
+    </separator>
+    <title>
+     <caption value=""/>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </title>
+   </children>
+   <bounds _body=",,324.0,201.6"/>
+   <outline>
+    <color _nil="1"/>
+   </outline>
+   <background _body=",255,255,255,255"/>
+  </block>
+  <sampleData>
+   <baseSampleData dataSetRepresentation="A, B, C"/>
+   <orthogonalSampleData dataSetRepresentation="5,4,12"/>
+   <ancillarySampleData dataSetRepresentation="Series 1"/>
+  </sampleData>
+  <emptyMessage>
+   <caption value="">
+    <font>
+     <alignment _body=",0"/>
+    </font>
+   </caption>
+   <background _body=",0,255,255,255"/>
+   <outline visible="false">
+    <color _body=",255,0,0,0"/>
+   </outline>
+   <insets _body="0.0,2.0,0.0,3.0"/>
+  </emptyMessage>
+  <axes>
+   <title>
+    <caption value="">
+     <font size="14.0" bold="true">
+      <alignment _body="1,"/>
+     </font>
+    </caption>
+    <background _nil="1"/>
+    <outline>
+     <color _nil="1"/>
+    </outline>
+   </title>
+   <associatedAxes>
+    <title>
+     <caption value="">
+      <font size="14.0" bold="true" rotation="90.0">
+       <alignment _body="1,"/>
+      </font>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </title>
+    <seriesDefinitions sorting="0">
+     <query definition="if (row[&quot;Year&quot;] == params[&quot;currentYear&quot;])&#13;&#10;   &quot;This Year&quot;;&#13;&#10;else&#13;&#10;   &quot;Prior Year&quot;;"/>
+     <seriesPalette>
+      <entries _type="Gradient">
+       <startColor _body=",255,80,166,218"/>
+       <endColor _body=",255,108,222,228"/>
+      </entries>
+      <entries _type="Gradient">
+       <startColor _body=",255,242,88,106"/>
+       <endColor _body=",255,255,149,117"/>
+      </entries>
+      <entries _type="Gradient">
+       <startColor _body=",255,232,172,57"/>
+       <endColor _body=",255,250,209,63"/>
+      </entries>
+      <entries _type="Gradient">
+       <startColor _body=",255,98,196,117"/>
+       <endColor _body=",255,128,255,128"/>
+      </entries>
+      <entries _body=",255,64,128,128"/>
+      <entries _body=",255,128,128,192"/>
+      <entries _body=",255,170,85,85"/>
+      <entries _body=",255,128,128,0"/>
+     </seriesPalette>
+     <series _type="BarSeries" seriesIdentifier="" translucent="true">
+      <label visible="true">
+       <caption value="">
+        <font name="Verdana" size="7.0"/>
+       </caption>
+       <background _nil="1"/>
+       <outline>
+        <color _nil="1"/>
+       </outline>
+      </label>
+      <dataDefinition definition="row[&quot;SaleAmount&quot;]"/>
+      <dataPoint separator=", ">
+       <components type="1">
+        <formatSpecifier _type="NumberFormatSpecifier" prefix="$" suffix="" fractionDigits="0"/>
+       </components>
+      </dataPoint>
+      <triggers condition="2">
+       <action>
+        <value _type="URLValue" baseUrl="&lt;structure name=&quot;action&quot;&gt;&#10;    &lt;property name=&quot;linkType&quot;&gt;drill-through&lt;/property&gt;&#10;    &lt;property name=&quot;reportName&quot;&gt;Sales by Territory.rptdesign&lt;/property&gt;&#10;    &lt;property name=&quot;targetWindow&quot;&gt;_blank&lt;/property&gt;&#10;    &lt;property name=&quot;targetFileType&quot;&gt;report-design&lt;/property&gt;&#10;    &lt;list-property name=&quot;paramBindings&quot;&gt;&#10;        &lt;structure&gt;&#10;            &lt;property name=&quot;paramName&quot;&gt;Territory&lt;/property&gt;&#10;            &lt;expression name=&quot;expression&quot;&gt;row[&quot;Territory&quot;]&lt;/expression&gt;&#10;        &lt;/structure&gt;&#10;    &lt;/list-property&gt;&#10;&lt;/structure&gt;&#10;" baseParameterName="" valueParameterName="" seriesParameterName=""/>
+       </action>
+      </triggers>
+      <curveFitting _nil="1"/>
+     </series>
+     <grouping groupingInterval="2.0"/>
+    </seriesDefinitions>
+    <lineAttributes visible="false">
+     <color _body=",0,255,255,255"/>
+    </lineAttributes>
+    <label visible="false">
+     <caption value="">
+      <font name="Verdana" size="8.0"/>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </label>
+    <formatSpecifier _type="NumberFormatSpecifier" prefix="$" suffix="" fractionDigits="0"/>
+    <majorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes>
+      <color _nil="1"/>
+     </tickAttributes>
+    </majorGrid>
+    <minorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes>
+      <color _nil="1"/>
+     </tickAttributes>
+    </minorGrid>
+    <scale>
+     <min _type="NumberDataElement"/>
+     <max _type="NumberDataElement" value="2500000.0"/>
+    </scale>
+    <origin>
+     <value _nil="1"/>
+    </origin>
+   </associatedAxes>
+   <ancillaryAxes type="2" titlePosition="1" orientation="0" labelPosition="1" staggered="true">
+    <title>
+     <caption value="">
+      <font size="14.0" bold="true">
+       <alignment _body="1,"/>
+      </font>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </title>
+    <seriesDefinitions>
+     <query definition=""/>
+     <seriesPalette>
+      <entries _body=",255,80,166,218"/>
+      <entries _body=",255,242,88,106"/>
+      <entries _body=",255,232,172,57"/>
+      <entries _body=",255,128,255,128"/>
+      <entries _body=",255,64,128,128"/>
+      <entries _body=",255,128,128,192"/>
+      <entries _body=",255,170,85,85"/>
+      <entries _body=",255,128,128,0"/>
+     </seriesPalette>
+     <series seriesIdentifier="">
+      <label>
+       <caption value=""/>
+       <background _nil="1"/>
+       <outline>
+        <color _nil="1"/>
+       </outline>
+      </label>
+      <dataPoint separator=", ">
+       <components type="1"/>
+      </dataPoint>
+      <curveFitting _nil="1"/>
+     </series>
+     <grouping groupingInterval="2.0"/>
+    </seriesDefinitions>
+    <lineAttributes visible="false">
+     <color _body=",255,0,0,0"/>
+    </lineAttributes>
+    <label>
+     <caption value="">
+      <font name="Verdana" size="8.0"/>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+     <insets _body=",0.0,,0.0"/>
+    </label>
+    <majorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes>
+      <color _nil="1"/>
+     </tickAttributes>
+    </majorGrid>
+    <minorGrid>
+     <lineAttributes>
+      <color _nil="1"/>
+     </lineAttributes>
+     <tickAttributes>
+      <color _nil="1"/>
+     </tickAttributes>
+    </minorGrid>
+    <origin>
+     <value _nil="1"/>
+    </origin>
+   </ancillaryAxes>
+   <seriesDefinitions>
+    <query definition=""/>
+    <seriesPalette>
+     <entries _type="Gradient">
+      <startColor _body=",255,80,166,218"/>
+      <endColor _body=",255,108,222,228"/>
+     </entries>
+     <entries _type="Gradient">
+      <startColor _body=",255,242,88,106"/>
+      <endColor _body=",255,255,149,117"/>
+     </entries>
+     <entries _type="Gradient">
+      <startColor _body=",255,232,172,57"/>
+      <endColor _body=",255,250,209,63"/>
+     </entries>
+     <entries _type="Gradient">
+      <startColor _body=",255,98,196,117"/>
+      <endColor _body=",255,128,255,128"/>
+     </entries>
+     <entries _body=",255,64,128,128"/>
+     <entries _body=",255,128,128,192"/>
+     <entries _body=",255,170,85,85"/>
+     <entries _body=",255,128,128,0"/>
+    </seriesPalette>
+    <series seriesIdentifier="">
+     <label>
+      <caption value=""/>
+      <background _nil="1"/>
+      <outline>
+       <color _nil="1"/>
+      </outline>
+     </label>
+     <dataDefinition definition="row[&quot;Territory&quot;]"/>
+     <dataPoint separator=", ">
+      <components type="1"/>
+     </dataPoint>
+     <curveFitting _nil="1"/>
+    </series>
+    <grouping groupingInterval="2.0"/>
+   </seriesDefinitions>
+   <lineAttributes visible="false">
+    <color _body=",255,0,0,0"/>
+   </lineAttributes>
+   <label>
+    <caption value="">
+     <font name="Verdana" size="8.0"/>
+    </caption>
+    <background _nil="1"/>
+    <outline>
+     <color _nil="1"/>
+    </outline>
+   </label>
+   <majorGrid>
+    <lineAttributes>
+     <color _nil="1"/>
+    </lineAttributes>
+    <tickAttributes>
+     <color _nil="1"/>
+    </tickAttributes>
+   </majorGrid>
+   <minorGrid>
+    <lineAttributes>
+     <color _nil="1"/>
+    </lineAttributes>
+    <tickAttributes>
+     <color _nil="1"/>
+    </tickAttributes>
+   </minorGrid>
+   <origin>
+    <value _nil="1"/>
+   </origin>
+  </axes>
+  <wallFill _body=",0,255,255,255"/>
+  <floorFill _body=",125,128,128,128"/>
+  <rotation>
+   <angles xAngle="-32.0" yAngle="23.0"/>
+  </rotation>
+ </ChartWithAxes>
+</ActuateChart>
+]]></xml-property>
+                        <property name="outputFormat">PNG</property>
+                        <list-property name="action">
+                            <structure>
+                                <property name="targetWindow">_blank</property>
+                                <property name="linkType">drill-through</property>
+                                <property name="targetFileType">report-design</property>
+                                <property name="reportName">Sales by Territory.rptdesign</property>
+                                <list-property name="paramBindings">
+                                    <structure>
+                                        <property name="paramName">Territory</property>
+                                        <simple-property-list name="expression">
+                                            <value>row["Territory"]</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                            </structure>
+                        </list-property>
+                        <expression name="bookmark">"Revenue_by_Territory"</expression>
+                        <property name="dataSet">Total Sales By Territory</property>
+                        <property name="height">2.8in</property>
+                        <property name="width">4.5in</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Territory</property>
+                                <expression name="expression">dataSetRow["Territory"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Year</property>
+                                <expression name="expression">dataSetRow["Year"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">SaleAmount</property>
+                                <expression name="expression">dataSetRow["SaleAmount"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
+                        </list-property>
+                    </extended-item>
+                    <grid name="Product Line Sales Header" id="573">
+                        <property name="width">100%</property>
+                        <column id="574"/>
+                        <row id="579">
+                            <cell id="580">
+                                <property name="borderBottomColor">#34598D</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="paddingTop">1pt</property>
+                                <label id="581">
+                                    <property name="fontFamily">"Verdana"</property>
+                                    <property name="fontSize">12pt</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="color">#34598D</property>
+                                    <property name="textAlign">left</property>
+                                    <text-property name="text">REVENUE BY PRODUCT LINE</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                    <extended-item extensionName="Chart" name="Product Line Sales Chart" id="100">
+                        <xml-property name="xmlRepresentation"><![CDATA[<ActuateChart version="2.5.3">
+ <ChartWithoutAxes version="2.5.3" type="Pie Chart" subType="Standard" dimension="1" units="Points" gridColumnCount="1" minSlice="0.0">
+  <description value="">
+   <font>
+    <alignment/>
+   </font>
+  </description>
+  <block>
+   <children _type="TitleBlock" visible="false">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <label>
+     <caption value="Pie Chart Title">
+      <font size="16.0" bold="true">
+       <alignment _body="1,"/>
+      </font>
+     </caption>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </label>
+   </children>
+   <children _type="Plot" anchor="6" stretch="2" horizontalSpacing="0" verticalSpacing="0">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <clientArea>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </clientArea>
+   </children>
+   <children _type="Legend" anchor="4" stretch="2" orientation="0" direction="0" position="1" itemType="1">
+    <outline>
+     <color _nil="1"/>
+    </outline>
+    <clientArea>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </clientArea>
+    <text value="">
+     <font name="SansSerif" size="8.0"/>
+    </text>
+    <separator>
+     <color _nil="1"/>
+    </separator>
+    <title>
+     <caption value=""/>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </title>
+   </children>
+   <bounds _body=",,288.0,252.0"/>
+   <insets _body="0.0,0.0,0.0,0.0"/>
+   <outline>
+    <color _nil="1"/>
+   </outline>
+   <background _body=",255,255,255,255"/>
+  </block>
+  <sampleData>
+   <baseSampleData dataSetRepresentation="&#039;A&#039;,&#039;B&#039;,&#039;C&#039;"/>
+   <orthogonalSampleData dataSetRepresentation="5,4,12"/>
+  </sampleData>
+  <emptyMessage>
+   <caption value="">
+    <font>
+     <alignment _body=",0"/>
+    </font>
+   </caption>
+   <background _body=",0,255,255,255"/>
+   <outline visible="false">
+    <color _body=",255,0,0,0"/>
+   </outline>
+   <insets _body="0.0,2.0,0.0,3.0"/>
+  </emptyMessage>
+  <seriesDefinitions>
+   <query definition=""/>
+   <seriesPalette>
+    <entries _body=",,0,0,128"/>
+    <entries _body=",,254,0,0"/>
+    <entries _body=",,254,254,0"/>
+    <entries _body=",,,0,0"/>
+    <entries _body=",,0,50,0"/>
+    <entries _body=",,0,254,0"/>
+    <entries _body=",,0,204,254"/>
+    <entries _body=",,196,0,98"/>
+   </seriesPalette>
+   <seriesDefinitions sorting="0">
+    <query definition=""/>
+    <seriesPalette>
+     <entries _body=",255,0,0,128"/>
+     <entries _body=",255,254,254,0"/>
+     <entries _body=",255,254,0,0"/>
+    </seriesPalette>
+    <formatSpecifier _type="NumberFormatSpecifier" prefix="" suffix="" multiplier="1.0E-4" fractionDigits="2"/>
+    <series _type="PieSeries" seriesIdentifier="Sale Amount" translucent="true" explosion="10" leaderLineStyle="0" leaderLineLength="5.0">
+     <label>
+      <caption value="">
+       <font name="SansSerif" size="8.0" rotation="0.0"/>
+      </caption>
+      <background _nil="1"/>
+      <outline>
+       <color _nil="1"/>
+      </outline>
+     </label>
+     <dataDefinition definition="row[&quot;Sale Amount&quot;]"/>
+     <dataPoint separator=" ">
+      <components type="1">
+       <formatSpecifier _type="NumberFormatSpecifier" prefix="$" suffix="" fractionDigits="0"/>
+      </components>
+      <components type="3">
+       <formatSpecifier _type="JavaNumberFormatSpecifier" pattern="[##%]"/>
+      </components>
+     </dataPoint>
+     <triggers condition="2">
+      <action>
+       <value _type="URLValue" baseUrl="&lt;structure name=&quot;action&quot;&gt;&#10;    &lt;property name=&quot;linkType&quot;&gt;drill-through&lt;/property&gt;&#10;    &lt;property name=&quot;reportName&quot;&gt;Revenue History by Product Line.rptdesign&lt;/property&gt;&#10;    &lt;property name=&quot;targetWindow&quot;&gt;_blank&lt;/property&gt;&#10;    &lt;property name=&quot;targetFileType&quot;&gt;report-design&lt;/property&gt;&#10;&lt;/structure&gt;&#10;" baseParameterName="" valueParameterName="" seriesParameterName=""/>
+      </action>
+     </triggers>
+     <title visible="false">
+      <caption value="">
+       <font size="16.0" bold="true"/>
+      </caption>
+      <background _nil="1"/>
+      <outline>
+       <color _nil="1"/>
+      </outline>
+     </title>
+     <leaderLineAttributes>
+      <color _body=",255,0,0,0"/>
+     </leaderLineAttributes>
+     <sliceOutline _body=",0,255,255,255"/>
+    </series>
+    <grouping groupingInterval="2.0"/>
+   </seriesDefinitions>
+   <series seriesIdentifier="Product Line">
+    <label>
+     <caption value=""/>
+     <background _nil="1"/>
+     <outline>
+      <color _nil="1"/>
+     </outline>
+    </label>
+    <dataDefinition definition="row[&quot;Product Line&quot;]"/>
+    <dataPoint separator=", ">
+     <components type="1"/>
+    </dataPoint>
+    <curveFitting _nil="1"/>
+   </series>
+   <grouping enabled="true" groupingInterval="0.0"/>
+  </seriesDefinitions>
+ </ChartWithoutAxes>
+</ActuateChart>
+]]></xml-property>
+                        <property name="outputFormat">PNG</property>
+                        <list-property name="action">
+                            <structure>
+                                <property name="targetWindow">_blank</property>
+                                <property name="linkType">drill-through</property>
+                                <property name="targetFileType">report-design</property>
+                                <property name="reportName">Revenue History by Product Line.rptdesign</property>
+                            </structure>
+                        </list-property>
+                        <list-property name="filter">
+                            <structure>
+                                <property name="operator">eq</property>
+                                <expression name="expr">row["Year"]</expression>
+                                <simple-property-list name="value1">
+                                    <value>params["currentYear"]</value>
+                                </simple-property-list>
+                            </structure>
+                        </list-property>
+                        <property name="altText">Product Line Sales Chart</property>
+                        <property name="marginTop">0pt</property>
+                        <expression name="bookmark">"Revenue_by_Product_Line"</expression>
+                        <property name="dataSet">Total Sales By Product Line</property>
+                        <property name="height">3.5in</property>
+                        <property name="width">4in</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Product Line</property>
+                                <expression name="expression">dataSetRow["Product Line"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Year</property>
+                                <expression name="expression">dataSetRow["Year"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Sale Amount</property>
+                                <expression name="expression">dataSetRow["Sale Amount"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
+                        </list-property>
+                    </extended-item>
+                </cell>
+            </row>
+        </grid>
+    </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">Down Trend Red Button 16x16.png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAALHRFWHRDcmVhdGlvbiBUaW1lAEZy
+aS
+                AxNCBNYXIgMjAwOCAxNzozMjoxOCAtMDgwMAb3YgQAAAAHdElNRQfYAw8AIhyeyUQLAAAACXBI
+WXMA
+                AA7DAAAOwwHHb6hkAAAABGdBTUEAALGPC/xhBQAAAM9QTFRFxsbG99bW1oyEzlJCxjkxzlpK
+3pSM99
+                7e/+/v1oR7xjEhzikY3jEYxjkp3pyUzmNa7zEh5zkh54yE55SM5zkp5zEY1oRz7zkp76Wc
+////762l
+                56Wc762t9+fn3qWl797W1ikY1nNrzko551pS54R7//f3987G78a951pK53Nr74Rz987O
+94yE95yU75
+                yU74R71ntz94x795SM/5SM96Wc76Wl/5yU/6Wc97Wt77Wt75SM57W1/62l972155yU
+/7Wt98a95721
+                99bO562l57WtzQDthAAAAAF0Uk5TAEDm2GYAAADWSURBVHjaNY/rcoJADIUj4qqw
+AgUsBKstlUtVtI
+                qIbAWl1vd/pmZt/SaTyTlJfhwAYnBjjBnf8OCmiIQQSvqnjUnbttcrtfOP1LOz
+qC5NjO2lEozepqFf
+                1HWD2NR14W9jMOy8LI8VojiW66/oBGG0y/J9gXjY59kuUsBcLFdJtkbcZOnq
+c7GF93kUY+IgOimi/W
+                FCl7sB4uu9AvcthKFueeRIAm+sz6Cj8X/nxbO4OgU6IceXe4trE5nMJOfJ
+dtwx157vWQZDTeeEPjIe
+                cTtKV1V7rC/nX59RGlaNV9muAAAAAElFTkSuQmCC
+
+            </property>
+        </structure>
+        <structure>
+            <property name="name">Neutral Trend Orange Button 16x16.png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAB3RJTUUH2AMPAQMC6ZsGvAAAAAlw
+SF
+                lzAAAOdAAADnQBaySz1gAAAARnQU1BAACxjwv8YQUAAAClUExURcbGxv/35/fGjO+lUu+UOe+t
+Y//O
+                pfe9hOd7COd7AO97APeEAPd7AOdzAOeEIf/Wrf+ECP+MEPe1c/+UIf+cKf+UGP+MCP/Wtf/n
+zv+cMe
+                eMIf+cOf+lQv+lSv+tUu+ta++ECP/37/+9e/ecQv+1Y//v3v/////GjPecOf+9c//Wpf/e
+tf/GhPet
+                Y//OlP/OnP/GlP/evfetWv+lUve1a//nxve1Y3wljs8AAAABdFJOUwBA5thmAAAAvElE
+QVR42jXPbQ
+                OBMBQF4EtUtrJqU8JQxlTavKT//9NcyvPp3vPpHAD0Ttq+670zDCZd0jwQ66bD/zQs
+a1DGtPcNWm1r
+                9lPbygI8ntpYt0auNfpVQFvdtDHGWmPuulQWrqqqm9GtUgnwvTpfRlpJCcdcrotR
+KfkJljTOd3KP5E
+                7E5ABzknKRb1EuVlHIYO3TGBMkeEo2WCwJMeGC81VK/exb1QlpFKMo8Icx4PkL
+QgMSLhn8906d2Wzu
+                /u4P3K4XsC3h5pkAAAAASUVORK5CYII=
+
+            </property>
+        </structure>
+        <structure>
+            <property name="name">Up Trend Green Button 16x16.png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAB3RJTUUH2AMPADYCSmiuPQAAAAlw
+SF
+                lzAAAOdAAADnQBaySz1gAAAARnQU1BAACxjwv8YQUAAACWUExURcbGxtb33pTWnFq9a0q1UmO9
+a5zW
+                pef354zOlDmtSjm1SkK9UkKtUnPGe0q9WkrGWozWlITOjFrGY2POc/f/92PGc6XerVrOa3PO
+e////+
+                /372vOc3POhFLGY4TWjIzWnHPGhN733s7v1pzepd7352vGc3vWjHvOhJTenMbvxsbvzs7v
+zq3eta3n
+                tbXnvb3nxoTWlL3nvQTLBgwAAAABdFJOUwBA5thmAAAAzElEQVR42jWP4XaCMAxG0+qQ
+UgeVQkawwG
+                idSsGyvf/Lreh2f+V+5yQnH0CkXbgaklDBH8spzNbO4fvn5Rwn79no/eRwc3RhXRnR
+uK6BB4CLeYRg
+                KcLCA28tJBxxpicWnVqgUfeJqCU6EPm7UlBfXdxHIox38HqD/NyPdoihG+ylr79g
+Jztt+oFI9UZ32S
+                ekWVHqs6nI6LqTAoEJWXzopqKmLgt5bAHSmJS6qjYXz1ffhcwLxXMpxelVJhWZ
+lDITx+S/LuO7/f4t
+                OWzzL0f8E+RbH9YcAAAAAElFTkSuQmCC
+
+            </property>
+        </structure>
+        <structure>
+            <property name="name">classic-models-blue-logo-75x75.png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAAEsAAABLCAIAAAC3LO29AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bW
+                FnZVJlYWR5ccllPAAAG6RJREFUeNqUWwd8VFW6n5OZhPRJIb03CKm0kEYnBBAWFqUq8GRhFWQR
+VGR1
+                ZXmgsoqiuyKKIqKIsAihKhAIRWoSSiA9IY2EZFIgvZeZ+/733snNnVsG3/wmk3PvKfd87f99
+3znnEt
+                f41X19fQpCFAoF/Uf/0//nysw1/6e/AeGV0XSgaDiKvkbQWXgDBYrXlf8MfoGIy4In8spK
+pYmqt69P
+                R1EKiuKNSA2QytynFPofegr0D6Ufg2LK/c+kKD7dFMU9SD84YUfgdeCPpi9QAw8deIZ+
+3vx5GM5J30
+                3fjCsTrVanIgwdCrH0FIbS47NdopKIZM5vxBc3EdcYlgUSFqkSEU3G4EMMuhCiInp2
+SegGkXyYYE6G
+                Siut6gZjyWqUwaylrYZIzoTIcIq9UPEbU5KclLMbCfKIFFeJgsh2liZVSkqEmyJ5
+hu0JyipJRBHPlB
+                jXLgNWy+kCEaGEnCQHFEsW24iM7gpnRVNIeChI+HYVFuSltrVA6WbGQ/FsDQaS
+GEEhg3n0P1sbi7BA
+                TxQe1zRU1jYIjEdtbRES4I6GlbVNVTUNCmmTHyAvJMDD1sochfTsUgEiMBQK
+2KVQ2FlbvrJwyquLJq
+                utLbmpfvvL5X/uPMqQ7Xnpx388rq6Pmr9ZAp+Y4oblM95a/hwK3x39fcuu
+E/xpebk6fP7Oi7HDA7ke
+                qQ+K/7r5h5a2TrTxdHX4bOOi2MgArjYts+SVLfvpWsxhy8uJ8aFv7ziS
+dOEexrO1tlg+N3753LEocO
+                1/OHFz27e/8bmhEig7yDv59ZuQHuT2y7nUx9UNXm6OH6yb/+rCyakP
+is5dywSFaJhTXClhiEw5NMiT
+                JQ+f6eMituw63i9xgqmc3/s2fvcmXb1wMweSfGPZNFA7f1rU98eu
+4X7yt2/iF+ULt3IhyfXLEmMiA+
+                Yljt53/Dq6hwS6szQrGPIOffoKRJ2eVXos5V5lTZOnq/2mV2eB
+5tvZZSmpeZzgVQrD+X24fgHIO3wm
+                9fVt+znavVwd314xMzTQExSGBnnRFBZVim2PffC+bX9FYd66
+L5O+WAuJgeDc4iq2wYIZY9AAl1u/Os
+                n2xuX8xKiW9i5cLJhG1+YVa97ffZrjCMiDAFH2dLHHF2Wo
+LsbatGoWyIMw//7ZUZaB6dkKTxe715ck
+                DPN3A4V6O+1HGj15Xm6DF82MbW7r2PTFUb7u79h3Bl92
+IFaGqfeLBMrJXmxd+wKognJC95KvZ08fFz
+                5tbHhusYattbWi1Sk00GPvB3/JLamqqm0EPQvPf832
+t2FsCYLas/Xl/BJNJWpLNIs2fMPOlRVgXkk1
+                LiEulnJaIckAKuw8eBlfAQ6reEEMiR85hJbPw0pW
+74XenJlH3IgglCAHIgLRhTNiFs6IRhVre+dv0h
+                ROHxvx7x/Ps2PsPXYNOokvyMZXb4eZJQvf/Br1
++47fQBXUclp8GL6cHS7e8C0KwwJoCtOzaBWNYQw1
+                v7SatV4pB6Xg2WF/3MNqI08DDb0rIyW9ERZV
+NtOaY4Ci6Lt17fM0PFbXv/nydPqOmwMrMUj1cW0jIq
+                fWts4Fb3wF84PCe7naJ8aFgU7gCr5pmaUt
+7Z2L3tptY20RGuDhSdeGJsaHgRh807JKYiL0VGEeHs72
+                jDw1PDdDpMMq2GE/lDItmPusJDnpx40Y
+cmLXehY8+wVYKYpaFDA/FtOALvjyq6aNC9+bdG3+9Gggyt
+                ELd44m30l7UJxGCzmXlWRlXdP86VFQ
+vKQLd5PO3wU9iizFhVt5WYwk4U5omAlwY7WUm300TfOAR42O
+                8D+4fSU0f+LyHQOUUpwdMn+/nE3b
+uGIWBLX/41V7jlzBzRnjIhbOjEVh885jjEA8WXFtAFr2izj5Rj
+                ZUMTTIA2A7b90uvueEMPGdP23M
+90nXcAklhDxRUVnTaMtAJaPMOZVweoysgCUMSUzt0qkoA1QBLV4u
+                9rjDwAx0QXE85d66pQmg+ZvN
+S388eQuPSogd9sLUUWi/bc9ZgXkR57jVOkrHiXnG+MgP182Hh+AkcO
+                t+0eadSazqXvzhXVZR+Z83
+Pj7473dewuMTV3wCD84PUED2+e/epmlb/AFE8fnGFyErriO6HD1/h0PO
+                HW8vnDdtNL8WIv3gm98w
+FDT2my3LQO3qrQdY8UyNC4FvYDnCftKzyrbtOUOrsUHkQ/QUCmJHkGFrQ7
+                v73CIOdWQSBaJ4VvZm
+EGRBFLDMfhQpFYxoS0czHuyTWL/X351IBuWAH9Y0Cko0LR3dYjM0oSmMX03p
+                KJkgS5zFCi6I0byU
+EOmolog6SCbVwqSByOQcRCbRwj8TYCnpz0HFYadUWEwEaZMheXLdxZklkUmGiC
+                jN40+aCG1MlIGI
+map6RqIgIk9uKUImDZXsLr8kIsdc8uysmUhm6vr80FAhCXlW9i2dFRuVpHTWZ1xi
+                Mlk84aeKxHja
+wcSl+oUNYRYsmTUQyfkxzzExIYPMTD1c7GHVgT4ualtL1rx93Ad7uzmyYIY2JiYm3I
+                hllU/qGloR
+A2UVVkoqgtSfvhElBQaSqwMqoWYPCJDIwaSpSunp4oB5hw/1MjczRcpjY2luZ2tpaW42
+                1I/2y+aD
+TBV/4KPV6fCQhqb24xfv7diX3KvVEmEcJU2etA2KJKmfr8vYNZROJ7naIyjb2VohzvrT5J
+                GB3i4e
+znYqlRL3O7t6Sh7XMYt19CebCeh0WorqV4bGlvbCsloU2ju729q7G1ra+MNaDDKzt7WaPi6s
+                vqn9
+wKlb9KofkUFRKTs1kuZzgMZEbRLLOwb2GxXuv+bFhPGjgyGc2qfNLoPVqPn9TsG7nx992tja2d
+                0j
+s3hkzEeyhUbSoXnShDxj7pSRiEUrqoX5vhHpSS1ZiLANf65j1+gGFkuF81SamOx8b+nzU0dfuJmN
+                
+8OpWRhFs6fKP77R1dE9Ytq2ppVOELoRIL/cSCU9qyBFXJ3XN0xYJdycgT1qSVH+VkDEqA3QR+YsN
+
+                f3nuufGRb3x08JfkdHbkvy6YCETZeSCFJk/oOogU1PKXSYwtX7s5qbVaCkoh8g2S62ECHCZy3oS/
+Ii
+                xEaYRXK+dNnLv2i8zCCnYUe7XVstnxHV09v5xLFyEqIQpJSzeIvKSRgnlydpHGz93xaVOrLLQQ
+GTnI
+                gZE+cJOOlui/7W8t/PLghcyCCu4BS2fH+Xs5Hzh1s6a+mSGpX6cFboXIrk+zKRrtNhjfoSQo
+sGWi0+
+                oCfZzV1pYSnCID0pPwllyVIbnsBFUKmXVCSE+pVO46eJEzTDcnu2VzxvZpdT+euC6GfnMz
+lZ+nE1qa
+                makc1Vb0oqCNpdraQqujVErMn/T2aZlmprMmRjraWUsqImbx2f4LDU1t7V096ILu7R3d
+yB7rm9v7mO
+                4Cy6ZkXAYxXC8V4gH+nOxt1i5NnL/+S4oGIfqmylT51T+XgchyzdOGlnaYoplKCW8O
+9nt7OHq7Oix8
+                LjrAy1lAdltH1+Pqhp4+LbzLYHubP+Ik//POIvyCHrBmkJmKdUiNrR0AIWS3+EWC
+llOsGerramVupq
+                NpJPDPFuamSDLgkDR1zcXldWjAuSsVs+sjtMNZE0cARRfPjA3ydrEwN4M/cLK3
+DR9CZ4YezvbXDvyD
+                DlCUJoMZUch9zl7LKtfUxw0PbGrtSH1Q4u5sN3vScMUf+8DZcquAmAC+7k52
+I4d5G+8FeSBLTErJ6O
+                juLXn8hEMa/T4WDAz0IONydlRPiw9zUFu9umASQOXs1cxpY8NsmGUyqCie
+7eKofuYU80s0xRW1iBDg
+                PLWVujs5Zb4eg/84hf/fD0wgJTXfbbA6JtK/q6fvxv0TECyj2P12+OmG
+RYtmxsJghD17+xztrQHi7C
+                UyfX9PJ/4as9wn62HlvMSon39LTYgJgTqMCvFl9I4ykdy8EX0qaxof
+aZ7CIY0dGYh40Hjj+qa2w8l3
+                U27mffTGXFxOjBqycXnizp8v1zW2sVhK2J0LMXksWkwaM4x7BliF
+WYI3MDAjj2xt73JxtK1vboPNHD
+                1/F0D52uJJiEJ7e7XGwlSt7tz17JOX7ueXVj8sr61+0lxRXQ+M
+eVT11DiFB8/cPnXpARRtiK/LT6fT
+                Gls6QgLcnjLkDexbVD9pMjJEbX1zWmYJ+JBfqsl++NjMVAVl
+hljk2sPw8ko0mNzmVbPVNhZofz+/Ir
+                dYY2qqNPIUpdIkOsI/p6jqws08eCOoma2VBXrFRvobp7C9
+syfA22lMuO/On6/cy69YNGN0VW2Tjo+l
+                oPFBQQUNm4Yq9PBRDYJsSMBBbT125BAIOW5EIKb7TC2F
+M0i+nu3kYHvy8n1/z8HAm/0nby2ZHftMFY
+                Xxjx89BF8QVlr5BFHO6FDfZ6p0WKD7UF+XYf6uULHF
+z43GDCtqGjn3QzwmvK7TUQ52Vrf+u5lddec+
+                QGc3Zzsj02pu7USQBcm4O9sLlBwsu3Gv6GlzG9rA
+PUaF+U2IGooHdfX0gmXIszAPlKHPSC+g9t29fe
+                iFm1YWdBWrCGmZZUgs+/p01pZwT8A4k2H+buiF
+sr2hccLIVUq9gnT39G35+rdTVzL1u9zsqj4QRael
+                BAR48NbqxKndroOX9p+8AWNTqVSBXs5fvvfS
+EF9XthY6WVBanZFfDiC1s7HEsyGQ1MySyGCvfcduwG
+                3gfoi/GzKV6xlFMBsQDFJDA90h7RHDvDPy
+KgrKaoYHe7W0dbZ19Hi7OYBNcH0IAOCfzl7PTogZBpPD
+                g9BxiI9LWdVTwAN8xaBBpuAFuAB5nr6S
+xbo+pa1fDOo8XBymj4tA2NnU0mEkfwWz2SR9444je5Oudn
+                b1gkuQDNAsPat05oRIOK6Ozu5jF+6B
+W0+b2rq6e60tzQfbW1tZDoKqg3I4ZRtrc6gToBJpKRCruq4J
+                c8LMzlzNfsRQeDe3vKG5PcDbGdwB
+VtlYmVtamAFd4eUh/yeNrc4Otg8KK4El8OzA+av3itAdVXhoVV
+                1z8o3cI8l34TNYCvWq1dOrNR9k
+dvZa5vil2747+rucP731oJjNDI8m3xastAH9QDZm3KvVRUf6g9lg
+                /58nj5gzeXhIgHv2wyp679XG
+EpOAxlqAiZTCzVkNIVTWNjo52ECwroPVkUO9YBQ+7g6AYugkoj1HOy
+                tba3PALFDd0hzoY2JrTSuF
+jeUgyNbHzTG/rAZBT2JcyMLpo+dMioRLbGzuaGrt4iI31uOTjStmglUb
+                Pj1sZ22ZkVeuqWtyo7O1
+ZoRpPM2k6hpacPO9/xzjKINwhvq4jR0V1NvXB01bsenH2ZOHQ8EQrHV394
+                YGeUCkxRV1UOaqusa6
+xlZXR3XKrVxMEfqCuA+K56iGv9VhnIihnqAArIHNAYHRklnmaOju0UIAEDUJ
+                84EeQpiAlrBAD9hl
+S3vX1JhgPPebI1dHhfpAZfJLa0rgXXgLMPrYCPQAOVtaOz2dHRh//RhMha3zKQ
+                TiONrZwEfR2wz9
+Eay2T7dlzRx49sKy6kUzoqG3mYWPW9q6Vi+aCESFj6mrb4XwVzw/DvEUIilPZztT
+                U9X0sWFnr2Uz
+8S2INWluo/GmQtMAfaYdoKa+s7MH1gXbyiupHhVq5uJg293b29zaxaxzu3b39CJSxb
+                O8XB1AJ/AC
+HvtSeiEQGEZUoannp0u0HUJzUm7lPa6uL6t8Akf3uLYBTiIy2NtJFCs/aWhNuZmTkV/B
+                kjfYwRYm
+MWiQCtoCXsAIYRtw8QBhQCICPZhToI8LIARGAnOFmmQWVEKHx40acvjcbS8XBwsLM1SBm4
+                TZITU1
+NQHBGNPH3XFKTDDip/Agj1BMqaYBOtzQ3AFEBEw0tXUi9JgxLvS3q9mnf89yd4K203Y41M8V
+                biMq
+zHfEMK+G5k5gysAecHNrx6U0eu87IS40PMgTtsHujfBdHywE9lPwqIazPSjVqwsm2qstjybfXT
+                o7
+FvMGFIFUKAy0CCkFGtTVtyDWg6RALcqFj2pGhnrD7/X0aK/cKfB2g5JaACrhcvp0us7u3gpNI+YK
+                
+Cm/eL4ES+bg5nL2eA+L7GDwrr26AmXm62n/y5lzkK68vmbzxs+MoTB8bykVdpswSGTiydfcZhWg1
+
+                kdy49xBJECBnVKgv6Cwur0Xs4uFqb8ds1PBCRLo1bB1eAQxePDP6wq1cUAidWb9sKscUAAZsDP4A
+Hg
+                wGDB+gedKMy9yiKi83+5UvjIO9gTzUDmXQn06XmLADd3Q6XVlVPaAogoGfcaMC+zOybqj3o8p6
+X/fB
+                7Kbi9YxiYGlNfSucM2Y4dkSgkwMMpIy3y60/TEf/XUzNa27rvJ1ddu3OQ6RLM8ZHYLiiilqA
+PuTp6+
+                EI4OYwFPPARMFapCCjQ/04/gliMVgXc4jBHE4sfkTA7l9orIYGTogaojQxMRKssATgobBk
+GCQYCkrY
+                b+r90gO/piXGh4wbGZhTorl2rxiPDh/icTenfM+RG1Crwke17HlAFb0vY7hugqzHVGmC
+nPB2duntnD
+                LY8ctz4j1DHdxd7GAhQd6uFxQ5LNIAMCHhKTGhq7buhx4G+TiHMLvtgg+kV9/U3svE
+6yhUVDfGDVdA
+                nl//93e0Z9NcMAtRAcAQiH3tXpEjvSAUg7wVGmsGBdbqAFQf7U0O8nZG+FLX0FbX
+0BoxxAOh/J+nDL
+                +WUXwpvQCDHDp7G5ELCgDtAYD0mrReRymIzLnQgaVwEzJxTDBSIUziw29/ZZEK
+wvn7yufGjgxCnH36
+                ygNIMn5EUHSEH4CeFjUhOcVV3x25fuP+Q7hJuBAoGwwJBgkMrGRCR5iflQWC
+ASuXwbaeLvZIr7u6e8
+                oqnzo72kJu6AVTRC8tRXV395mBFxTivr7a+hagCxQyJsK/qKLuXl5FR2eP
+uZlp1ZMmTM+QEgoUvkFR
+                1B/ZUWPBV8VklsBJJSGtHV3A3jeWJQKEEX8hxr+fV44ApfppCySDmQHA
+EAEwSyG0utJ5ptGlYvFGLL
+                c/ARvp6entNsi/kPERLbM7gnAF8QAsXDR7SmnnF0vJHGPkr09z8wDo
+00sjpkpwtLO7D9pSUlEXMzwA
+                EHczoxjRCQqwZDh6+Ctkz60d3UQfEilkt0GJ+GgoGVjzY6opHWVt
+ZdGpF5H+MJ5eNITY21jCN1AKiX
+                1GpRoUCiVGxGt4ghXCPkbdoRhwUE+aWmEYCCygfkqVCctINFLb
+WnR29cH8+CuOhB1U7uiiYLWQN1tk
+                3gjZoNKMHg7kebiJeKAdys2Il4g25/S7awrJEzQK2e1ewBMM
+w149qKdX1dPXl1X4mL3f0d3LdrNEKE
+                xM2js7uQ78xWHjkpTbq4A6AEUdbC11DALpDwQp6dgNECA5
+cXZ3rX/Nm9MHmeV3wX4EmNrY3G5vZ00v
+                arR36foPt8IBWFshwqBdvLF9TuHZYtESsNTx0vaOnnYG
+n+Ab8NFqtbAGhcymguEZYSJeipc6GWxYBl
+                VwhtYAQzsr2CTGALpAdcHsrp4uI+f65coK2T1Bg6lA
+8xnlJ1K8EZqiauCYt+SIROp4giGpsIF2Wkn0
+                g7Yypz7kySNEfsdb6jSC9Aa55JEMSSmqDCuIQpZa
++fP5ktvR0scRiMwmtuS2P5E+ZP2sqQrG1dshJe
+                uZJI89E5ljDEQSeI2fv5d+iUHuDLnoRAclc9rA
+cN9CKB4C/8aOhfSCOQJoQBJCLfpcNaHXRdkDn+wk
+                4OsRZNgwVQWlNSmpeZwLRPth/u58mSIhrqpr
+4h5uY20xzN9VsM0IkCwsq0F0Eezvimch0BNzGZlXVL
+                gPQhxcFj6qu5JeKJCBSnQGg75/eMcq/dpz
+beO4pR/xmRITEXDo01fYxOqLny/m04cFFdGRAdvffMHT
+                cOUKWeJrHx5iD5r9z5y4tS9NFsDp7exH
+H+09B16gvOxP0X97cZKgwaW0gtc/PrJ0dvSaRRN++jW94P
+                tagYhWLxr/2sLx/C4FZbULNnzPJ1Fl
+uL9J/7ACRHrOnDJz93Kxr6xt4viyadUskI3ZR0f4a5j7U+NC
+                d29eAn5v+/bM8YsZKCBY3/3PlyDS
+tS9Ofu3Dg+iHMlp+eejy7exy5nSb+ZrFk8aE++56b3HCyn9jWL
+                bBV//9/U5OOTddDSPkYD86sXpY
+VitQ8jmTI0Ee2qzbngTCPFzU+7YuReOoUJ87ueXcCxoq3j4c4ZSQ
+                lZ6ithHlmMjApJS7bJN1SxJw
+Z9X7Bza9Oos+7VmqARe2vzUP5SUb9+aXVetnVtv0rz1nD3y8IiF2GD
+                sySwBkQkuMeTYEePvwu0he
+g/3dcDOYUdFL6YWMKhrsKQf70VUFyIYMDWzOJPoU66XbDwsY4jV1zbuP
+                XIe6Iv4mYjvUM4exG5ZC
+5oxx17zE0cFI0lJo4qGE65YmpNzKS88qZRUyv7Rm+Z/jYWPHUjLY07tStk
+                4gMQ8XO7Y9Z9EQNYiE
+GNEdpgtScfOdldM4m8G8t39/nqvqp3wAcVvp8++KpbPGTBkzFFQVltXCDr85
+                cl2wJ60SIztLIQCG
+TXAAHmzVpxvmg+aNnx9lMQN04ndMhB9tcnWNUm/96A8tBzMCRFYtAFOQx5hrUw
+                gjQHbGpH861XoV
+pav6VdfAoWza9dvf27ujwnzcndX4QjkZwYav+N9DgqiNf5SKLrEUpmeWsks1uFRb
+                W7wwdRQMb+Nn
+Sa1tXTEMVXkMhLAvqxiEA0yqMjdhJL1ikJZPcyHcjxUg/8Fzp4xgwQaGNHcKva/40+
+                m0rw5fFcRT
+Y8J8GAofid0eOLJp168s12B+L82Mgt6OZujkuxkT/tkg0g8z+kPiRJHGCGpqXMjrS6aw
+                725wx+YL
+Smk/UcWADWNmA7HF8wkj8EXVT6dScR3NyIqZpV6IcxNGvLtyOqb40ffJCnqN2Je1NEG4Q/
+                qr+pck
+Bg4h7Ht/Sfbx96ZED+UgFCra39IAPVWGyzQK1sBoCpk2cAaJcaGfvMXo52dJpN/vMbu80EBy
+                /FLG
+81NHTo0NOb1rzcVUWmJAFzQAeWu2HWpppyM4VksBnstmxzLscIV1wRn+7V+HC2ngIawnhEuAz+
+                Dm
+d+py1skrmSyQrl44Ycmsgar125Pu5pZDPzcunzo61Lu1vRtaCgGCZZ/8cFHgVFVi40nLLIXNsCy8
+                
+mJoXw2zfwX3Tp8iJ3tHhm8+gYnpW2ZJ39r48J54ljLW3f+05d+IS7TaY917MC3j6ic+JSw9u5zy6
+
+                nFZAGwUhoDa/rIaIIjKwAFUFZbUCJwnMBCU/n7mLZqBqyawxrA2fupJ18MxdVoYG4ZDf1I0UJV5c
+IE
+                YOLcudUpM/10WMh53yVUxmR0RhM5FOtaQCWkqlkI6UpcJPo0fVZY4+y7zfyXszV2GMPKmsgBjN
+r0S5
+                KGeHRC45k+GbfGgsTZJIkkSKPEJkXvCRPq4sit+J+DixSuKIvXiRRGHsZU3xyS4iowvS5/Ck
+LyVfoz
+                a4RUkkmpRC8PY8JVzzpiTW2qTmIP8yMKEURg/vil7HVEhkt4SSTyMlOSLxwvTA/iFFUcLb
+zzj0TwY8
+                u1xSK8l18seSXbmFTekzsAqZ98G5a5VSpWQXVaXIoAxUjzIcnMi+KCJ+mOCsPCV45c+g
+AyXURF5+R0
+                T92cH5wDVw1p0+BKn4PwEGAF1ezGnj8X1JAAAAAElFTkSuQmCC
+
+            </property>
+        </structure>
+        <structure>
+            <property name="name">A.gif</property>
+            <property name="type">image/gif</property>
+            <property name="data">
+                R0lGODlhZQAeAPcAAAAAAAAAMwAAZgAAmQAAzAAA/wArAAArMwArZgArmQArzAAr/wBVAABVMwBV
+Zg
+                BVmQBVzABV/wCAAACAMwCAZgCAmQCAzACA/wCqAACqMwCqZgCqmQCqzACq/wDVAADVMwDVZgDV
+mQDV
+                zADV/wD/AAD/MwD/ZgD/mQD/zAD//zMAADMAMzMAZjMAmTMAzDMA/zMrADMrMzMrZjMrmTMr
+zDMr/z
+                NVADNVMzNVZjNVmTNVzDNV/zOAADOAMzOAZjOAmTOAzDOA/zOqADOqMzOqZjOqmTOqzDOq
+/zPVADPV
+                MzPVZjPVmTPVzDPV/zP/ADP/MzP/ZjP/mTP/zDP//2YAAGYAM2YAZmYAmWYAzGYA/2Yr
+AGYrM2YrZm
+                YrmWYrzGYr/2ZVAGZVM2ZVZmZVmWZVzGZV/2aAAGaAM2aAZmaAmWaAzGaA/2aqAGaq
+M2aqZmaqmWaq
+                zGaq/2bVAGbVM2bVZmbVmWbVzGbV/2b/AGb/M2b/Zmb/mWb/zGb//5kAAJkAM5kA
+ZpkAmZkAzJkA/5
+                krAJkrM5krZpkrmZkrzJkr/5lVAJlVM5lVZplVmZlVzJlV/5mAAJmAM5mAZpmA
+mZmAzJmA/5mqAJmq
+                M5mqZpmqmZmqzJmq/5nVAJnVM5nVZpnVmZnVzJnV/5n/AJn/M5n/Zpn/mZn/
+zJn//8wAAMwAM8wAZs
+                wAmcwAzMwA/8wrAMwrM8wrZswrmcwrzMwr/8xVAMxVM8xVZsxVmcxVzMxV
+/8yAAMyAM8yAZsyAmcyA
+                zMyA/8yqAMyqM8yqZsyqmcyqzMyq/8zVAMzVM8zVZszVmczVzMzV/8z/
+AMz/M8z/Zsz/mcz/zMz///
+                8AAP8AM/8AZv8Amf8AzP8A//8rAP8rM/8rZv8rmf8rzP8r//9VAP9V
+M/9VZv9Vmf9VzP9V//+AAP+A
+                M/+AZv+Amf+AzP+A//+qAP+qM/+qZv+qmf+qzP+q///VAP/VM//V
+Zv/Vmf/VzP/V////AP//M///Zv
+                //mf//zP///wAAAAAAAAAAAAAAACH5BAEAAPwALAAAAABlAB4A
+AAj/APXtG0hwWSZNCJcRXMiwocOF
+                AglGfEhxX7SKCy9irEhM0ySElNKkeaNsI8OJJ02q3BdRI0WU
+KzW9QRhqE0I4Y9JoanhRoECXBF0Ctb
+                iyIsyI+ibCNKlJp7Jo+pYhVJPmx5iL0FiaHFo05UCgPXmu
+XDowzUFlCpcRy5RJZI4xDxGGDapJDI4c
+                mRRC03QQoV++y5RpogfUoMJ99CwiHCjYb6i/mqJBRvj0
+YaYxcDYVW6Y2Gd+mOXJoDAsHgYOdX/dpOn
+                BjZBoHCKItc4CDtgPaOHDIAKXJQcPVJQnCzjEQjW3Y
+thGk2XS7OQ7lqRm+mUSJmDJ69PRdH6YsZw7U
+                QXP8/9CBw6Um5S6X1VZ4MRoc0anh4FgGVBOOyAOJ
+OVDzII1Fjcs8AN4+yyAQykrXJZXPPMgMkwkmmU
+                zyQ2gD7vNaKKAggFo0d2VEYIVq4JCRfEOtdhiH
+or122EC9DZghV0mdRE8+8shzjDDDQJjGJMSgMeFp
+                LP2EA1z75OCbRQi8YdRAbxCn1T4hahRRhqCw
+CGQ0MsDhkjJAEpQhe/8NVM9J8wgTjDCYSJLGGJSM4e
+                BdOQioVTRqIFDlPhnuxNwmA6EkZVki9rmP
+fL85UBKKBBmpkEDnDajJA7c991yVQ+mDJiZj5CCSGmJM
+                0l0OFeRQ3j5jzqYkQT84EI0ydi6UmEb1
+RP/0nqCDzjdQYqo1wGdvB37Vn5dyaqTMA3BAFk17ECUlg3
+                ji5ZRMGjjoEKd/EQHxAALYBoDAAzNo
+iQAaX7VU2VdqOPkViU8O6oBCkGJ7gACmxTYQlQsRIy9E6dIq
+                H7M5vAEKDg/EqWpQd51CDCjKYChq
+ND/gEMpoFuJQkqwipncAHNG95h4OcEiF8CYZ+oennF4isKJKr4
+                WGAzTGxWmrRrn1ulBvHctw2rHL
+vIHADxmlYe5/or5x0TI/aIhoQ6Up1ChR+7AKyjKnBBbKUzqJNaio
+                bBmZW3ADmSoWtBc1LMMBCOCQ
+BrIDweEDrYC+28B9+2TiAKUZqcezegMqExputfn/J4bIDylDTDKT4K
+                AG1wudzNCxY+4DjTKQcxUd
+qRlBTl9BFB07eVBDE8Ue4gI17lMyDolOUKyI5ct0Qz7R2npFf8YYo+q0
+                Y4QSPcngurlSXfWemu5s
++75RS00ndVRQfaJNuZibN9T46hg1juzJzy/vkOQqZbWRS9pPFA3wqEfHdT
+                1QBe+QQNp7qL7wDnXU
+l0bA01o9V4JJRGAmS2VCWNOUoxScTDux3EwMooZMEGNVy0hf71bln0xIbyHz
+                w4gyMrE4MXhIKhoh
+hkPUchExNGUmMtGJxO5Tkk2xzyIUbAoadiKSA1oIDWPQBDTSIAbBpAENNjSLVJ
+                bRwoGM4Q1pyGE0
++cxylcjg4A1FfMMKB/KDpmDIL0MsEoA0gbjeLWMScbsIZaBhwShGIxNqiAZvdiIZ
+                KqqmMQhTEocU
+8waDyARPlPGPDP2zDFBcBDM/4A1vLmQhBZ6QQErCz2cq88WytBEtaswEb/AkmEMeRm
+                RNQZh7CKTH
+nYCCGP6RzEBEE40c2PCS/sGB6f44wbhZ5GlnGch9NIHKyPDlcJGcxBfd+BUPZqIxT6Gg
+                4DRhENV8
+0SOo2dEKIbcYnp1tfScES3CkAo3DBIYxWjQjQSD3k6YdBhoabN400xcVoSTujxSp3kIoCL
+                2FKCN9
+lcLeQ46XGuKZD5zwjKc850nPeq4kIAA7
+
+            </property>
+        </structure>
+    </list-property>
+</report>

@@ -63,8 +63,8 @@ while [ $# -gt 0 ]; do
             APACHE_DIRS=iportal
             ENCYCL_VOL=`echo "$1" | awk -F# '{print $2}'`
             ;;
-        iServer)
-            SERVER_TYPE=iServer
+        iServer|iHub)
+            SERVER_TYPE=$1
             APACHE_DIRS=iportal
             ENCYCL_VOL=; #Filled later with HOST
             ;;

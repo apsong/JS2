@@ -1,0 +1,5 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target><Id>WRWidgetManager</Id><Type>Document</Type></Target><Operator>getdatasets</Operator></Operation><Operation><Target><Id>WRWidgetManager</Id><Type>Document</Type></Target><Operator>GetVisibility</Operator></Operation><Operation><Target><Id>WRWidgetManager</Id><Type>Document</Type></Target><Operator>getthemes</Operator></Operation><Operation><Target><Id>WRWidgetManager</Id><Type>Document</Type></Target><Operator>GetPageLayout</Operator></Operation><Operation><Target><Id>WRWidgetManager</Id><Type>Document</Type></Target><Operator>GetTableLayout</Operator></Operation><Operation><Target><Id>WRWidgetManager</Id><Type>Document</Type></Target><Operator>GetBindings</Operator></Operation><Operation><Target><Id>Document</Id><Type>Document</Type></Target><Operator>GetPage</Operator></Operation></GetUpdatedObjects></Body></Envelope>

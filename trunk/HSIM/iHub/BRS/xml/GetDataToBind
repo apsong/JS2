@@ -1,0 +1,13 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>WRWidgetManager</Id>
+<Type>Document</Type>
+</Target>
+<Operator>GetDataToBind</Operator>
+</Operation>
+</GetUpdatedObjects>
+</Body>
+</Envelope>

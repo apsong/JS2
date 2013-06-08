@@ -1,0 +1,20 @@
+@(4 1 100000)
+S:/@-6/login.do?__vp=@-5&userid=Administrator&password=&locale=en_US&loginpostback=true {(JSESSIONID=@257;)}
+S:/@-6/wr?__reloadTemplate=true&__vp=@-5&__newWindow=falseHEAD:Cookie: JSESSIONID=@257 {(__dsSessionId=@258&)}
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/GetDesignState>	
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/LoadTemplate> Standard/template1.rpttemplate
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/GetDataToBind> 
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/BindOdaNBRS> /2.66 Table_T {(<DataSetId>@161</DataSetId>)}
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/AddColumn> /2.66 Table_T 0 @161.AMOUNT 1 @161.CHECKNUMBER 2 @161.CUSTOMERNUMBER 3 @161.PAYMENTDATE {(<RptElementId>@162</RptElementId>)}
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/GroupBy> /2.@162 Table 2
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SectionBy> /2.@162 Table 0
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/Undo>
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/HideDetailRow> /2.@162 Table 0
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/Undo>
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/UngroupBy> /2.@162 Table 2
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SetSort> /2.@162 Table 0 desc
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SetAlignmentNGetPage> /2.@162 Table alignment center 1 -1 in center
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SetAggregation> /2.@162 Table 0 AMOUNT
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SetFilter> /2.@162 Table AMOUNT 6 gt 30000
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/BrowseFolder> 
+M:/@-6/wr?__dsSessionId=@258&__vp=@-5HEAD:Cookie: JSESSIONID=@257\r\nrequest-type: SOAPPOST:<xml/SaveFile> /Temp/@257_@4c

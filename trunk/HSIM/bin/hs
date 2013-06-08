@@ -29,12 +29,12 @@ NEWFILE()
 ERRSUM=0
 DO_HSIM()
 {
-    ARG1=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}'`
-    ARG2=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}' | sed -e 's/\./ /g'`
-    ARG3=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $3}'`
-    ARG4=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $4}'`
-    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}' | sed -e 's/\[.*\]//g'`
-    ARG6=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $6}' | sed -e 's/\./ /g'`
+    ARG1=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}' | sed -e 's/\..*$//'`
+    ARG2=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}' | sed -e 's/^.*\.//'`
+    ARG3=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}'`
+    ARG4=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $3}'`
+    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $4}' | sed -e 's/\[.*\]//g'`
+    ARG6=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}' | sed -e 's/\./ /g'`
 
     SERVER_ADDR="$ARG1"
     [ -n "$ARG6" ] && SERVER_TYPE="$ARG6" || SERVER_TYPE="$ARG2"
@@ -47,19 +47,22 @@ DO_HSIM()
         iServer*)
             TEST_BASE=$HSIM_HOME/iServer
             ;;
+        iHub*)
+            TEST_BASE=$HSIM_HOME/iHub
+            ;;
         *)
             echo 1>&2 "($PROGRAM)Error: Invalid SERVER_TYPE '$SERVER_TYPE'"
             exit 1
             ;;
     esac
     TESTCASE=$TEST_BASE/$ARG3/$ARG4.sim
-    if [ ! -f "$TESTCASE" ]; then
-        if [ -f "$TEST_BASE/$ARG3/__template__.sim" ]; then
-            (cd "$TEST_BASE/$ARG3" && EVAL cp_sims __template__.sim $ARG4)
-        else
-            echo 1>&2 "($PROGRAM)Error: TESTCASE '$TESTCASE' doesn't exist"; exit 1
-        fi
-    fi
+#    if [ ! -f "$TESTCASE" ]; then
+#        if [ -f "$TEST_BASE/__TV0Param.sim" ]; then
+#            (cd "$TEST_BASE/$ARG3" && EVAL cp_sims __template__.sim $ARG4)
+#        else
+#            echo 1>&2 "($PROGRAM)Error: TESTCASE '$TESTCASE' doesn't exist"; exit 1
+#        fi
+#    fi
 
     case "$ARG5" in
         *[0-9].*[0-9][smhti]*)

@@ -1,0 +1,13 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>$1</Id>
+<Type>$2</Type>
+</Target>
+<Operator>BindOda</Operator>
+</Operation>
+</GetUpdatedObjects>
+</Body>
+</Envelope>

@@ -1,0 +1,25 @@
+#! /usr/bin/sh
+
+PROGRAM=`basename $0`
+
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM '-H %H -T %T"
+    echo 1>&2 "       $PROGRAM -i TS -d AJC121207"
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -i) shift; TESTPLAN="$1";;
+        -d) shift; APACHE_DIR="$1";;
+        --help) usage; exit 0;;
+        *) echo 1>&2 "($PROGRAM)Error: Invalid option '$1'"; usage; exit 1;;
+    esac
+    shift
+done
+
+[ -z "$TESTPLAN" ] && { echo 1>&2 "($PROGRAM)Error: TESTPLAN is not set!"; usage; exit 2;}
+[ -z "$APACHE_DIR" ] && { echo 1>&2 "($PROGRAM)Error: APACHE_DIR is not set!"; usage; exit 3;}
+
+echo $TESTPLAN
+echo $APACHE_DIR

@@ -1,0 +1,10 @@
+#! /usr/bin/sh
+
+if [ -f jrem.jar ]; then
+    cp -v jrem.jar iHub/reportengines/lib/jrem.jar
+    cp -v jrem.jar iHub/servletcontainer/iportal/WEB-INF/lib/com.actuate.jrem.jar
+fi
+
+if [ -f javaserver.jar ]; then
+    cp -v javaserver.jar iHub/Jar/javaserver.jar
+fi

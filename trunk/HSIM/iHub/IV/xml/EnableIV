@@ -1,0 +1,22 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>Document</Id>
+<Type>Document</Type>
+</Target>
+<Operator>EnableIV</Operator>
+<Oprand>
+<Name>page</Name>
+<Value>$1</Value>
+</Oprand>
+<Oprand>
+<Name>svg</Name>
+<Value>false</Value>
+</Oprand>
+</Operation>
+<IVSessionID>$2</IVSessionID>
+</GetIVUpdatedObjects>
+</Body>
+</Envelope>

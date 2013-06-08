@@ -1,0 +1,22 @@
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+<Body>
+<GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+<Operation>
+<Target>
+<Id>$1</Id>
+<Type>Table</Type>
+</Target>
+<Operator>HideColumn</Operator>
+<Oprand>
+<Name>columniid</Name>
+<Value>$2</Value>
+</Oprand>
+<Oprand>
+<Name>page</Name>
+<Value>$3</Value>
+</Oprand>
+</Operation>
+<IVSessionID>$5</IVSessionID>
+</GetIVUpdatedObjects>
+</Body>
+</Envelope>

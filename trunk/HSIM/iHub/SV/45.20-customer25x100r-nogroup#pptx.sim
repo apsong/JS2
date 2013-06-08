@@ -1,0 +1,36 @@
+@(1 1 100)
+#part-4(sv, others_1)
+
+
+#S:/@-6/ {(JSESSIONID=@257; Path)}
+#S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+#M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=DOC&__page=@1&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/doc>
+
+#S:/@-6/ {(JSESSIONID=@257; Path)}
+#S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+#M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=DOCX&__page=1-100&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/docx>
+
+#S:/@-6/ {(JSESSIONID=@257; Path)}
+#S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+#M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=xls&__page=1-100&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/xls>
+
+#S:/@-6/ {(JSESSIONID=@257; Path)}
+#S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+#M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=xlsx&__page=1-100&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/xlsx>
+
+#S:/@-6/ {(JSESSIONID=@257; Path)}
+#S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+#M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=ppt&__page=@1&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/ppt>
+
+S:/@-6/ {(JSESSIONID=@257; Path)}
+S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=pptx&__page=1-100&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/pptx>
+
+#S:/@-6/ {(JSESSIONID=@257; Path)}
+#S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+#M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=ps&__page=@1&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/ps>
+
+#S:/@-6/ {(JSESSIONID=@257; Path)}
+#S:/@-6/iv?__report=%2F20-customer25x100r-nogroup.rptdocument&repositoryType=WorkgroupHEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/Startup> {(<IVSessionID>@258</IVSessionID>)}
+#M:/@-6/iv?__locale=en_US&__vp=workgroup&closex=true&__report=%2F20-customer25x100r-nogroup.rptdocument&viewerId=js3&__format=xhtml&__page=@1&__ivsessionid=@258&__persistentdocumentname=/20-customer25x100r-nogroup.rptdocumentHEAD:Content-Type: application/x-www-form-urlencoded\r\n\r\nCookie: JSESSIONID=@257POST:<./options/xhtml>
+
