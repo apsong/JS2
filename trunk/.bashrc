@@ -2,7 +2,7 @@ source $HOME/.bash_functions
 
 export HSIM_HOME=$HOME/HSIM
 export WCSPT_HOME=$HOME/WCSPT
-export JMETER_HOME=$HOME/JMeter-2.9
+export JMETER_HOME=$HOME/JMeter
 export JM_HOME=$HOME/JM
 export PATH=$HOME/.JS/bin:$HSIM_HOME/bin:$WCSPT_HOME/bin:$JM_HOME/bin:$PATH:$HOME/SysinternalsSuite
 [ "$HOSTNAME" != "jinsong" ] && export LANG=C
@@ -12,6 +12,7 @@ alias l.='ls -d .*'
 alias ll='ls -l'
 alias h='history'
 alias js='cd $HOME/.JS/bin'
+alias .h='cd $HOME/HSIM/bin'
 alias vi='vim'
 
 ####################### reset PATH ###########################

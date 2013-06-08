@@ -4,22 +4,54 @@ PROGRAM=`basename $0`
 
 usage()
 {
-    echo 1>&2 "Usage: $PROGRAM '-H %H -T %T"
-    echo 1>&2 "       $PROGRAM -i TS -d AJC121207"
+    echo 1>&2 "Usage:"
+    echo 1>&2 " $PROGRAM '-host %H -server_type %S -volume %V -client_num %N -duration %L -test_script %T'"
+    echo 1>&2 " $PROGRAM '-test_type %t -report_name %f'"
 }
 
-while [ $# -gt 0 ]; do
-    case "$1" in
-        -i) shift; TESTPLAN="$1";;
-        -d) shift; APACHE_DIR="$1";;
-        --help) usage; exit 0;;
-        *) echo 1>&2 "($PROGRAM)Error: Invalid option '$1'"; usage; exit 1;;
-    esac
-    shift
-done
+case $# in
+    0)  usage; exit 1;;
+    1)  FORMAT=$1; DIR=`pwd`;;
+    2)  FORMAT=$1; DIR=$2;;
+    *)  usage; exit 1;;
+esac
 
-[ -z "$TESTPLAN" ] && { echo 1>&2 "($PROGRAM)Error: TESTPLAN is not set!"; usage; exit 2;}
-[ -z "$APACHE_DIR" ] && { echo 1>&2 "($PROGRAM)Error: APACHE_DIR is not set!"; usage; exit 3;}
+case $DIR in
+    *@*.AJC*|*@*.iServer*|*@*.iHub*) ;;
+    *) echo 1>&2 "Error: Invalid directory '$DIR'"; exit 2;;
+esac
 
-echo $TESTPLAN
-echo $APACHE_DIR
+DIR=`echo $DIR | sed -e 's/^.*@//' -e 's/\[.*\]//g'`
+
+H=`echo $DIR | awk -F '[./]' '{print $1}'`
+S=`echo $DIR | awk -F '[./]' '{print $2}'`
+case $S in
+    iServer|iHub)
+        V=`echo $H | sed -e 's/-/_/g'`
+        ;;
+    AJC[0-9][0-9][0-9][0-9][0-9][0-9])
+        V=$S
+        S=AJC
+        ;;
+    iServer#*|iHub#*)
+        V=`echo $S | sed -e 's/^.*#//'`
+        S=`echo $S | sed -e 's/#.*$//'`
+        ;;
+    *)
+        echo 1>&2 "Error: Unable to parse volume from '$DIR'"; exit 2;;
+esac
+t=`echo $DIR | awk -F   '/'  '{print $2}'`; [ -z "$t" ] && t=NULL
+f=`echo $DIR | awk -F   '/'  '{print $3}'`; [ -z "$f" ] && f=NULL
+N=`echo $DIR | awk -F   '/'  '{print gensub("\\\\.[^.]+$", "", 1, $4)}'`; [ -z "$N" ] && N=NULL
+L=`echo $DIR | awk -F   '/'  '{print gensub("^[^.]+\\\\.", "", 1, $4)}'`; [ -z "$L" ] && L=NULL
+T=$S/$t/$f.sim
+
+echo $FORMAT | sed \
+    -e "s^%H^$H^g" \
+    -e "s^%S^$S^g" \
+    -e "s^%t^$t^g" \
+    -e "s^%f^$f^g" \
+    -e "s^%N^$N^g" \
+    -e "s^%L^$L^g" \
+    -e "s^%T^$T^g" \
+    -e "s^%V^$V^g"
