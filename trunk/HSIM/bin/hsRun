@@ -16,7 +16,7 @@ usage()
     echo 1>&2 "    SERVER_TYPE:"
     echo 1>&2 "        AJC#<APACHE_DIR>...      --May be more than one to run in sequence"
     echo 1>&2 "        AJC<yymmdd>...           --alias of 'AJC#AJC<yymmdd>'"
-    echo 1>&2 "        iServer[#<ENCYC_VOLUME>] --ENCYC_VOLUME defaults to <HOST> with '-' replaced by '_'"
+    echo 1>&2 "        {iServer|iHub}[#<ENCYC_VOLUME>] --ENCYC_VOLUME defaults to <HOST> with '-' replaced by '_'"
     echo 1>&2 "    SERVER_ADDR (for AJC):"
     echo 1>&2 "        <HOST>[:PORT]            --PORT defaults to '8080'"
     echo 1>&2 "    SERVER_ADDR (for iServer):"
@@ -58,13 +58,13 @@ while [ $# -gt 0 ]; do
             SERVER_TYPE=AJC
             APACHE_DIRS="$APACHE_DIRS $1"
             ;;
-        iServer#*)
+        iServer#*|iHub#*)
             SERVER_TYPE=iServer
             APACHE_DIRS=iportal
             ENCYCL_VOL=`echo "$1" | awk -F# '{print $2}'`
             ;;
         iServer|iHub)
-            SERVER_TYPE=$1
+            SERVER_TYPE=iServer
             APACHE_DIRS=iportal
             ENCYCL_VOL=; #Filled later with HOST
             ;;
