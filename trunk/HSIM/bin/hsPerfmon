@@ -54,7 +54,7 @@ set aveCPUs {}
 set aveDQLs {}
 set CPU {}
 set DQL {}
-set begin [clock seconds]
+set begin [expr [clock seconds] - 2] ;#Bring forward every output for 2s
 set end [expr $begin + $SECONDS]
 while {[after 1000; set now [clock seconds]] <= $end} {
     set line [string trim [gets $chan]]
