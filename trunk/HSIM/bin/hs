@@ -2,84 +2,14 @@
 
 PROGRAM=`basename $0`
 
-##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
-EVAL()
-{
-    echo "#!CMD:[" $@ "]"
-    eval "$@"
-}
-
-NEWFILE()
-{
-    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
-
-    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
-
-    mkdir -p .$FILE || exit 101
-    if [ -h $FILE ]; then
-        rm -f $FILE
-    elif [ -e $FILE ]; then
-        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
-        mv $FILE $REAL_FILE.bak
-    fi
-    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
-}
-##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
-
-ERRSUM=0
 DO_HSIM()
 {
-    ARG1=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}' | sed -e 's/\..*$//'`
-    ARG2=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $1}' | sed -e 's/^.*\.//'`
-    ARG3=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $2}'`
-    ARG4=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $3}'`
-    ARG5=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $4}' | sed -e 's/\[.*\]//g'`
-    ARG6=`pwd | awk -F@ '{print $NF}' | awk -F/ '{print $5}' | sed -e 's/\./ /g'`
-
-    SERVER_ADDR="$ARG1"
-    [ -n "$ARG6" ] && SERVER_TYPE="$ARG6" || SERVER_TYPE="$ARG2"
-    [ -n "$IN_SANITY_TEST" ] && ARG5="" #Clean up ARG5 so it would be recognized as sanity test later
-
-    case $SERVER_TYPE in
-        AJC*)
-            TEST_BASE=$HSIM_HOME/AJC
-            ;;
-        iServer*)
-            TEST_BASE=$HSIM_HOME/iServer
-            ;;
-        iHub*)
-            TEST_BASE=$HSIM_HOME/iHub
-            ;;
-        *)
-            echo 1>&2 "($PROGRAM)Error: Invalid SERVER_TYPE '$SERVER_TYPE'"
-            exit 1
-            ;;
-    esac
-    TESTCASE=$TEST_BASE/$ARG3/$ARG4.sim
-#    if [ ! -f "$TESTCASE" ]; then
-#        if [ -f "$TEST_BASE/__TV0Param.sim" ]; then
-#            (cd "$TEST_BASE/$ARG3" && EVAL cp_sims __template__.sim $ARG4)
-#        else
-#            echo 1>&2 "($PROGRAM)Error: TESTCASE '$TESTCASE' doesn't exist"; exit 1
-#        fi
-#    fi
-
-    case "$ARG5" in
-        *[0-9].*[0-9][smhti]*)
-            CLIENT_NUM_DURATION=`echo "$ARG5" | sed -e 's/\./ /g'`
-            if [ -z "$OPTS" ]; then
-                LOG=`NEWFILE $PROGRAM.log`
-            else
-                LOG=`echo $PROGRAM.$OPTS.log | sed -e 's/ //g'`
-                LOG=`NEWFILE $LOG`
-            fi
-            echo "#!CMD:[ hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE $CLIENT_NUM_DURATION --job hs.perfmon $OPTS]" > $LOG
-            EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE $CLIENT_NUM_DURATION --job hs.perfmon $OPTS "|" tee -a $LOG
-            ;;
-        "")
+    ARGS_RUN=`hsPrintf "%S %H %T %N %L"` || exit 1
+    case "$ARGS_RUN$SANITY" in
+        *NULL|*SANITY)
             LOG=`NEWFILE sanity.log`
-            [ -z "$SANITY_CLIENT_NUM" ] && SANITY_CLIENT_NUM=1
-            EVAL hsRun $SERVER_TYPE $SERVER_ADDR $TESTCASE $SANITY_CLIENT_NUM 1i -V $AJCS "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
+            ARGS_SANITY=`echo $ARGS_RUN | awk '{print $1, $2, $3, "1 1i -V"}'`
+            EVAL hsRun $ARGS_SANITY "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
             ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
             echo | tee -a $LOG
@@ -95,23 +25,24 @@ DO_HSIM()
             echo
             ;;
         *)
-            echo 1>&2 "($PROGRAM)Error: Invalid CLIENT_NUM.DURATION '$ARG5'"
-            exit 1
+            LOG=`NEWFILE $PROGRAM.log`
+            echo "#!CMD:[ hsRun $ARGS_RUN --job hs.perfmon ]" > $LOG
+            EVAL hsRun $ARGS_RUN --job hs.perfmon "|" tee -a $LOG
             ;;
     esac
 }
 
+SANITY=
 while [ $# -gt 0 ]; do
     case "$1" in
-        -D) shift; OPTS="$OPTS -D $1";;
-        AJC*) AJCS="$AJCS $1"; OPTS="$OPTS $1";;
-        -t) IN_SANITY_TEST=1;;
-        -T) IN_SANITY_TEST=1; shift; SANITY_CLIENT_NUM=$1;;
+        -t) SANITY=SANITY;;
         *) DIRS="$DIRS $1";;
     esac
     shift
 done
 [ -z "$DIRS" ] && DIRS="$PWD"
+
+ERRSUM=0
 
 ORIG_PWD="$PWD"
 for DIR in $DIRS; do

@@ -11,11 +11,11 @@ EVAL()
 usage()
 {
     echo 1>&2 "Usage:"
-    echo 1>&2 "  $PROGRAM SERVER_TYPE SERVER_ADDR CLIENT_NUM DURATION TESTCASE [-V] [--job CMD] [-R REPEAT_NUM]"
+    echo 1>&2 "  $PROGRAM SERVER_TYPE SERVER_ADDR CLIENT_NUM DURATION TESTCASE [-V] [--job CMD]"
     echo 1>&2
     echo 1>&2 "    SERVER_TYPE:"
-    echo 1>&2 "        AJC#<APACHE_DIR>...      --May be more than one to run in sequence"
-    echo 1>&2 "        AJC<yymmdd>...           --alias of 'AJC#AJC<yymmdd>'"
+    echo 1>&2 "        AJC#<APACHE_DIR>"
+    echo 1>&2 "        AJC<yymmdd>              --alias of 'AJC#AJC<yymmdd>'"
     echo 1>&2 "        {iServer|iHub}[#<ENCYC_VOLUME>] --ENCYC_VOLUME defaults to <HOST> with '-' replaced by '_'"
     echo 1>&2 "    SERVER_ADDR (for AJC):"
     echo 1>&2 "        <HOST>[:PORT]            --PORT defaults to '8080'"
@@ -31,8 +31,6 @@ usage()
     echo 1>&2 "        [PATH/]<FILE>.sim        --File with suffix '.sim' containing test URLs"
     echo 1>&2 "    -V                           --Print out all messages exchanged between the test client and server"
     echo 1>&2 "    --job <CMD>                  --Runs 'CMD HOST DURATION' in the background when $PROGRAM is running"
-    echo 1>&2 "    -R <REPEAT_NUM>              --Repeat for <REPEAT_NUM> times"
-    echo 1>&2 "    -D <DELAY>                   --Delay for <DELAY> seconds after each run"
     echo 1>&2
     echo 1>&2 "Examples:"
     echo 1>&2 "  $PROGRAM AJC121207 sha-perf 1 1i /home/samson/HSIM/AJC/SV1/Customer~Dashboard#html.sim -V"
@@ -43,29 +41,26 @@ usage()
     echo 1>&2 "      --iServer sanity on server 'sha-perf:8900', soapserver 'sha-perf:8000', encyclopedia volume 'sha_perf'"
     echo 1>&2 "  $PROGRAM iServer#sha_perf sha-perf 4 6t /home/samson/HSIM/iServer/BRS/BRS.sim --job hs.perfmon"
     echo 1>&2 "      --iServer execute 4 threads for 6 ticks, with backgroud job 'vmstat 10 60'"
-    echo 1>&2 "  $PROGRAM AJC121207 AJC121122 sha-perf 1 6t SV1/Customer~Dashboard#html.sim -R 3"
-    echo 1>&2 "      --AJC execute on AJC121207 and then AJC121122, repeating for 3 times."
-    echo 1>&2 "        That is: (AJC121207, AJC121122, AJC121207, AJC121122, AJC121207, AJC121122)"
 }
 
 while [ $# -gt 0 ]; do
     case "$1" in
         AJC#*)
             SERVER_TYPE=AJC
-            APACHE_DIRS="$APACHE_DIRS `echo '$1' | awk -F# '{print $2}'`"
+            APACHE_DIR=`echo '$1' | awk -F# '{print $2}'`
             ;;
         AJC[0-9][0-9][0-9][0-9][0-9][0-9])
             SERVER_TYPE=AJC
-            APACHE_DIRS="$APACHE_DIRS $1"
+            APACHE_DIR=$1
             ;;
         iServer#*|iHub#*)
             SERVER_TYPE=iServer
-            APACHE_DIRS=iportal
+            APACHE_DIR=iportal
             ENCYCL_VOL=`echo "$1" | awk -F# '{print $2}'`
             ;;
         iServer|iHub)
             SERVER_TYPE=iServer
-            APACHE_DIRS=iportal
+            APACHE_DIR=iportal
             ENCYCL_VOL=; #Filled later with HOST
             ;;
         *:*)
@@ -106,14 +101,6 @@ while [ $# -gt 0 ]; do
             shift
             JOB="$1"
             ;;
-        -R)
-            shift
-            REPEAT_NUM="$1"
-            ;;
-        -D)
-            shift
-            DELAY="$1"
-            ;;
         --help)
             usage; exit 0
             ;;
@@ -135,36 +122,25 @@ done
 [ -z "$PORT" ] && [ "$SERVER_TYPE" = AJC ] && PORT=8080 || PORT=8900
 [ -z "$SOAP_HOST" ] && SOAP_HOST=$HOST
 [ -z "$SOAP_PORT" ] && SOAP_PORT=$PORT
-[ -z "$REPEAT_NUM" ] && REPEAT_NUM=1
 
 OLD_PWD=$PWD
 cd $TEST_DIR
 
-LOOP=1
-while [ $LOOP -le $REPEAT_NUM ]; do
-    [ $REPEAT_NUM -ne 1 ] && { echo; echo "[$LOOP]";}
-    for APACHE_DIR in $APACHE_DIRS; do
-        [ "$APACHE_DIR" != "$APACHE_DIRS" ] && echo "[$APACHE_DIR]"
-        for DURATION in $DURATIONS; do
-            OPTS="-testType SSO -H $HOST -port $PORT"
-            [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -soapserver $SOAP_HOST -soapport $SOAP_PORT"
-            OPTS="$OPTS -clients $CLIENT_NUM"
-            [ "$DURATION" -gt 0 ] && OPTS="$OPTS -l $DURATION" || OPTS="$OPTS -n `expr $DURATION '*' -1`"
-            OPTS="$OPTS -d $APACHE_DIR"
-            [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -S $ENCYCL_VOL"
-            OPTS="$OPTS $TEST_FILE $TEST_OPTS"
-            [ -n "$VERBOSE" ] && OPTS="$OPTS -V"
+for DURATION in $DURATIONS; do
+    OPTS="-testType SSO -H $HOST -port $PORT"
+    [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -soapserver $SOAP_HOST -soapport $SOAP_PORT"
+    OPTS="$OPTS -clients $CLIENT_NUM"
+    [ "$DURATION" -gt 0 ] && OPTS="$OPTS -l $DURATION" || OPTS="$OPTS -n `expr $DURATION '*' -1`"
+    OPTS="$OPTS -d $APACHE_DIR"
+    [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -S $ENCYCL_VOL"
+    OPTS="$OPTS $TEST_FILE $TEST_OPTS"
+    [ -n "$VERBOSE" ] && OPTS="$OPTS -V"
 
 #OPTS="$OPTS -T 60"
-            [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"
-            echo "#!CMD:[ cd $TEST_DIR; HsimD.exe $OPTS 2>&1 ]"
-            HsimD.exe $OPTS 2>&1
-            cat error.log >> $OLD_PWD/error.log; rm -f error.log
-            mv error.log.* $OLD_PWD 2>/dev/null
-            [ -n "$JOB" ] && EVAL wait
-            [ -n "$DELAY" ] && EVAL sleep $DELAY
-        done
-    done
-    LOOP=`expr $LOOP '+' 1`
+    [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"
+    echo "#!CMD:[ cd $TEST_DIR; HsimD.exe $OPTS 2>&1 ]"
+    HsimD.exe $OPTS 2>&1
+    cat error.log >> $OLD_PWD/error.log; rm -f error.log
+    mv error.log.* $OLD_PWD 2>/dev/null
+    [ -n "$JOB" ] && EVAL wait
 done
-
