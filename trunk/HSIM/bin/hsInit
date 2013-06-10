@@ -14,6 +14,12 @@ while [ $# -gt 0 ]; do
         AJC|iServer|iHub) TARGETS="$TARGETS $1";;
         [0-9][0-9][0-9][0-9][0-9][0-9]) YYMMDD="$1";;
         [a-zA-Z]*) HOST="$1";;
+        [0-9]*@[a-zA-Z]*.[Ai]*)
+            YYMMDD=`echo $1 | awk -F '[@.]' '{ print $1 }'`
+            HOST=`echo $1 | awk -F '[@.]' '{ print $2 }'`
+            T=`echo $1 | awk -F '[@.]' '{ print $3 }'`
+            TARGETS="$TARGETS $T"
+            ;;
         -f) OVERRIDE=1;;
         --help) usage; exit 0;;
         *) echo 1>&2 "Error: Invalid option '$1'"; usage; exit 1;;
@@ -96,6 +102,7 @@ for TARGET in $TARGETS; do
 
     if [ "$TARGET" = "iHub" ]; then #LDS
         for X in x1 x100; do
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/[warmup]A1_SUM_M_$X/14.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A1_SUM_M_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A2_COUNT_D_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A3_COUNT_M_$X/{1,14}.6t

@@ -10,38 +10,49 @@ _EVAL()
 
 DO_HSIM()
 {
-    ARGS_RUN=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
-    case "$ARGS_RUN$SANITY" in
-        *NULL|*SANITY)
-            LOG=`NEWFILE sanity.log`
-            ARGS_SANITY=`echo $ARGS_RUN | awk '{print $1, $2, $3, "1 1i -V"}'`
-            _EVAL hsRun $ARGS_SANITY "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
-            ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
+    ARGS_START=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
 
-            echo | tee -a $LOG
-            echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
-            grep ' | ' $LOG | grep -v 'grep' >> $LOG
+    if [ "$PROGRAM" = "ht" -o "$PROGRAM" = "hts" ]; then
+        LOG=`NEWFILE ht.log`
+        case "$ARGS_START" in
+            *[0-9]i)
+                ARGS_TEST="$ARGS_START -V";;
+            *)
+                ARGS_TEST=`echo $ARGS_START | awk '{print $1, $2, $3, "1 1i -V"}'`;;
+        esac
+        _EVAL hsRun $ARGS_TEST "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
+        ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
-            if [ $ERRCNT -eq 0 -a `grep -c '| OK' $LOG` -gt 0 ]; then
-                echo "($PROGRAM)Note: Sanity test PASS. Verbose output is saved in $LOG"
-            else
-                echo "($PROGRAM)Error: Sanity test FAIL. Verbose output is saved in $LOG"
-                ERRSUM=`expr $ERRSUM '+' $ERRCNT`
-            fi
-            echo
-            ;;
-        *)
-            LOG=`NEWFILE $PROGRAM.log`
-            echo "#!CMD:[ hsRun $ARGS_RUN --job hs.perfmon ]" > $LOG
-            _EVAL hsRun $ARGS_RUN --job hs.perfmon "|" tee -a $LOG
-            ;;
-    esac
+        echo | tee -a $LOG
+        echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
+        grep ' | ' $LOG | grep -v 'grep' >> $LOG
+
+        if [ $ERRCNT -eq 0 -a `grep -c '| OK' $LOG` -gt 0 ]; then
+            echo "($PROGRAM)Note: Hsim Test PASS. Verbose output is saved in $LOG"
+        else
+            echo "($PROGRAM)Error: Hsim Test FAIL. Verbose output is saved in $LOG"
+            ERRSUM=`expr $ERRSUM '+' $ERRCNT`
+            return #ht failed, and thus won't hs anymore.
+        fi
+        echo
+    fi
+
+    if [ "$PROGRAM" = "hs" -o "$PROGRAM" = "hts" ]; then
+        case "$ARGS_START" in
+            *[0-9][smhti])
+                    LOG=`NEWFILE hs.log`
+                    echo "#!CMD:[ hsRun $ARGS_START --job hs.perfmon ]" > $LOG
+                    _EVAL hsRun $ARGS_START --job hs.perfmon "|" tee -a $LOG
+                    ;;
+            *)
+                    echo 1>&2 "Error: Invalid hsRun arguments '$ARGS_START'"
+                    ;;
+        esac
+    fi
 }
 
-SANITY=
 while [ $# -gt 0 ]; do
     case "$1" in
-        -t) SANITY=SANITY;;
         *) DIRS="$DIRS $1";;
     esac
     shift
