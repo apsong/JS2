@@ -1,9 +1,9 @@
 #!hsim -x
-#with parameter
+@(9 ORDERPRIORITY.csv)
 
 S:/@-6/loginservlet?__vp=@-5&userid=@-1&password=@-2&locale=en_US&timezone=America%2FLos_Angeles&loginpostback=true {(JSESSIONID=@257; Path)}
 
-M:/@-6/executereport.do?postback=true&jobType=sync&selectedTab=0&invokeSubmit=true&inputfile=%2FC4_FILTER_Some_NoSummary_x100.rptdesign&numOfParam=1&parameters[0].name=ORDERPRIORITY&parameters[0].value=1-URGENT&parameters[0].valueIsNull=falseHEAD:Cookie: JSESSIONID=@257 {(__report=@3&);(connectionHandle=@4&)}
+M:/@-6/executereport.do?postback=true&jobType=sync&selectedTab=0&invokeSubmit=true&inputfile=%2FC4_FILTER_Some_NoSummary_x100.rptdesign&numOfParam=1&parameters[0].name=ORDERPRIORITY&parameters[0].value=@9&parameters[0].valueIsNull=falseHEAD:Cookie: JSESSIONID=@257 {(__report=@3&);(connectionHandle=@4&)}
 
 M:/@-6/iv?connectionHandle=@4&__report=@3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp>
 

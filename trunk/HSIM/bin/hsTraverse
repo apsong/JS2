@@ -39,9 +39,9 @@ DO_TRAVERSE()
 {
     pwd | awk '{print "#!CMD:[ cd " $0 " ]"}'
     case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
-        1|2|3) $PROGRAM */ $OPTS;;
-        4) EVAL "hs || hs && hs *[0-9].*[0-9][smhti] $OPTS";; #sanity (try twice) && execute
-        5) EVAL "hs $OPTS";;
+        1|2) $PROGRAM */ $OPTS;;
+        3) EVAL "hs || hs && hs *[0-9].*[0-9][smhti] $OPTS";; #sanity (try twice) && execute
+        4) EVAL "hs $OPTS";;
         *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; return 1;;
     esac
     echo

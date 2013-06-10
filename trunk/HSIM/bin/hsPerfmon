@@ -94,6 +94,6 @@ close $chan
 after 1000
 set aveCPUs [lrange $aveCPUs 1 end-1]
 if {[llength $aveCPUs] > 0} {
-    puts [format "Average from Tick 2 to Tick %.0f(when all users are active): CPU = %2.1f  %s" \
-            [expr {$SECONDS*1.0/$TICKLEN-1}] [LIST2average $aveCPUs] ($aveCPUs)/[llength $aveCPUs]]
+    puts [format "Average from Tick 2 to Tick %.0f(when all users are active): CPU= %2.1f  DiskQ= %.1f" \
+            [expr {$SECONDS*1.0/$TICKLEN-1}] [LIST2average $aveCPUs] [LIST2average $aveDQLs]]
 }

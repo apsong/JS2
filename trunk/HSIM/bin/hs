@@ -2,6 +2,12 @@
 
 PROGRAM=`basename $0`
 
+_EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
 DO_HSIM()
 {
     ARGS_RUN=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
@@ -9,14 +15,14 @@ DO_HSIM()
         *NULL|*SANITY)
             LOG=`NEWFILE sanity.log`
             ARGS_SANITY=`echo $ARGS_RUN | awk '{print $1, $2, $3, "1 1i -V"}'`
-            EVAL hsRun $ARGS_SANITY "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
+            _EVAL hsRun $ARGS_SANITY "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
             ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
             echo | tee -a $LOG
             echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
             grep ' | ' $LOG | grep -v 'grep' >> $LOG
 
-            if [ $ERRCNT -eq 0 ]; then
+            if [ $ERRCNT -eq 0 -a `grep -c '| OK' $LOG` -gt 0 ]; then
                 echo "($PROGRAM)Note: Sanity test PASS. Verbose output is saved in $LOG"
             else
                 echo "($PROGRAM)Error: Sanity test FAIL. Verbose output is saved in $LOG"
@@ -27,7 +33,7 @@ DO_HSIM()
         *)
             LOG=`NEWFILE $PROGRAM.log`
             echo "#!CMD:[ hsRun $ARGS_RUN --job hs.perfmon ]" > $LOG
-            EVAL hsRun $ARGS_RUN --job hs.perfmon "|" tee -a $LOG
+            _EVAL hsRun $ARGS_RUN --job hs.perfmon "|" tee -a $LOG
             ;;
     esac
 }
@@ -47,7 +53,7 @@ ERRSUM=0
 ORIG_PWD="$PWD"
 for DIR in $DIRS; do
     echo
-    EVAL cd "$DIR" && DO_HSIM || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
+    _EVAL cd "$DIR" && DO_HSIM || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
     cd "$ORIG_PWD"
 done
 

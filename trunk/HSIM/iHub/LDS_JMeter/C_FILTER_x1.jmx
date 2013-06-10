@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.4" jmeter="2.9 r1437961">
+<jmeterTestPlan version="1.2" properties="2.4" jmeter="2.9-SNAPSHOT.20130425">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="C_FILTER" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -281,7 +281,7 @@
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">http</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/iportal/login.do</stringProp>
+            <stringProp name="HTTPSampler.path">/iportal/loginservlet</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -347,18 +347,6 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 120" enabled="true">
-          <intProp name="ActionProcessor.action">1</intProp>
-          <intProp name="ActionProcessor.target">0</intProp>
-          <stringProp name="ActionProcessor.duration">120000</stringProp>
-        </TestAction>
-        <hashTree/>
-        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="sleep 5" enabled="false">
-          <intProp name="ActionProcessor.action">1</intProp>
-          <intProp name="ActionProcessor.target">0</intProp>
-          <stringProp name="ActionProcessor.duration">5000</stringProp>
-        </TestAction>
-        <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Few (1)" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
