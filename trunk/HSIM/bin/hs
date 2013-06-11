@@ -8,6 +8,15 @@ _EVAL()
     eval "$@"
 }
 
+BASE64_DECODE()
+{
+    sed -e 's/%2[bB]/+/g' \
+        -e 's/%2[eE]/./g' \
+        -e 's|%2[fF]|/|g' \
+        -e 's/%24/$/g' \
+        -e 's/bA[a-zA-Z0-9/+]\{278\}/BASE64[280]/g'
+}
+
 DO_HSIM()
 {
     ARGS_START=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
@@ -20,12 +29,12 @@ DO_HSIM()
             *)
                 ARGS_TEST=`echo $ARGS_START | awk '{print $1, $2, $3, "1 1i -V"}'`;;
         esac
-        _EVAL hsRun $ARGS_TEST "|" tee $LOG | egrep '( \| )|(^\[.*\]$)'
+        _EVAL hsRun $ARGS_TEST "|" tee $LOG | egrep '( \| )|(^\[.*\]$)' | BASE64_DECODE
         ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
         echo | tee -a $LOG
         echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
-        grep ' | ' $LOG | grep -v 'grep' >> $LOG
+        grep ' | ' $LOG | grep -v 'grep' | BASE64_DECODE >> $LOG
 
         if [ $ERRCNT -eq 0 -a `grep -c '| OK' $LOG` -gt 0 ]; then
             echo "($PROGRAM)Note: Hsim Test PASS. Verbose output is saved in $LOG"
