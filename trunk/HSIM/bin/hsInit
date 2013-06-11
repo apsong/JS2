@@ -102,7 +102,6 @@ for TARGET in $TARGETS; do
 
     if [ "$TARGET" = "iHub" ]; then #LDS
         for X in x1 x100; do
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/[warmup]A1_SUM_M_$X/14.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A1_SUM_M_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A2_COUNT_D_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A3_COUNT_M_$X/{1,14}.6t

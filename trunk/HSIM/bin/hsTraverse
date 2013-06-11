@@ -15,7 +15,7 @@ usage()
 EVAL()
 {
     echo "#!CMD:[" $@ "]"
-    eval "$@"
+    [ "$NO_EVAL" = "TRUE" ] || eval "$@"
 }
 
 NEWFILE()
@@ -40,7 +40,7 @@ DO_TRAVERSE()
     pwd | awk '{print "#!CMD:[ cd " $0 " ]"}'
     case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
         1|2) $PROGRAM */ $OPTS;;
-        3) EVAL "hs || hs && hs *[0-9].*[0-9][smhti] $OPTS";; #sanity (try twice) && execute
+        3) EVAL "ht || ht && hs *[0-9].*[0-9][smhti] $OPTS";; #sanity (try twice) && execute
         4) EVAL "hs $OPTS";;
         *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; return 1;;
     esac
@@ -52,6 +52,7 @@ while [ $# -gt 0 ]; do
         --help) usage; exit 0;;
         -R) shift; OPTS="$OPTS -R $1";;
         -D) shift; OPTS="$OPTS -D $1";;
+        -t) shift; NO_EVAL=TRUE;;
         -*) usage; exit 1;;
         *) DIRS="$DIRS $1";;
     esac

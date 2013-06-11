@@ -138,8 +138,8 @@ for DURATION in $DURATIONS; do
 
 #OPTS="$OPTS -T 60"
     [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"
-    echo "#!CMD:[ cd $TEST_DIR; HsimD.exe $OPTS 2>&1 ]"
-    HsimD.exe $OPTS 2>&1
+    echo "#!CMD:[ cd $TEST_DIR; HsimV2.exe $OPTS 2>&1 ]"
+    HsimV2.exe $OPTS 2>&1
     cat error.log >> $OLD_PWD/error.log; rm -f error.log
     mv error.log.* $OLD_PWD 2>/dev/null
     [ -n "$JOB" ] && EVAL wait
