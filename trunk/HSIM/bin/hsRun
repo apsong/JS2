@@ -86,8 +86,7 @@ while [ $# -gt 0 ]; do
             esac
             ;;
         *.sim)
-            TEST_DIR=`dirname "$1"`
-            TEST_FILE=`basename "$1"`
+            TEST_FILE=`cygpath -w $1`
             TEST_OPTS=`awk '/#!hsim /{sub("#!hsim ", ""); print}' "$1"` || exit 2
             [ -n "$TEST_OPTS" ] && { echo "($PROGRAM)Note: Use hsim parameter '$TEST_OPTS' from $1";}
             ;;
@@ -123,9 +122,6 @@ done
 [ -z "$SOAP_HOST" ] && SOAP_HOST=$HOST
 [ -z "$SOAP_PORT" ] && SOAP_PORT=$PORT
 
-OLD_PWD=$PWD
-cd $TEST_DIR
-
 for DURATION in $DURATIONS; do
     OPTS="-testType SSO -H $HOST -port $PORT"
     [ "$SERVER_TYPE" = iServer ] && OPTS="$OPTS -soapserver $SOAP_HOST -soapport $SOAP_PORT"
@@ -138,9 +134,7 @@ for DURATION in $DURATIONS; do
 
 #OPTS="$OPTS -T 60"
     [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"
-    echo "#!CMD:[ cd $TEST_DIR; HsimV2.exe $OPTS 2>&1 ]"
+    echo "#!CMD:[ HsimV2.exe $OPTS 2>&1 ]"
     HsimV2.exe $OPTS 2>&1
-    cat error.log >> $OLD_PWD/error.log; rm -f error.log
-    mv error.log.* $OLD_PWD 2>/dev/null
     [ -n "$JOB" ] && EVAL wait
 done

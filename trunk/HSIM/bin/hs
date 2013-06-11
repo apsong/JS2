@@ -14,7 +14,8 @@ BASE64_DECODE()
         -e 's/%2[eE]/./g' \
         -e 's|%2[fF]|/|g' \
         -e 's/%24/$/g' \
-        -e 's/bA[a-zA-Z0-9/+]\{278\}/BASE64[280]/g'
+        -e 's/%3d/=/g' \
+        -e 's/bA[a-zA-Z0-9/+=]\{268\}/BASE64[270]/g'
 }
 
 DO_HSIM()
