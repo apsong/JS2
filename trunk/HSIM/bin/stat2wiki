@@ -13,7 +13,7 @@ set HEAD [subst {
 |align = "center"|'''Reports /second'''
 |align = "center"|'''Time(second) /report'''
 |align = "center"|'''CPU'''
-|align = "left"|'''____________________Comment____________________'''}]
+|align = "left"|'''_____________________Comment_____________________'''}]
 
 set BODY {
 |-
