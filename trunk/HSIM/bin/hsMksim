@@ -1,0 +1,56 @@
+#! /bin/sh
+
+PROGRAM=`basename $0`
+usage()
+{
+    echo 1>&2 "Usage: $PROGRAM [DIR]..."
+}
+
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    [ "$NO_EVAL" = "TRUE" ] || eval "$@"
+}
+
+NEWFILE()
+{
+    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
+
+    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
+
+    mkdir -p .$FILE || exit 101
+    if [ -h $FILE ]; then
+        rm -f $FILE
+    elif [ -e $FILE ]; then
+        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
+        mv $FILE $REAL_FILE.bak
+    fi
+    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
+}
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
+
+DO_MKSIM()
+{
+    TARGET=`hsPrintf $HSIM_HOME/%T`
+    NAME=`basename $TARGET | sed -e 's/\..*$//'`
+    TEMPLATE=`dirname \`dirname $TARGET\``/TV0Param.sim
+    echo "#!CMD:[" "sed -e 's/\${REPORT_NAME}/$NAME/g' $TEMPLATE" ">" $TARGET
+    sed -e "s/\${REPORT_NAME}/$NAME/g" $TEMPLATE > $TARGET
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --help) usage; exit 0;;
+        *) DIRS="$DIRS $1";;
+    esac
+    shift
+done
+[ -z "$DIRS" ] && DIRS="$PWD"
+
+ORIG_PWD="$PWD"
+for DIR in $DIRS; do
+    echo
+    cd "$DIR" && DO_MKSIM || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
+    cd "$ORIG_PWD"
+done

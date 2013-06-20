@@ -112,9 +112,20 @@ for TARGET in $TARGETS; do
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C2_FILTER_Many_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C3_FILTER_Some_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C4_FILTER_Some_NoSummary_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C5_FILTER_Low_GT_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C6_FILTER_High_LT_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C7_FILTER_Low_IN_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C8_FILTER_High_IN_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C9_FILTER_xQualifier_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D1_RTP_Trail2Y_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D2_RTP_Trail2Q_xTab_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D3_RTP_YTD_xTab_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D4_RTP_Trail2Q_YTD_xTab_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M1_Simple_xTab_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M2_Nation_Year_xTab_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M3_3filters_3groups_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M4_All_NoParam_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M5_All_WithParam_$X/{1,14}.6t
         done
     fi
 

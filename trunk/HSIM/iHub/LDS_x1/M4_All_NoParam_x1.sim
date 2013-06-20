@@ -1,0 +1,7 @@
+#!hsim -x
+
+S:/@-6/loginservlet?__vp=@-5&userid=@-1&password=@-2&locale=en_US&loginpostback=true&timezone=America%2FLos_Angeles {(JSESSIONID=@257; Path)}
+
+M:/@-6/executereport.do?__executableName=%2FM4_All_NoParam_x1.rptdesignHEAD:Cookie: JSESSIONID=@257 {(__report=@3&);(connectionHandle=@4&)}
+
+M:/@-6/iv?connectionHandle=@4&__report=@3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp>

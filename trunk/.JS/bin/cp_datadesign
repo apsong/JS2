@@ -1,11 +1,11 @@
 #! /usr/bin/sh
 
-for SRC in `ls *001.datadesign`; do
-    DST=`echo $SRC | sed -e 's/001/1/'`
+for SRC in `ls *00[1-9].datadesign`; do
+    DST=`echo $SRC | sed -e 's/00\([1-9]\)/\1/'`
     echo sed -e 's/localhost/birt01-win/g' -e 's@tpch_sf_001/tpch_sf_1@g' $SRC ">" $DST
     sed -e 's/localhost/birt01-win/g' -e 's/tpch_sf_001/tpch_sf_1/g' $SRC > $DST
 
-    DST=`echo $SRC | sed -e 's/001/100/'`
+    DST=`echo $SRC | sed -e 's/00\([1-9]\)/\100/'`
     echo sed -e 's/localhost/birt01-win/g' -e 's@tpch_sf_001/tpch_sf_100@g' $SRC ">" $DST
     sed -e 's/localhost/birt01-win/g' -e 's/tpch_sf_001/tpch_sf_100/g' $SRC > $DST
 done

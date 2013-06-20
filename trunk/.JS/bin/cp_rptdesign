@@ -3,6 +3,6 @@
 mkdir -p 100
 for SRC in `ls *_x1.*`; do
     DST=`echo $SRC | sed -e 's/_x1/_x100/'`
-    echo sed -e 's/1\.data/100.data/g' -e 's@Data Object/[A-Z]\+1@&00@g' $SRC ">" 100/$DST
-    sed -e 's/1\.data/100.data/g' -e 's@Data Objects/[A-Za-z_0-9]\+1@&00@g' $SRC > 100/$DST
+    echo sed -e 's/\([1-9]\)\.data/\100.data/g' -e 's@Data Objects/[A-Za-z_0-9]\+[1-9]@&00@g' $SRC ">" 100/$DST
+    sed -e 's/\([1-9]\)\.data/\100.data/g' -e 's@Data Objects/[A-Za-z_0-9]\+[1-9]@&00@g' $SRC > 100/$DST
 done
