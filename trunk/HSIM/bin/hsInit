@@ -102,30 +102,27 @@ for TARGET in $TARGETS; do
 
     if [ "$TARGET" = "iHub" ]; then #LDS
         for X in x1 x100; do
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A1_SUM_M_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A2_COUNT_D_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A3_COUNT_M_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A4_COUNTDISTINCT_D_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/A5_COUNTDISTINCT_M_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/B1_JOIN_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C1_FILTER_Few_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C2_FILTER_Many_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C3_FILTER_Some_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C4_FILTER_Some_NoSummary_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C5_FILTER_Low_GT_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C6_FILTER_High_LT_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C7_FILTER_Low_IN_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C8_FILTER_High_IN_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/C9_FILTER_xQualifier_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D1_RTP_Trail2Y_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D2_RTP_Trail2Q_xTab_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D3_RTP_YTD_xTab_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/D4_RTP_Trail2Q_YTD_xTab_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M1_Simple_xTab_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M2_Nation_Year_xTab_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M3_3filters_3groups_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M4_All_NoParam_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/M5_All_WithParam_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_SUM_M_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_COUNT_D_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_COUNT_M_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_COUNTDISTINCT_D_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_COUNTDISTINCT_M_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_JOIN_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_EQ_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_NE_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_EQ_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_EQ_detail_$X/1.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_IN_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_IN_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_LT_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_GE_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Med_LE_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xQualifier_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_Trail2Y_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_xTab_Trail2Q_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_xTab_YTD_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xTab_DATETIME_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_3filters_3groups_$X/{1,14}.6t
         done
     fi
 

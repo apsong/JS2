@@ -33,7 +33,7 @@ usage()
 case "$1" in
     *.sim)
         SOURCE=$1
-        NAME=`grep -m 1 -o "%2f[A-Za-z0-9_]*.rptdesign" $SOURCE | sed -e 's/%2f\|\.rptdesign//g'`
+        NAME=`grep -m 1 -o "%2[fF][A-Za-z0-9_]*.rptdesign" $SOURCE | sed -e 's/%2[fF]\|\.rptdesign//g'`
         [ -z "$NAME" ] && { echo 1>&2 "Error: Cannot find SRC_RPTDESIGN_NAME in $SOURCE"; exit 1;}
         shift
         for TARGET do
