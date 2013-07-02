@@ -75,13 +75,13 @@ while [ $# -gt 0 ]; do
         [0-9]|[0-9][0-9]|[0-9][0-9][0-9]|[0-9][0-9][0-9][0-9])
             CLIENT_NUM=$1
             ;;
-        [0-9][smhti]*|[0-9][0-9][smhti]*|[0-9][0-9][0-9][smhti]*|[0-9][0-9]*[0-9][0-9][smhti]*)
+        [0-9][smhtTi]*|[0-9][0-9][smhtTi]*|[0-9][0-9][0-9][smhtTi]*|[0-9][0-9]*[0-9][0-9][smhtTi]*)
             NUM=`echo "$1" | sed -e 's/.$//'`
             case "$1" in
                 *[0-9]s*) DURATIONS="$DURATIONS $NUM";;
                 *[0-9]m*) DURATIONS="$DURATIONS `expr $NUM '*' 60`";;
                 *[0-9]h*) DURATIONS="$DURATIONS `expr $NUM '*' 3600`";;
-                *[0-9]t*) DURATIONS="$DURATIONS `expr $NUM '*' 100`";;
+                *[0-9][tT]*) DURATIONS="$DURATIONS `expr $NUM '*' 100`";;
                 *[0-9]i*) DURATIONS="$DURATIONS -$NUM";;
             esac
             ;;
