@@ -55,6 +55,7 @@ set aveDQLs {}
 set CPU {}
 set DQL {}
 set begin [expr [clock seconds] - 3] ;#Bring forward every output for 3s
+set next [expr $begin + $TICKLEN]
 set end [expr $begin + $SECONDS]
 while {[after 1000; set now [clock seconds]] <= $end} {
     set line [string trim [gets $chan]]
@@ -62,7 +63,9 @@ while {[after 1000; set now [clock seconds]] <= $end} {
     lappend CPU [lindex $line 0]
     set dql [lindex $line 1]; if {$dql < 0} { set dql 0 }
     lappend DQL $dql
-    if {($now - $begin) % $TICKLEN == 0} {
+    if {$now >= $next} {
+        while {$now >= $next} { incr next $TICKLEN }
+
         set aveCPU [LIST2average $CPU]
         set aveDQL [LIST2average $DQL]
         lappend aveCPUs $aveCPU

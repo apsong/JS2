@@ -36,7 +36,8 @@ DO_STAT()
             3) DO_STAT *[0-9][smht]*/;;
             4)
                 if [ -f hs.log ]; then
-                    awk -v DIR=`pwd | sed -e 's/^.*@//'` '
+#awk -v DIR=`pwd | sed -e 's/^.*@//'` '
+                    awk -v DIR=`pwd | sed -e "s^$BASE_DIR/^^"` '
                         /):/ {
                             if ($12 == "CPU") {
                                 CPU=$14
@@ -63,6 +64,7 @@ DO_STAT()
     done
 }
 
+BASE_DIR=$PWD
 if [ $# -eq 0 ]; then
     EVAL DO_STAT .    "|" tee `NEWFILE $PROGRAM.log`
 else 
