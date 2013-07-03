@@ -97,6 +97,25 @@ for TARGET in $TARGETS; do
             mkdir -p -v	$YYMMDD@$HOST.$TARGET/BRS/BRS/6.5t.10t
             mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/SampleBIRTReport/{1,6}.6t
             mkdir -p -v	$YYMMDD@$HOST.$TARGET/Transient/rpt1/{1,6}.6t
+
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/Cube_RTP_xTab_Trail2Q_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/Cube_RTP_xTab_YTD_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/Cube_xTab_DATETIME_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_3filters_3groups_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_COUNT_D_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_COUNT_M_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_COUNTDISTINCT_D_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_COUNTDISTINCT_M_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_SUM_M_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_High_EQ_detail_x1/1.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_High_EQ_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_High_GE_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_High_IN_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Low_EQ_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Low_IN_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Low_LT_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Low_NE_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Med_LE_x1/{1,14}.6t
             ;;
     esac
 
