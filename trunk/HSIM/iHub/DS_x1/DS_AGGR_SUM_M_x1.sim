@@ -1,6 +1,6 @@
 #!hsim -x
 
-S:/@-6/login.do?__vp=@-5&userid=@-1&password=@-2&locale=en_US&loginpostback=true&timezone=America%2FLos_Angeles {(JSESSIONID=@257; Path)}
+S:/@-6/loginservlet?__vp=@-5&userid=@-1&password=@-2&locale=en_US&loginpostback=true&timezone=America%2FLos_Angeles {(JSESSIONID=@257; Path)}
 
 M:/@-6/executereport.do?__executableName=%2FDS_AGGR_SUM_M_x1.rptdesignHEAD:Cookie: JSESSIONID=@257 {(__report=@3&);(connectionHandle=@4&)}
 
