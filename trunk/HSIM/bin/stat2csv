@@ -1,0 +1,27 @@
+#! /usr/bin/tclsh
+
+set TESTS {}
+while {[gets stdin line]>=0} {
+    if {[llength $line] < 11} { continue }
+    if {[regexp {([^/]+)/([0-9]+)\.[0-9]+[tT]$} [lindex $line 0] {} TEST THREADS]} {
+        set T [expr {$THREADS == 1 ? 1 : "M"}]
+        set ${TEST}(THREADS_$T) $THREADS
+        set ${TEST}(REPORTS_$T) [lindex $line 2]
+        set ${TEST}(SECONDS_$T) [lindex $line 4]
+        set ${TEST}(CPU_$T) [lindex $line 6]%
+        if {[lsearch $TESTS $TEST] == -1} {
+            lappend TESTS $TEST
+        }
+    }
+}
+
+foreach TEST $TESTS {
+    foreach K {THREADS_1 REPORTS_1 SECONDS_1 CPU_1 THREADS_M REPORTS_M SECONDS_M CPU_M} {
+        if {![info exists ${TEST}($K)]} {
+            set $K -
+        } else {
+            set $K [set ${TEST}($K)]
+        }
+    }
+    puts $TEST,$REPORTS_1,$SECONDS_1,$CPU_1,$REPORTS_M,$SECONDS_M,$CPU_M
+}
