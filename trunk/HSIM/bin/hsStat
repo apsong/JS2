@@ -30,7 +30,8 @@ DO_STAT()
 {
     local OLD_PWD=`pwd` #Here has to use the bash extension for local variable
     for DIR do
-        cd $DIR || exit 2
+        [ -d $DIR ] || return 1
+        cd $DIR || return 2
         case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
             1|2) DO_STAT */;;
             3) DO_STAT *[0-9][smht]*/;;
