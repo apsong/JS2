@@ -1,5 +1,42 @@
 #! /usr/bin/tclsh
 
+proc getIndex {test} {
+    set index 0
+    foreach pattern {
+        *_AGGR_SUM_M_*
+        *_AGGR_COUNT_D_*
+        *_AGGR_COUNT_M_*
+        *_AGGR_COUNTDISTINCT_D_*
+        *_AGGR_COUNTDISTINCT_M_*
+        *_JOIN_*
+        *_FILTER_Low_EQ_*
+        *_FILTER_Low_NE_*
+        *_FILTER_Low_LT_*
+        *_FILTER_Low_IN_*
+        *_FILTER_High_EQ_x*
+        *_FILTER_High_EQ_detail_*
+        *_FILTER_High_GE_*
+        *_FILTER_High_IN_*
+        *_FILTER_Med_LE_*
+        *_3filters_3groups_*        
+        *_RTP_Trail2Y_*
+        *_RTP_xTab_Trail2Q_*
+        *_RTP_xTab_YTD_*
+        *_xQualifier_*
+        *_xTab_DATETIME_*
+    } {
+        if {[string match $pattern $test]} { return $index }
+        incr index
+    }
+    return [incr index]
+}
+proc compTest {t1 t2} {
+    set comp [expr [getIndex $t1] - [getIndex $t2]]
+    return $comp==0 ? [string compare $t1 $t2] : $comp
+}
+
+##################################################################
+
 set TESTS {}
 while {[gets stdin line]>=0} {
     if {[llength $line] < 11} { continue }
@@ -15,6 +52,7 @@ while {[gets stdin line]>=0} {
     }
 }
 
+set LINES {}
 foreach TEST $TESTS {
     foreach K {THREADS_1 REPORTS_1 SECONDS_1 CPU_1 THREADS_M REPORTS_M SECONDS_M CPU_M} {
         if {![info exists ${TEST}($K)]} {
@@ -23,5 +61,8 @@ foreach TEST $TESTS {
             set $K [set ${TEST}($K)]
         }
     }
-    puts $TEST,$REPORTS_1,$SECONDS_1,$CPU_1,$REPORTS_M,$SECONDS_M,$CPU_M
+    lappend LINES $TEST,$REPORTS_1,$SECONDS_1,$CPU_1,$REPORTS_M,$SECONDS_M,$CPU_M
 }
+
+puts [join [lsort -command compTest $LINES] \n]
+
