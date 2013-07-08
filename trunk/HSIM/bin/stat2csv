@@ -36,6 +36,11 @@ proc compTest {t1 t2} {
 }
 
 ##################################################################
+if {$argc > 0} {
+    set SEP [subst [lindex $argv 0]]
+} else {
+    set SEP ,
+}
 
 set TESTS {}
 while {[gets stdin line]>=0} {
@@ -61,7 +66,9 @@ foreach TEST $TESTS {
             set $K [set ${TEST}($K)]
         }
     }
-    lappend LINES $TEST,$REPORTS_1,$SECONDS_1,$CPU_1,$REPORTS_M,$SECONDS_M,$CPU_M
+    lappend LINES [join \
+        [list $TEST.rptdesign $THREADS_1 $REPORTS_1 $SECONDS_1 $CPU_1 $THREADS_M $REPORTS_M $SECONDS_M $CPU_M] \
+        $SEP]
 }
 
 puts [join [lsort -command compTest $LINES] \n]

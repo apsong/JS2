@@ -101,7 +101,6 @@ for TARGET in $TARGETS; do
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/Cube_RTP_xTab_Trail2Q_x1/{1,14}.6t
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/Cube_RTP_xTab_YTD_x1/{1,14}.6t
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/Cube_xTab_DATETIME_x1/{1,14}.6t
-            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_3filters_3groups_x1/{1,14}.6t
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_COUNT_D_x1/{1,14}.6t
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_COUNT_M_x1/{1,14}.6t
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_AGGR_COUNTDISTINCT_D_x1/{1,14}.6t
@@ -116,6 +115,7 @@ for TARGET in $TARGETS; do
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Low_LT_x1/{1,14}.6t
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Low_NE_x1/{1,14}.6t
             mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_Med_LE_x1/{1,14}.6t
+            mkdir -p -v $YYMMDD@$HOST.$TARGET/DS_x1/DS_FILTER_X3groups_x1/{1,14}.6t
             ;;
     esac
 
@@ -136,27 +136,12 @@ for TARGET in $TARGETS; do
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_LT_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_GE_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Med_LE_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_X3groups_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xQualifier_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_Trail2Y_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_xTab_Trail2Q_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_xTab_YTD_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xTab_DATETIME_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_3filters_3groups_$X/{1,14}.6t
         done
-    fi
-
-    if [ "$TARGET" = "iServer" ]; then #LDS for 11SP4, _x1 only
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A1_SUM_M_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A2_COUNT_D_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A3_COUNT_M_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A4_COUNTDISTINCT_D_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_A5_COUNTDISTINCT_M_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_B1_JOIN_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C1_FILTER_Few_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C2_FILTER_Many_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C3_FILTER_Some_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_C4_FILTER_Some_NoSummary_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_M1_Simple_xTab_x1/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iServer/LDS_x1/11SP4_M2_Nation_Year_xTab_x1/1.6t
     fi
 done
