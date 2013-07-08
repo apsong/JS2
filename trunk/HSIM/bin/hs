@@ -30,21 +30,27 @@ DO_HSIM()
             *)
                 ARGS_TEST=`echo $ARGS_START | awk '{print $1, $2, $3, "1 1i -V"}'`;;
         esac
-        _EVAL hsRun $ARGS_TEST "|" tee $LOG | egrep --line-buffered '( \| )|(^\[.*\]$)' | BASE64_DECODE
-        ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
+        for i in 1 2; do
+            _EVAL hsRun $ARGS_TEST "|" tee $LOG | egrep --line-buffered '( \| )|(^\[.*\]$)' | BASE64_DECODE
+            ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
-        echo | tee -a $LOG
-        echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
-        grep ' | ' $LOG | grep -v 'grep' | BASE64_DECODE >> $LOG
+            echo | tee -a $LOG
+            echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
+            grep ' | ' $LOG | grep -v 'grep' | BASE64_DECODE >> $LOG
 
-        if [ $ERRCNT -eq 0 -a `grep -c '| OK' $LOG` -gt 0 ]; then
-            echo "($PROGRAM)Note: Hsim Test PASS. Verbose output is saved in $LOG"
-        else
-            echo "($PROGRAM)Error: Hsim Test FAIL. Verbose output is saved in $LOG"
-            ERRSUM=`expr $ERRSUM '+' $ERRCNT`
-            return #ht failed, and thus won't hs anymore.
-        fi
-        echo
+            if [ $ERRCNT -eq 0 -a `grep -c '| OK' $LOG` -gt 0 ]; then
+                echo "($PROGRAM)Note: Hsim Test PASS. Verbose output is saved in $LOG"
+                echo
+                break
+            else
+                echo "($PROGRAM)Error: Hsim Test FAIL. Verbose output is saved in $LOG"
+                echo
+                if [ $i -eq 2 ]; then #Check for 2 times
+                    ERRSUM=`expr $ERRSUM '+' $ERRCNT`
+                    return #ht failed, and thus won't hs anymore.
+                fi
+            fi
+        done
     fi
 
     if [ "$PROGRAM" = "hs" -o "$PROGRAM" = "hts" ]; then

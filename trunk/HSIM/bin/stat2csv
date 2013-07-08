@@ -8,7 +8,6 @@ proc getIndex {test} {
         *_AGGR_COUNT_M_*
         *_AGGR_COUNTDISTINCT_D_*
         *_AGGR_COUNTDISTINCT_M_*
-        *_JOIN_*
         *_FILTER_Low_EQ_*
         *_FILTER_Low_NE_*
         *_FILTER_Low_LT_*
@@ -18,7 +17,8 @@ proc getIndex {test} {
         *_FILTER_High_GE_*
         *_FILTER_High_IN_*
         *_FILTER_Med_LE_*
-        *_3filters_3groups_*        
+        *_FILTER_X3groups_*        
+        *_JOIN_*
         *_RTP_Trail2Y_*
         *_RTP_xTab_Trail2Q_*
         *_RTP_xTab_YTD_*
