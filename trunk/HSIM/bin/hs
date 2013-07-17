@@ -18,10 +18,10 @@ BASE64_DECODE()
         -e 's/bA[a-zA-Z0-9/+=]\{254\}/BASE64[256]/g'
 }
 
-ARGS_START=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
-
 ht()
 {
+    ARGS_START=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
+
     LOG=`NEWFILE ht.log`
     case "$ARGS_START" in
         *[0-9]i)
@@ -50,6 +50,8 @@ ht()
 
 hs()
 {
+    ARGS_START=`hsPrintf "%S %H $HSIM_HOME/%T %N %L"` || exit 1
+
     case "$ARGS_START" in
         *[0-9][smhtTi])
                 LOG=`NEWFILE hs.log`
@@ -60,6 +62,8 @@ hs()
                 echo 1>&2 "Error: Invalid hsRun arguments '$ARGS_START'"
                 ;;
     esac
+
+    [ $DELAY -gt 0 ] && _EVAL sleep $DELAY
 }
 
 hts()
@@ -67,8 +71,10 @@ hts()
     ht || ht && hs #Test twice, and start run if any test passed.
 }
 
+DELAY=0
 while [ $# -gt 0 ]; do
     case "$1" in
+        -D) shift; DELAY=$1;;
         *) DIRS="$DIRS $1";;
     esac
     shift
@@ -78,6 +84,6 @@ done
 ORIG_PWD="$PWD"
 for DIR in $DIRS; do
     echo
-    _EVAL cd "$DIR" && { $PROGRAM; true;} || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
+    _EVAL cd "$DIR" && { pwd; $PROGRAM; true;} || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
     cd "$ORIG_PWD"
 done
