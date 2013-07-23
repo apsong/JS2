@@ -5,7 +5,7 @@ function Release-Ref ($ref) {
     [System.GC]::WaitForPendingFinalizers()
 }
 
-$csv = "I:\【数据管理】\人员信息总表.csv"
+$csv = "I:\【数据管理】\人员信息总表_Summary.csv"
 $SUMMARY = (import-csv $csv)
 "${csv}: " + $SUMMARY.Count
 #$HASH.Values | Where-Object { $_.Name -eq "万红卫" }

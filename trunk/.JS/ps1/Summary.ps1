@@ -7,7 +7,7 @@ function Release-Ref ($ref) {
 
 $XLS = (Get-ChildItem I:\【数据管理】\人员信息总表*.xlsx | Sort-Object | Select-Object -last 1).FullName
 $CSV = $XLS.Replace(".xlsx", ".csv")
-$SUMMARY = "I:\【数据管理】\人员信息总表.csv"
+$SUMMARY = "I:\【数据管理】\人员信息总表_Summary.csv"
 
 if (1) {
 $excel = new-object -comobject excel.application 
@@ -35,7 +35,8 @@ $HASH = @{}
 $row = 0
 $header = "Name","Phone","Email","Date","Address","Subject","Action","Applied","Sent","Received","Uploaded"
 import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -process {
-    if ($_.Date -ne $null -and $_.Date -ne "") { $_.Date = [DateTime]$_.Date }
+    $_.Date = (Get-Date -UFormat "%Y/%m/%d" $_.Date)
+    $_.Name = $_.Name.Replace(" ", "")
     
     if ($_.Action -eq "参加学佛沙龙") {
         $xfsl = 1; $ptsl = 0;
@@ -61,7 +62,7 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
             Sent = $_.Sent
             Received = $_.Received
         }
-        if ($xfsl + $ptsl -eq 0) { $person.LastDate = $null }
+        if ($xfsl + $ptsl -eq 0) { $person.FirstDate = $null; $person.LastDate = $null }
         $HASH[$ID] = $person
     } else {
         #if ($person.Name -eq "忻汉能") { $_; $person; }
@@ -76,7 +77,7 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
                 $person.Email = $_.Email
             }
         }
-        if ($xfsl + $ptsl -gt 0 -and $person.FirstDate -gt $_.Date) { $person.FirstDate = $_.Date }
+        if ($xfsl + $ptsl -gt 0 -and ($person.FirstDate -gt $_.Date -or $person.FirstDate -eq $null)) { $person.FirstDate = $_.Date }
         if ($xfsl + $ptsl -gt 0 -and $person.LastDate -lt $_.Date) { $person.LastDate = $_.Date }
         if ($_.Applied -eq "是") { $person.Applied = "是" }
         if ($_.Sent -eq "是") { $person.Sent = "是" }
@@ -87,5 +88,5 @@ import-csv $CSV -header $header | select-object -skip 1 | ForEach-Object -proces
     $row++
 }
 "[$row rows are processed, " + $HASH.Count + " rows are generated.]"
-$HASH.values | Select-Object Name,Phone,Applied,Email,FirstDate,LastDate,XFSL,PTSL,Sent,Received `
+$HASH.values | ?{ $_.LastDate -ne $null} | Select-Object Name,Phone,Applied,Email,FirstDate,LastDate,XFSL,PTSL,Sent,Received `
         | export-csv -noTypeInformation -encoding Unicode $SUMMARY
