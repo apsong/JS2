@@ -26,6 +26,7 @@ $a = Release-Ref($worksheet)
 $a = Release-Ref($workbook)
 $a = Release-Ref($excel)
 
+# Switch to Unicode
 $temp = (Get-Content $csv)
 $temp | Out-File $csv -Encoding Unicode
 }
