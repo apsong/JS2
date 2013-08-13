@@ -44,9 +44,9 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
         $XFSL = 0
         $PTSL = 0
     }
-    if ($XFSL -eq 0 -or $PTSL -eq 0) {    
-        $similar = ($SUMMARY | Where-Object { $_.Name -eq $Name -or $_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*" })
-        if ($similar -ne $null) {
+    if ($XFSL -lt 2 -or $PTSL -lt 1) {    
+        $similar = @($SUMMARY | Where-Object { $_.Name -eq $Name -or $_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*" })
+        if ($similar.Count -gt 0) {
             "Warning: No good hit! Partly hit results for $Name/$Phone1/$Phone2/$Email are: " + $similar.Count
             $similar
         }
@@ -64,7 +64,7 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     $newName = $Name + $file.Extension; if ($file.Name -like "*(松江)*") { $newName = "(松江)$newName" }
     if ($WORD -lt 250 -or $WORD2 -eq 0) {
         $dest = $file.DirectoryName + "\不足字数[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
-    } elseif ($XFSL -eq 0 -or $PTSL -eq 0) {
+    } elseif ($XFSL -lt 2 -or $PTSL -lt 1) {
         $dest = $file.DirectoryName + "\不足沙龙[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } else {
         $dest = $file.DirectoryName + ".合格\[${first}]$newName"

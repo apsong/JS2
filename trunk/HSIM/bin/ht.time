@@ -1,0 +1,4 @@
+#! /bin/bash
+
+[ $# -eq 0 ] && SOURCE=- || SOURCE="$@"
+cat $SOURCE | awk '/rpt.+\.rptdesign/{printf("%s %8s\n", $9, $4)}' | awk '{print "  " NR ":\t" $0}'

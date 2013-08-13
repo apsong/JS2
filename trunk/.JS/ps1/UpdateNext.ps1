@@ -13,19 +13,21 @@ $NextPTSL = "I:\【数据管理】\人员信息总表_NextPTSL.csv"
 $NextXFSL = "I:\【数据管理】\人员信息总表_NextXFSL.csv"
 
 ###################################################################################################
-$PTSLs = (Import-Csv I:\【数据管理】\人员信息总表-20130714.csv | ?{$_.沙龙主题 -eq "菩提沙龙" } | %{ Get-Date -UFormat "%Y/%m/%d" $_.参加沙龙时间 } | sort -Unique)
-$PTSLs
-$Last2PTSL = ($PTSLs | Select-Object -Index ($PTSLs.Count-2))
-"`nLast2PTSL:"
-$Last2PTSL
+#$PTSLs = (Import-Csv I:\【数据管理】\人员信息总表-20130714.csv | ?{$_.沙龙主题 -eq "菩提沙龙" } | %{ Get-Date -UFormat "%Y/%m/%d" $_.参加沙龙时间 } | sort -Unique)
+#$PTSLs
+#$Last2PTSL = ($PTSLs | Select-Object -Index ($PTSLs.Count-2))
+#"`nLast2PTSL:"
+#$Last2PTSL
 
+$Last2PTSL = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 90)))
 Import-Csv $SUMMARY | ?{$_.LastDate -gt $Last2PTSL -and $_.PTSL -eq 0} | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
     | export-csv -noTypeInformation -encoding Unicode $NextPTSL
     
 $LastMonth = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 30)))
 Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastMonth } | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
     | export-csv -noTypeInformation -encoding Unicode $NextXFSL
-        
+
+$Last2PTSL = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 90)))
 ###################################################################################################
 $excel = new-object -comobject excel.application 
 $excel.Visible = $True 
@@ -40,12 +42,18 @@ function NewSheet($workbook, $name, $file) {
     $newSheet = $workbook.Worksheets.Add()
     $newSheet.Name = $name
     $newSheet.Move([System.Reflection.Missing]::Value, $workbook.WorkSheets.Item($workbook.WorkSheets.Count))
+    
+    # Data->From Text: $file,   To "$A$1"
     $connector = $newSheet.QueryTables.Add("TEXT;" + $file, $newSheet.Range("A1"))
-    $newSheet.QueryTables.Item($connector.name).TextFileCommaDelimiter = $true
-    $newSheet.QueryTables.Item($connector.name).TextFileParseType = 1
-    [void]$newSheet.QueryTables.Item($connector.name).Refresh()
-    $newSheet.QueryTables.Item($connector.name).Delete()
-
+    $connector.TextFileCommaDelimiter = $true
+    $connector.TextFileParseType = 1
+    [void]$connector.Refresh()
+    $connector.Delete()
+    #$newSheet.QueryTables.Item($connector.name).TextFileCommaDelimiter = $true
+    #$newSheet.QueryTables.Item($connector.name).TextFileParseType = 1
+    #[void]$newSheet.QueryTables.Item($connector.name).Refresh()
+    #$newSheet.QueryTables.Item($connector.name).Delete()
+    
     $newSheet.Cells.Item(1, 1) = "姓名"
     $newSheet.Cells.Item(1, 2) = "电话"
     $newSheet.Cells.Item(1, 3) = "报名书院"
