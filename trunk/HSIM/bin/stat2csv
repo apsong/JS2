@@ -39,7 +39,7 @@ proc compTest {t1 t2} {
 if {$argc > 0} {
     set SEP [subst [lindex $argv 0]]
 } else {
-    set SEP ,
+#set SEP ,
 }
 
 set TESTS {}
@@ -66,9 +66,14 @@ foreach TEST $TESTS {
             set $K [set ${TEST}($K)]
         }
     }
-    lappend LINES [join \
-        [list $TEST.rptdesign $THREADS_1 $REPORTS_1 $SECONDS_1 $CPU_1 $THREADS_M $REPORTS_M $SECONDS_M $CPU_M] \
-        $SEP]
+    if {[info exists SEP]} {
+        lappend LINES [join \
+            [list $TEST.rptdesign $THREADS_1 $REPORTS_1 $SECONDS_1 $CPU_1 $THREADS_M $REPORTS_M $SECONDS_M $CPU_M] \
+            $SEP]
+    } else {
+        lappend LINES [format "%-38s    (%s) %6s %8s %6s    (%2s) %6s %8s %6s" \
+                  $TEST.rptdesign $THREADS_1 $REPORTS_1 $SECONDS_1 $CPU_1 $THREADS_M $REPORTS_M $SECONDS_M $CPU_M]
+    }
 }
 
 puts [join [lsort -command compTest $LINES] \n]
