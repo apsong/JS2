@@ -8,6 +8,7 @@ proc getIndex {test} {
         *_AGGR_COUNT_M_*
         *_AGGR_COUNTDISTINCT_D_*
         *_AGGR_COUNTDISTINCT_M_*
+        *_JOIN_*
         *_FILTER_Low_EQ_*
         *_FILTER_Low_NE_*
         *_FILTER_Low_LT_*
@@ -18,7 +19,6 @@ proc getIndex {test} {
         *_FILTER_High_IN_*
         *_FILTER_Med_LE_*
         *_FILTER_X3groups_*        
-        *_JOIN_*
         *_RTP_Trail2Y_*
         *_RTP_xTab_Trail2Q_*
         *_RTP_xTab_YTD_*
@@ -71,7 +71,7 @@ foreach TEST $TESTS {
             [list $TEST.rptdesign $THREADS_1 $REPORTS_1 $SECONDS_1 $CPU_1 $THREADS_M $REPORTS_M $SECONDS_M $CPU_M] \
             $SEP]
     } else {
-        lappend LINES [format "%-38s    (%s) %6s %8s %6s    (%2s) %6s %8s %6s" \
+        lappend LINES [format "%-40s    (%s) %6s %8s %6s    (%2s) %6s %8s %6s" \
                   $TEST.rptdesign $THREADS_1 $REPORTS_1 $SECONDS_1 $CPU_1 $THREADS_M $REPORTS_M $SECONDS_M $CPU_M]
     }
 }

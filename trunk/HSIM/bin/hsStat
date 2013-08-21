@@ -39,6 +39,11 @@ DO_STAT()
                 if [ -f hs.log ]; then
 #awk -v DIR=`pwd | sed -e 's/^.*@//'` '
                     awk -v DIR=`pwd | sed -e "s^$BASE_DIR/^^"` '
+                        BEGIN {
+                            SumResp = 0
+                            NumResp = 0
+                            LastResp = 9999.00
+                        }
                         /):/ {
                             if ($12 == "CPU") {
                                 CPU=$14
@@ -48,6 +53,25 @@ DO_STAT()
                                 DQL=$NF
                             } else {
                                 URL=gensub(",", "", "g", $14); Resp=$16
+
+                                if (Resp > 1000) {
+                                    if (LastResp < 1000) {
+                                        SumResp -= LastResp
+                                        NumResp --
+                                    }
+                                    if (NumResp > 0) {
+                                        Resp = sprintf("%.2f", SumResp / NumResp)
+                                    }
+                                }
+                            }
+                        }
+                        /Tick=/ {
+                            if ($2 > 1) {
+                                if ($6 < 1000) {
+                                    SumResp += $6
+                                    NumResp ++
+                                }
+                                LastResp = $6
                             }
                         }
                         /Error page received/ {
