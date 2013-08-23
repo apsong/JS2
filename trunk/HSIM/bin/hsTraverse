@@ -40,7 +40,7 @@ NEWFILE()
 ##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
 
 REPEAT=1
-DELAY=0
+DELAY=90
 while [ $# -gt 0 ]; do
     case "$1" in
         --help) usage; exit 0;;
