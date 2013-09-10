@@ -15,7 +15,7 @@ usage()
 EVAL()
 {
     if [ "$NO_EVAL" = "TRUE" ]; then
-        echo $@
+        echo EVAL "$@"
     else
         echo "#!CMD:[" $@ "]"
         eval "$@"
@@ -58,8 +58,10 @@ for ROUND in `seq 1 $REPEAT`; do
     [ $REPEAT -gt 1 ] && echo "[ROUND: $ROUND]"
     for ROOT in $ROOTS; do
         for DIR in `find $ROOT -name "[0-9]*\.*[0-9][tT]" -type d`; do
-            EVAL cd "$DIR" && { EVAL hts; [ $DELAY -gt 0 ] && EVAL sleep $DELAY; true;} \
-                || echo 1>&2 "($PROGRAM)Error: Failed to enter directory '$DIR'"
+            THIS_REPORT=`basename \`dirname "$DIR"\``
+            [ "$LAST_REPORT" != "" -a "$LAST_REPORT" != "$THIS_REPORT" ] && { EVAL sleep $DELAY;}
+            EVAL hts $DIR
+            LAST_REPORT=$THIS_REPORT
         done
         echo
     done

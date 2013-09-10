@@ -133,6 +133,7 @@ for DURATION in $DURATIONS; do
     [ "$SERVER_TYPE" != AJC ] && OPTS="$OPTS -S $ENCYCL_VOL"
     OPTS="$OPTS $TEST_FILE $TEST_OPTS"
     [ -n "$VERBOSE" ] && OPTS="$OPTS -V"
+    OPTS="$OPTS -T 900"
 
 #OPTS="$OPTS -T 60"
     [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"
