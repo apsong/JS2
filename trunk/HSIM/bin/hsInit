@@ -147,5 +147,6 @@ for TARGET in $TARGETS; do
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_xTab_YTD_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xTab_DATETIME_$X/{1,14}.6t
         done
+        mkdir -p -v	$YYMMDD@$HOST.iHub/LRU_cache/rpt{1,2,3,12,23,31,123,12-1,12-2,12-b}
     fi
 done
