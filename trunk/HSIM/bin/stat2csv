@@ -43,8 +43,11 @@ if {$argc > 0} {
 #set SEP ,
 }
 
+if {[catch {open hsStat.log} FD]} {
+    set FD stdin
+}
 set TESTS {}
-while {[gets stdin line]>=0} {
+while {[gets $FD line]>=0} {
     if {[llength $line] < 11} { continue }
     if {[regexp {([^/]+)/([0-9]+)\.[0-9]+[tT]$} [lindex $line 0] {} TEST THREADS]} {
         set T [expr {$THREADS == 1 ? 1 : "M"}]
@@ -56,6 +59,9 @@ while {[gets stdin line]>=0} {
             lappend TESTS $TEST
         }
     }
+}
+if {$FD != "stdin"} {
+    catch {close $FD}
 }
 
 set LINES {}
