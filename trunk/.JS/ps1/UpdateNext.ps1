@@ -27,7 +27,7 @@ $LastMonth = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 30)
 Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastMonth } | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
     | export-csv -noTypeInformation -encoding Unicode $NextXFSL
 
-$Last2PTSL = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 90)))
+Import-Csv $SUMMARY | ?{$_.Applied -eq "ÊÇ" -and $_.Sent -ne "ÊÇ" -and $_.PTSL -gt 0}
 ###################################################################################################
 $excel = new-object -comobject excel.application 
 $excel.Visible = $True 
