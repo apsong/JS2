@@ -119,7 +119,7 @@ done
 
 [ -z "$ENCYCL_VOL" -a "$SERVER_TYPE" = "iServer" ] && ENCYCL_VOL=`echo $HOST | sed -e 's/-/_/g'`
 [ -z "$ENCYCL_VOL" -a "$SERVER_TYPE" = "iHub" ]    && ENCYCL_VOL="Default%20Volume"
-ENCYCL_VOL=`echo $HOST | sed -e 's/-/_/g'`
+#ENCYCL_VOL=`echo $HOST | sed -e 's/-/_/g'`
 [ -z "$PORT" ] && [ "$SERVER_TYPE" = AJC ] && PORT=8080 || PORT=8900
 [ -z "$SOAP_HOST" ] && SOAP_HOST=$HOST
 [ -z "$SOAP_PORT" ] && SOAP_PORT=$PORT
