@@ -7,6 +7,4 @@ for WEB_XML in `find -regex ".*/iportal/.*/web.xml"`; do
     diff $WEB_XML.orig $WEB_XML
 done
 
-mv -v register.bat __register.bat
-mv -v unregister.bat __unregister.bat
-mv -v setupiHub.bat __setupiHub.bat
+mv -v startiHub.bat ________startiHub.bat
