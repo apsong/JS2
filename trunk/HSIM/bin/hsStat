@@ -38,7 +38,7 @@ DO_STAT()
             4)
                 if [ -f hs.log ]; then
 #awk -v DIR=`pwd | sed -e 's/^.*@//'` '
-                    awk -v DIR=`pwd | sed -e "s^$BASE_DIR/^^"` '
+                    awk -v DIR=`pwd | sed -e "s/^.\\{$BASE_DIR_LEN\\}//"` '
                         BEGIN {
                             SumResp = 0
                             NumResp = 0
@@ -90,6 +90,7 @@ DO_STAT()
 }
 
 BASE_DIR=$PWD
+BASE_DIR_LEN=`pwd | wc -m`
 if [ $# -eq 0 ]; then
     EVAL DO_STAT .    "|" tee `NEWFILE $PROGRAM.log`
 else 

@@ -17,7 +17,7 @@ proc getIndex {test} {
         *_FILTER_Low_EQ_*
         *_FILTER_Low_NE_*
         *_FILTER_Low_LT_*
-        *_FILTER_Low_IN_*
+        *_FILTER_Low_IN*
         *_FILTER_Med_LE_*
         *_FILTER_X3groups_*        
         *_RTP_Trail2Y_*
