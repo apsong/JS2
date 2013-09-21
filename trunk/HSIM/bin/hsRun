@@ -135,7 +135,6 @@ for DURATION in $DURATIONS; do
     [ -n "$VERBOSE" ] && OPTS="$OPTS -V"
     OPTS="$OPTS -T 900"
 
-#OPTS="$OPTS -T 60"
     [ -n "$JOB" ] && EVAL $JOB $HOST $DURATION "2>&1" "&"
     echo "#!CMD:[ HsimV2.exe $OPTS 2>&1 ]"
     HsimV2.exe $OPTS 2>&1
