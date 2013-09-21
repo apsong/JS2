@@ -13,21 +13,18 @@ $NextPTSL = "I:\【数据管理】\人员信息总表_NextPTSL.csv"
 $NextXFSL = "I:\【数据管理】\人员信息总表_NextXFSL.csv"
 
 ###################################################################################################
-#$PTSLs = (Import-Csv I:\【数据管理】\人员信息总表-20130714.csv | ?{$_.沙龙主题 -eq "菩提沙龙" } | %{ Get-Date -UFormat "%Y/%m/%d" $_.参加沙龙时间 } | sort -Unique)
-#$PTSLs
-#$Last2PTSL = ($PTSLs | Select-Object -Index ($PTSLs.Count-2))
-#"`nLast2PTSL:"
-#$Last2PTSL
+$LastSL = (Import-Csv $CSV | %{ Get-Date -UFormat "%Y/%m/%d" $_.参加沙龙时间 } | sort -Unique -Descending | Select-Object -First 1)
 
-$Last2PTSL = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 90)))
-Import-Csv $SUMMARY | ?{$_.LastDate -gt $Last2PTSL -and $_.PTSL -eq 0} | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
+$LastQuarter = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date $LastSL) - (New-TimeSpan -Days 90)))
+Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastQuarter -and $_.PTSL -eq 0} | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
     | export-csv -noTypeInformation -encoding Unicode $NextPTSL
     
-$LastMonth = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date) - (New-TimeSpan -Days 30)))
+$LastMonth = (Get-Date -UFormat "%Y/%m/%d" ((Get-Date $LastSL) - (New-TimeSpan -Days 30)))
 Import-Csv $SUMMARY | ?{$_.LastDate -gt $LastMonth } | sort LastDate | select Name,Phone,Applied,Email,LastDate,XFSL,PTSL,Sent `
     | export-csv -noTypeInformation -encoding Unicode $NextXFSL
 
 Import-Csv $SUMMARY | ?{$_.Applied -eq "是" -and $_.Sent -ne "是" -and $_.PTSL -gt 0}
+
 ###################################################################################################
 $excel = new-object -comobject excel.application 
 $excel.Visible = $True 
@@ -73,7 +70,7 @@ function NewSheet($workbook, $name, $file) {
     $a = Release-Ref($newSheet)
 }
 NewSheet $workbook (Get-Date -UFormat "下次学佛沙龙(>%Y-%m-%d)" $LastMonth) $NextXFSL
-NewSheet $workbook (Get-Date -UFormat "下次菩提沙龙(>%Y-%m-%d)" $Last2PTSL) $NextPTSL
+NewSheet $workbook (Get-Date -UFormat "下次菩提沙龙(>%Y-%m-%d)" $LastQuarter) $NextPTSL
 
 ###################################################################################################
 $workbook.Worksheets.Item(1).Activate()
