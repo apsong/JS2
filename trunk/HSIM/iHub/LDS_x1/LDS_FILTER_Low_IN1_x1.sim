@@ -1,0 +1,9 @@
+#!hsim -x
+@(9 CUSTKEY_x1.csv)
+
+S:/@-6/loginservlet?__vp=@-5&userid=@-1&password=@-2&locale=en_US&timezone=America%2FLos_Angeles&loginpostback=true {(JSESSIONID=@257; Path)}
+
+M:/@-6/executereport.do?postback=true&jobType=sync&selectedTab=0&invokeSubmit=true&inputfile=%2FLDS_FILTER_Low_IN1_x1.rptdesign&numOfParam=1&parameters[0].name=CUSTKEY&parameters[0].value=@9&parameters[0].valueIsNull=falseHEAD:Cookie: JSESSIONID=@257 {(iv?@3)}
+
+M:/@-6/iv?@3HEAD:request-type: SOAP\r\nCookie: JSESSIONID=@257POST:<xml/StartUp>
+

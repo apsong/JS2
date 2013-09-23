@@ -127,24 +127,24 @@ for TARGET in $TARGETS; do
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_COUNTDISTINCT_D_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_COUNTDISTINCT_M_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_MEDIAN_M_$X/{1,14}.6t
-#mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_JOIN_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_JOIN_COUNT_D_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_JOIN_COUNT_M_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_EQ_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_NE_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_EQ_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_EQ_detail_$X/1.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_IN_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_IN_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_LT_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_GE_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_EQ_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_NE_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_IN1_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_IN9_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Low_LT_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_Med_LE_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_X3groups_$X/{1,14}.6t
-            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xQualifier_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_Trail2Y_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_Trail2Y_LT1998_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_xTab_Trail2Q_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_RTP_xTab_YTD_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xQualifier_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_xTab_DATETIME_$X/{1,14}.6t
         done
         mkdir -p -v	$YYMMDD@$HOST.iHub/LRU_cache/rpt{1,2,3,12,23,31,123,12-1,12-2,12-b}
