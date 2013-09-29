@@ -83,5 +83,6 @@ foreach TEST $TESTS {
     }
 }
 
-puts [join [lsort -command compTest $LINES] \n]
+#puts [join [lsort -command compTest $LINES] \n]
+puts [join [lsort $LINES] \n]
 
