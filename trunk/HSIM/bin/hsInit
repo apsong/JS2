@@ -129,6 +129,7 @@ for TARGET in $TARGETS; do
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_AGGR_MEDIAN_M_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_JOIN_COUNT_D_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_JOIN_COUNT_M_$X/{1,14}.6t
+            mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_JOIN_MASS_COUNT_D_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_EQ_$X/{1,14}.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_EQ_detail_$X/1.6t
             mkdir -p -v	$YYMMDD@$HOST.iHub/LDS_$X/LDS_FILTER_High_IN_$X/{1,14}.6t

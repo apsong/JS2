@@ -2,7 +2,7 @@
 
 for WEB_XML in `find -regex ".*/iportal/.*/web.xml"`; do
     [ ! -f $WEB_XML.orig ] && cp -v $WEB_XML $WEB_XML.orig
-    sed -i -e 's/\<20\>/300/' $WEB_XML
+    sed -i -e 's/\<20\>/600/' $WEB_XML
     unix2dos $WEB_XML
     diff $WEB_XML.orig $WEB_XML
 done
