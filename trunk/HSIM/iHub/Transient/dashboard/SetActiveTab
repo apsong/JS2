@@ -1,0 +1,37 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>@200</ConnectionHandle>
+        <RequestId>3</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>/\$\$\$AC_USER_PROFILES/New Dashboard.dashboard</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>http://@-3:@-4/@-6/</AppBaseUrl>
+                <iPortalID>@100</iPortalID>
+                <HttpSessionId>@101</HttpSessionId>
+                <DashboardSessionID>@151</DashboardSessionID>
+                <IVSessionID>@152</IVSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>SetActiveTab</Operator>
+                <Target>
+                    <Id>Engine</Id>
+                    <Type>Engine</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>Id</Name>
+                            <Value>@201</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+            <IVSessionID>1383813368414_211A9CBCA0DB5780F9BC95062BC2EE0C</IVSessionID>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>

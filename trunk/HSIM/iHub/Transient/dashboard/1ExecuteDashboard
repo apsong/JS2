@@ -1,0 +1,39 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>3zj/eo12+XJO9sgXzK5h4THHezjezzhDBQWrJWZtsq+YSGSlDHdgpjsfWZilbgPhNC1J/NQ+R7SLwGgQWN1jwx0VdnsJR6fLMn2cWAJPlZEqcksJBzYWfDW9SiwbxtGMJ+W4BZWdgpqS5e4y2kos8mg3Xa69MMXK2wtbdi+6KSCTQeG5TUZNAJCkoE1hMX9gomnngUVyJrnEQ/sxTfhNA1PTeq2n5UI3z9W3oc8TzwfzioSnID0MNq6JykOadClU</ConnectionHandle>
+        <RequestId>1</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>/\$\$\$AC_USER_PROFILES/New Dashboard.dashboard</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>http://jinsong:8700/iportal/</AppBaseUrl>
+                <iPortalID>@100</iPortalID>
+                <HttpSessionId>@101</HttpSessionId>
+                <DashboardSessionID>@151</DashboardSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>ExecuteDashboard</Operator>
+                <Target>
+                    <Id/>
+                    <Type>Dashboard</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>Id</Name>
+                            <Value>@150</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Action</Name>
+                            <Value>Run</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
