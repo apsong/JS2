@@ -6,7 +6,7 @@
     <soapenv:Body>
         <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
             <Object>
-                <Name>/\$\$\$AC_USER_PROFILES/New Dashboard.dashboard</Name>
+                <Name>@149</Name>
             </Object>
             <DashboardContext>
                 <WebAppPath>null</WebAppPath>
