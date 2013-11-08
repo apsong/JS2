@@ -31,7 +31,7 @@
                     </ParameterValues>
                 </Data>
             </Operation>
-            <IVSessionID>1383813368414_211A9CBCA0DB5780F9BC95062BC2EE0C</IVSessionID>
+            <IVSessionID>@152</IVSessionID>
         </GetDashboardUpdatedObjects>
     </soapenv:Body>
 </soapenv:Envelope>
