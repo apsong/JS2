@@ -38,7 +38,7 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     $WORD = $worksheet.Cells.Item($FofaRow,$FofaCol).Value();    if ($WORD -eq $null) { $WORD = 0 } else { $WORD = $WORD.Length }
     $WORD2 = $worksheet.Cells.Item($ShuyuanRow,$ShuyuanCol).Value();   if ($WORD2 -eq $null) { $WORD2 = 0 } else { $WORD2 = $WORD2.Length }
 
-    $match = ($SUMMARY | Where-Object { $_.Name -eq $Name -and ($_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*") })
+    $match = @($SUMMARY | Where-Object { $_.Name -eq $Name -and ($_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*") })
     $XFSL,$PTSL = ($match | Measure-Object -Sum XFSL,PTSL | %{$_.Sum})
     if ($XFSL -eq $null -or $PTSL -eq $null) {
         $XFSL = 0
@@ -46,9 +46,13 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     }
     if ($XFSL -lt 2 -or $PTSL -lt 1) {    
         $similar = @($SUMMARY | Where-Object { $_.Name -eq $Name -or $_.Phone -eq $Phone1 -or $_.Phone -eq $Phone2 -or $_.Email -like "*${Email}*" })
-        if ($similar.Count -gt 0) {
-            "Warning: No good hit! Partly hit results for $Name/$Phone1/$Phone2/$Email are: " + $similar.Count
-            $similar
+        if ($match.Count -gt 0) {
+            "( $Name && ( $Phone1 || $Phone2 || $Email ) ).Count : " + $match.Count
+            $match
+        }
+        if ($similar.Count -gt $match.Count) {
+            "( $Name || $Phone1 || $Phone2 || $Email ).Count : " + $similar.Count
+            $similar | Where-Object { $match -notcontains $_ }
         }
     }
     
@@ -67,7 +71,7 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     } elseif ($XFSL -lt 2 -or $PTSL -lt 1) {
         $dest = $file.DirectoryName + "\不足沙龙[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } else {
-        $dest = $file.DirectoryName + ".合格\[${first}]$newName"
+        $dest = $file.DirectoryName + ".合格\[${now}]$newName"
     }
     "`t`t`t`t`t`t`t`t-> $dest"
     
@@ -76,7 +80,7 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     $file.MoveTo($dest)
 }
 $excel.Quit()
-Release-Ref($excel)
+$a = Release-Ref($excel)
 
 
 if (1) {
