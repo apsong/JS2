@@ -1,0 +1,615 @@
+<trace
+	ScenarioName="Dashboard Test create crosstab" 
+	ScenarioDescription="200 users create their own crosstab. Rewriten on iHub AugustaR1 DEV131105. See Step 1./2./3./4./5. in comments below."
+	ScenarioType="Transient,Dashboard"
+	collectstats="off"
+	>
+	<variable name="iportal" value="http://birt01-win:8700/iportal"/>
+	<variable name="volume" value="Default%20Volume"/>
+	<variable name="NoOfUsers" value="1"/>
+	<variable name="TestDuration" value="900"/>
+	<variable name="ThinkTime" value="0"/>
+
+	<variable name="dataSource" value="new_datadesign"/>
+	<variable name="generationStatus" value="Pending"/>
+	<variable name="getGenStatusCount" value=""/>
+	<variable name="GenStatusLimit" value="10"/>
+	<variable name="connectionHandleInURL" value=""/>
+	<variable name="metadataList" value=""/>
+	
+	<!--<include>../DashboardPerformance/Scenarios/CommonUtility/iserverbuild.xml</include>-->
+	
+	<!--for from="1" to="{NoOfUsers}" var="n"-->
+	<step count="{NoOfUsers}" delayms="500" var="n">	
+
+		<!-- Step 1: Login -->
+        <httpget label="1_Login" stats="on" url="{iportal}/loginservlet?userid=user{n}&amp;password=&amp;__vp={volume}">
+            <httpresponse>
+                <read body='&lt;Param id="iPortalId">(.+?)&lt;/Param>' into="iPortalId"/>
+                <read body='&lt;Param id="httpSessionId">(.+?)&lt;/Param>' into="httpSessionId"/>
+            </httpresponse>
+        </httpget>
+		<verify cond="NOT(ISEMPTY({iPortalId}))" onfail="exit"/>	<!-- a user failed to login, test is invalid -->
+        <log level="info">iPortalId: {iPortalId}</log>
+        <log level="info">httpSessionId: {httpSessionId}</log>
+
+		<timer duration="{TestDuration}">
+			<while>
+		
+		<!-- Step 1': Dashboard homepage -->
+		<httpget stats="on" label="1a_Html_frameset" url="{iportal}/getfolderitems.do?fromDashboard=true&amp;showBanner=false&amp;doframe=true&amp;__vp={volume}"/>
+		<httpget stats="on" label="1b_Html_treebrowser" url="{iportal}/treebrowser.do?path=%2f&amp;action=expandPath&amp;__vp={volume}&amp;fromDashboard=true&amp;showBanner=false"/>
+		<httpget stats="on" label="1c_Html_frame" url="{iportal}/getfolderitems.do?fromDashboard=true&amp;showBanner=false&amp;doframe=false&amp;__vp={volume}"/>
+
+		<!-- Step 2: In iPortal,
+                     click "Create" and pick "Dashboard" from dropdownlist, generating the following three requests -->
+        
+		<httpget stats="on" label="2a_launchDesigner" url="{iportal}/dashboard?__launchDesigner=true&amp;usePersonalDashboard=false&amp;__vp={volume}&amp;locale=en_US">
+			<httpresponse>
+				<read body='dashboard.setDashboardName\("(.*?)"\);' into="newDashboard"/>
+			</httpresponse>
+		</httpget>
+        <log level="info">newDashboard: {newDashboard}</log>
+		
+		<httppost stats="on" label="2b_Startup" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <RequestId>0</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{newDashboard}</Name>
+            </Object>
+            <DashboardContext/>
+            <Operation>
+                <Operator>StartUp</Operator>
+                <Target>
+                    <Id>Engine</Id>
+                    <Type>Engine</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>UseProfile</Name>
+                            <Value>false</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Embed</Name>
+                            <Value>false</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>
+			</postbody>
+			<httpresponse>	
+				<read body="activeTab&amp;quot;:&amp;quot;(.+?)&amp;quot;" into="activeTab"/>
+				<read body="&lt;DashboardSessionID>(.+?)&lt;/DashboardSessionID>" into="dashboardSessionId"/>
+                <read body="&lt;ConnectionHandle>(.+?)&lt;/ConnectionHandle>" into="connectionHandle"/>
+                <read body="dashboardPath&lt;/Name>.*?&lt;DefaultValue>(.+?)&lt;/DefaultValue>" into="dashboardPath"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">activeTab: {activeTab}</log>
+        <log level="info">dashboardSessionId: {dashboardSessionId}</log>
+        <log level="info">connectionHandle: {connectionHandle}</log>
+        <log level="info">dashboardPath: {dashboardPath}</log>
+        <set var="connectionHandleInURL" value="{connectionHandle}"/>
+        <replace var="connectionHandleInURL" expression="=" new="%3D"/>
+        <replace var="connectionHandleInURL" expression="\+" new="%2B"/>
+        <replace var="connectionHandleInURL" expression="/" new="%2F"/>
+        <log level="info">connectionHandleInURL: {connectionHandleInURL}</log>
+
+		<httppost stats="on" label="2c_ExecuteDashboard" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>{connectionHandle}</ConnectionHandle>
+        <RequestId>1</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{newDashboard}</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>{iportal}</AppBaseUrl>
+                <iPortalID>{iPortalId}</iPortalID>
+                <HttpSessionId>{httpSessionId}</HttpSessionId>
+                <DashboardSessionID>{dashboardSessionId}</DashboardSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>ExecuteDashboard</Operator>
+                <Target>
+                    <Id/>
+                    <Type>Dashboard</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>Id</Name>
+                            <Value>{activeTab}</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Action</Name>
+                            <Value>Run</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                </Data>
+            </Operation>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+				<read body="&lt;IVSessionID>(.+?)&lt;/IVSessionID>" into="ivSessionId"/>
+                <read body="&lt;TransientDocument>(.+?)&lt;/TransientDocument>" into="transientDocument"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">ivSessionId: {ivSessionId}</log>
+        <log level="info">transientDocument: {transientDocument}</log>
+
+        <!-- Step 3: In the opened dashboard designer,
+                     click "Data" and pick "Manage Data" from dropdownlist,
+                     and then select "{dataSource}.data" in the popup dialog and click on the right arrow to move it right,
+                     generating the following requests -->
+        
+		<httppost stats="on" label="3a_QueryDataMartFileList" url="{iportal}/iv?connectionHandle={connectionHandleInURL}&amp;__vp={volume}&amp;locale=en_US&amp;closex=true&amp;__report={transientDocument}">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Body xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+        <GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <IVSessionID>{ivSessionId}</IVSessionID>
+            <ViewerId>Datamart</ViewerId>
+            <Operation>
+                <Target>
+                    <Id>Document</Id>
+                    <Type>Document</Type>
+                </Target>
+                <Operator>QueryDataMartFileList</Operator>
+                <Oprand>
+                    <Name>source</Name>
+                    <Value>actuate.dialog.datamanager.ManageDataDialog</Value>
+                </Oprand>
+            </Operation>
+            <Operation>
+                <Target>
+                    <Id>Document</Id>
+                    <Type>Document</Type>
+                </Target>
+                <Operator>GetMetadata</Operator>
+                <Oprand>
+                    <Name>dpi</Name>
+                    <Value>96</Value>
+                </Oprand>
+                <Data>
+                    <Metadata>DataMarts</Metadata>
+                </Data>
+            </Operation>
+        </GetIVUpdatedObjects>
+    </Body>
+</Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+                <read body="&lt;IVSessionID>(.+?)&lt;/IVSessionID>" into="ivSessionId_3a"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">3a_QueryDataMartFileList.ivSessionID: {ivSessionId_3a}</log>
+
+		<httppost stats="on" label="3b_QueryDataMartFileMetadata" url="{iportal}/iv?connectionHandle={connectionHandleInURL}&amp;__vp={volume}&amp;locale=en_US&amp;closex=true&amp;__report={transientDocument}">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Body xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+        <GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <IVSessionID>{ivSessionId}</IVSessionID>
+            <ViewerId>Datamart</ViewerId>
+            <Operation>
+                <Target>
+                    <Id>Document</Id>
+                    <Type>Document</Type>
+                </Target>
+                <Operator>QueryDataMartFileMetadata</Operator>
+                <Oprand>
+                    <Name>source</Name>
+                    <Value>actuate.dialog.datamanager.ManageDataDialog</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>dataMartName</Name>
+                    <Value>/{dataSource}.data</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>accessType</Name>
+                    <Value>latest</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>version</Name>
+                    <Value>-1</Value>
+                </Oprand>
+            </Operation>
+        </GetIVUpdatedObjects>
+    </Body>
+</Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+                <read body="&lt;IVSessionID>(.+?)&lt;/IVSessionID>" into="ivSessionId_3b"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">3b_QueryDataMartFileMetadata.ivSessionId: {ivSessionId_3b}</log>
+
+		<httppost stats="on" label="3c_ApplyDataManager" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>{connectionHandle}</ConnectionHandle>
+        <RequestId>2</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{newDashboard}</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>{iportal}</AppBaseUrl>
+                <iPortalID>{iPortalId}</iPortalID>
+                <HttpSessionId>{httpSessionId}</HttpSessionId>
+                <DashboardSessionID>{dashboardSessionId}</DashboardSessionID>
+                <IVSessionID>{ivSessionId}</IVSessionID>
+            </DashboardContext>
+            <Operation>
+                <Operator>ApplyDataManager</Operator>
+                <Target>
+                    <Id/>
+                    <Type>Dashboard</Type>
+                </Target>
+                <Data>
+                    <Json>{dashboardDesign:"{newDashboard}",dataMarts:[{"fileName":"{dataSource}","action":"add","accessType":"latest","version":-1}]}</Json>
+                </Data>
+            </Operation>
+            <IVSessionID>{ivSessionId}</IVSessionID>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+                <read body="&lt;IVSessionID>(.+?)&lt;/IVSessionID>" into="ivSessionId_3c"/>
+			</httpresponse>
+		</httppost>
+        <log level="info">3c_ApplyDataManager.ivSessionID: {ivSessionId_3c}</log>
+
+        <!-- Step 4: In the dashboard designer, click "Insert"->"Table..."->"Crosstab", and Crosstab Builder will pop up.
+                     In Crosstab Builder, choose "Group2.R_Name" and "Group2.N_Name" for Row, "Group.N_Name" for Column, "L_QUANTITY1" for Summary Fields.
+                     Click "OK", generating the following requests -->
+		
+		<httppost stats="on" label="4a_GetMetadata" url="{iportal}/iv?connectionHandle={connectionHandleInURL}&amp;__vp={volume}&amp;locale=en_US&amp;closex=true&amp;__report={transientDocument}"> <!-- may need modify the transientDocument -->
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Body xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+        <GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <IVSessionID>{ivSessionId}</IVSessionID>
+            <ViewerId>Crosstab</ViewerId>
+            <Operation>
+                <Target>
+                    <Id>Document</Id>
+                    <Type>Document</Type>
+                </Target>
+                <Operator>GetMetadata</Operator>
+                <Oprand>
+                    <Name>dpi</Name>
+                    <Value>96</Value>
+                </Oprand>
+                <Data>
+                    <Metadata>DataMarts</Metadata>
+                </Data>
+            </Operation>
+        </GetIVUpdatedObjects>
+    </Body>
+</Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+				<read body="(&lt;Target>Metadata&lt;/Target>)" into="checkGetMetadata"/>
+			</httpresponse>
+		</httppost>
+		<verify cond="NOT(ISEMPTY({checkGetMetadata}))" onfail="continue"/>
+        <log level="info">4a_GetMetadata.checkGetMetadata: {checkGetMetadata}</log>
+
+		<httppost stats="on" label="4b_ApplyCrosstabBuilder" url="{iportal}/dashboard?__vp={volume}&amp;locale=en_US&amp;closex=true">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header>
+        <ConnectionHandle>{connectionHandle}</ConnectionHandle>
+        <RequestId>12</RequestId>
+    </soapenv:Header>
+    <soapenv:Body>
+        <GetDashboardUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <Object>
+                <Name>{dashboardPath}</Name>
+            </Object>
+            <DashboardContext>
+                <WebAppPath>null</WebAppPath>
+                <AppBaseUrl>{iportal}</AppBaseUrl>
+                <iPortalID>{iPortalId}</iPortalID>
+                <HttpSessionId>{httpSessionId}</HttpSessionId>
+                <DashboardSessionID>{dashboardSessionId}</DashboardSessionID>
+                <IVSessionID>{ivSessionId}</IVSessionID>
+                <PersonalDashboardPath>{dashboardPath}</PersonalDashboardPath>
+            </DashboardContext>
+            <Operation>
+                <Operator>ApplyCrosstabBuilder</Operator>
+                <Target>
+                    <Id/>
+                    <Type>Crosstab</Type>
+                </Target>
+                <Data>
+                    <ParameterValues>
+                        <ParameterValue>
+                            <Name>GeneralAttr</Name>
+                            <Value>{"parentId":4,"positionId":0,"width":907,"zIndex":2}</Value>
+                        </ParameterValue>
+                        <ParameterValue>
+                            <Name>Type</Name>
+                            <Value>Gadgets</Value>
+                        </ParameterValue>
+                    </ParameterValues>
+                    <GeneralProps>
+                        <ParameterValue>
+                            <Name>BuilderGadgetOptions</Name>
+                            <Value>{"showTitle":"true","showBorder":"true","showCaption":"true","title":"Crosstab - LineItem","showScrollBar":"false","showViewerToolbar":"true","captionAlignment":"left","autoRefresh":0}</Value>
+                        </ParameterValue>
+                    </GeneralProps>
+                    <Cube>
+                        <Name>LineItem</Name>
+                        <DataSource>
+                            <Name>NewDataMartDataSource</Name>
+                            <!-- <Name>新DataMart数据源</Name> -->
+                            <DataMartName>{dataSource}</DataMartName>
+                            <Type>latest</Type>
+                        </DataSource>
+                    </Cube>
+                    <Crosstab>
+                        <CubeName>LineItem</CubeName>
+                        <Rows>
+                            <DimensionView>
+                                <Index>0</Index>
+                                <AxisType>0</AxisType>
+                                <Dimension>Group2</Dimension>
+                                <Levels>
+                                    <LevelView>
+                                        <Index>0</Index>
+                                        <LevelName>R_NAME</LevelName>
+                                        <LevelAttributes/>
+                                    </LevelView>
+                                    <LevelView>
+                                        <Index>1</Index>
+                                        <LevelName>N_NAME</LevelName>
+                                        <LevelAttributes/>
+                                    </LevelView>
+                                </Levels>
+                            </DimensionView>
+                        </Rows>
+                        <Columns>
+                            <DimensionView>
+                                <Index>0</Index>
+                                <AxisType>1</AxisType>
+                                <Dimension>Group</Dimension>
+                                <Levels>
+                                    <LevelView>
+                                        <Index>0</Index>
+                                        <LevelName>N_NAME</LevelName>
+                                        <LevelAttributes/>
+                                    </LevelView>
+                                </Levels>
+                            </DimensionView>
+                        </Columns>
+                        <Measures>
+                            <MeasureView>
+                                <Index>0</Index>
+                                <MeasureName>L_QUANTITY1</MeasureName>
+                            </MeasureView>
+                        </Measures>
+                        <RowGrandTotalCellIid>none</RowGrandTotalCellIid>
+                        <ColumnGrandTotalCellIid>none</ColumnGrandTotalCellIid>
+                        <RowSubTotals>none</RowSubTotals>
+                        <EnablePageBreak>true</EnablePageBreak>
+                        <RowInterval>40</RowInterval>
+                        <ColumnInterval>10</ColumnInterval>
+                    </Crosstab>
+                    <Json>{}</Json>
+                    <Filter>
+                        <Type>Advanced</Type>
+                        <ConditionLineList/>
+                    </Filter>
+                </Data>
+            </Operation>
+            <IVSessionID>{ivSessionId}</IVSessionID>
+        </GetDashboardUpdatedObjects>
+    </soapenv:Body>
+</soapenv:Envelope>
+                ]]>
+			</postbody>
+			<httpresponse>
+				<read body="&lt;Json>(.+?)&lt;/Json>" into="jsondata"/>
+			</httpresponse>
+		</httppost>
+		<json var="jsondata" read="gadget/realName" into="gadgetId"/>
+		<verify cond="NOT(ISEMPTY({gadgetId}))" onfail="continue"/>
+        <log level="info">gadgetId: {gadgetId}</log>
+
+		<httppost stats="on" label="4c_Startup" url="{iportal}/iv?connectionHandle={connectionHandleInURL}&amp;__vp={volume}&amp;locale=en_US&amp;closex=true&amp;__report={transientDocument}&amp;viewerId=js3">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Body xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+        <GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <IVSessionID>{ivSessionId}</IVSessionID>
+            <ViewerId>js3</ViewerId>
+            <Operation>
+                <Target>
+                    <Id>Document</Id>
+                    <Type>Document</Type>
+                </Target>
+                <Operator>StartUp</Operator>
+                <Oprand>
+                    <Name>svg</Name>
+                    <Value>true</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>dpi</Name>
+                    <Value>96</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>standalone</Name>
+                    <Value>false</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>gadgetId</Name>
+                    <Value>{gadgetId}</Value>
+                </Oprand>
+            </Operation>
+        </GetIVUpdatedObjects>
+    </Body>
+</Envelope>
+                ]]>
+		    </postbody>
+	        <httpresponse>
+				<read body="&lt;RptElementId>(.+?)&lt;/RptElementId>" into="reportElements"/>
+				<read body="&lt;ConnectionHandle>(.+?)&lt;/ConnectionHandle>" into="gadgetCH"/>
+			</httpresponse>
+		</httppost>		
+		<replace var="gadgetCH" expression="=" new="%3D"/>
+		<replace var="gadgetCH" expression="\+" new="%2B"/>
+		
+        <log level="always" category="reportElements">reportElements: {reportElements}</log>
+        <!-- EX: /8,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/27,/40 -->
+		<set var="metadataList" value=""/>
+		<for each="reportElements" var="item">
+			<log level="always" category="item">{item}</log>
+			<set var="metadataList" value="{metadataList},/{item}"/>
+			<log level="always" category="metadataList">{metadataList}</log>
+		</for>
+		<log level="always" category="metadataList">{metadataList}</log>
+		<replace var="metadataList" expression="^," new=""/>
+		<log level="always" category="metadataList">{metadataList}</log>
+        
+		<httppost stats="on" label="4d_EnableIV" url="{iportal}/iv?__vp={volume}&amp;locale=en_US&amp;closex=true&amp;connectionHandle={gadgetCH}&amp;__report={transientDocument}&amp;viewerId=js3">
+			<header name='Pragma' value='no-cache'/>
+			<header name='soapaction' value='""'/>
+			<header name='request-type' value='SOAP'/>
+			<header name='x-requested-with' value='XMLHttpRequest'/>
+			<postbody>
+				<![CDATA[
+<Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+    <Body xmlns="http://schemas.xmlsoap.org/soap/envelope/">
+        <GetIVUpdatedObjects xmlns="http://schemas.actuate.com/actuate11">
+            <IVSessionID>{ivSessionId}</IVSessionID>
+            <ViewerId>js3</ViewerId>
+            <Operation>
+                <Target>
+                    <Id>js3</Id>
+                    <Type>Document</Type>
+                </Target>
+                <Operator>EnableIV</Operator>
+                <Oprand>
+                    <Name>page</Name>
+                    <Value>1</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>showMargin</Name>
+                    <Value>false</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>plsEnabled</Name>
+                    <Value>false</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>gadgetId</Name>
+                    <Value>{gadgetId}</Value>
+                </Oprand>
+            </Operation>
+            <Operation>
+                <Target>
+                    <Id>js3</Id>
+                    <Type>Document</Type>
+                </Target>
+                <Operator>GetFeatureMetadata</Operator>
+                <Oprand>
+                    <Name>showMargin</Name>
+                    <Value>false</Value>
+                </Oprand>
+                <Oprand>
+                    <Name>dpi</Name>
+                    <Value>96</Value>
+                </Oprand>
+                <Data>
+                    <Metadata>{metadataList}</Metadata>
+                </Data>
+            </Operation>
+        </GetIVUpdatedObjects>
+    </Body>
+</Envelope>
+				]]>
+			</postbody>
+			<httpresponse>
+				<read body="&lt;DashboardSessionID>(.+?)&lt;/DashboardSessionID>" into="dashsession"/>
+			</httpresponse>
+		</httppost>
+
+		<think mean="{ThinkTime}" algorithm="exponential"/>
+
+			</while>
+		</timer>
+		
+		<!-- Step 5: Logout -->
+		<httpget stats="on" label="5_Logout" url="{iportal}/logout.do?__vp={volume}"/>
+
+	</step>
+</trace>

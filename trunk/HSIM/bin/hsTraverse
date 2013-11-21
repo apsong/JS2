@@ -40,7 +40,7 @@ NEWFILE()
 ##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
 
 REPEAT=1
-DELAY=180
+DELAY=90
 while [ $# -gt 0 ]; do
     case "$1" in
         --help) usage; exit 0;;
@@ -57,10 +57,13 @@ done
 for ROUND in `seq 1 $REPEAT`; do
     [ $REPEAT -gt 1 ] && echo "[ROUND: $ROUND]"
     for ROOT in $ROOTS; do
-        for DIR in `find $ROOT -name "[0-9]*\.*[0-9][tT]" -type d`; do
+        for DIR in `find $ROOT \( -name "[0-9]*\.*[0-9]t" -or -name 1.0i \) -type d`; do
             THIS_REPORT=`basename \`dirname "$DIR"\``
             [ "$LAST_REPORT" != "" -a "$LAST_REPORT" != "$THIS_REPORT" ] && { EVAL sleep $DELAY;}
-            EVAL hts $DIR
+            case "$DIR" in
+                */1.0i) EVAL htt $DIR;;
+                *)      EVAL hts $DIR;;
+            esac
             LAST_REPORT=$THIS_REPORT
         done
         echo

@@ -27,16 +27,18 @@ _ht()
     _EVAL hsRun $ARGS_TEST "|" tee $LOG | egrep --line-buffered '( \| )|(^\[.*\]$)' | BASE64_DECODE
     ERRCNT=`grep ' | ' $LOG | egrep -c -v ' \| OK'`
 
-    echo | tee -a $LOG
+    echo >> $LOG
     echo "##########################!CMD:[ grep ' | ' $LOG ]########################" >> $LOG
     grep ' | ' $LOG | grep -v 'grep' | BASE64_DECODE >> $LOG
 
+    echo | tee -a $LOG
+
     if [ $ERRCNT -eq 0 -a `grep -c '| OK' $LOG` -gt 0 ]; then
-        echo "($PROGRAM)Note: Hsim Test PASS. Verbose output is saved in $LOG"
+        echo "($PROGRAM)Note: Hsim Test PASS. Verbose output is saved in $LOG" | tee -a $LOG
         echo
         return 0
     else
-        echo "($PROGRAM)Error: Hsim Test FAIL. Verbose output is saved in $LOG"
+        echo "($PROGRAM)Error: Hsim Test FAIL. Verbose output is saved in $LOG" | tee -a $LOG
         echo
         return 1
     fi
@@ -66,9 +68,14 @@ hs()
 {
     _hs; [ $DELAY -gt 0 ] && _EVAL sleep $DELAY
 }
+htt()
+{
+    _ht || _ht; [ $DELAY -gt 0 ] && _EVAL sleep $DELAY
+}
 hts()
 {
-    _ht || _ht && hs #Test twice, and start run if any test passed.
+    #Test twice, and start run if any test passed.
+    _ht || _ht && _hs; [ $DELAY -gt 0 ] && _EVAL sleep $DELAY
 }
 
 DELAY=0

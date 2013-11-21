@@ -1,8 +1,10 @@
+echo "########## source $HOME/.bash_functions ##########"
 source $HOME/.bash_functions
 
 export HSIM_HOME=$HOME/HSIM
 export WCSPT_HOME=$HOME/WCSPT
 export JMETER_HOME=$HOME/JMeter
+export TRACE_HOME=$HOME/Trace
 export JM_HOME=$HOME/JM
 export PATH=$HOME/.JS/bin:$HSIM_HOME/bin:$WCSPT_HOME/bin:$JM_HOME/bin:$PATH:$HOME/SysinternalsSuite
 [ "$HOSTNAME" != "jinsong" ] && export LANG=C
