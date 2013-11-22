@@ -11,10 +11,11 @@ _EVAL()
 do_trace()
 {
     SCRIPT=$TRACE_HOME/Dashboard/`basename \`pwd\``.xml
-    SCRIPT=`cygpath -w $SCRIPT | sed -e 's@\\\\@/@g'`
     [ -f $SCRIPT ] || { echo 1>&2 "Error: '$SCRIPT' doesn't exist."; return 1;}
 
-    _EVAL traceRun --s $SCRIPT
+    LOG=`NEWFILE trace.out`
+    SCRIPT=`cygpath -w $SCRIPT | sed -e 's@\\\\@/@g'`
+    _EVAL traceRun --s $SCRIPT | tee $LOG
     _EVAL sleep $DELAY
 }
 
