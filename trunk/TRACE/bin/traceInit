@@ -1,0 +1,5 @@
+mkdir -v 1.dashSelectMultiSelectorCrosstab
+mkdir -v 2.dashViewMultiSelector
+mkdir -v 3.dashViewSelector
+mkdir -v 4.dashCreateCrosstab
+mkdir -v 5.dashSubscribeCrosstab

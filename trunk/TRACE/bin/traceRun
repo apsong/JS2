@@ -1,0 +1,9 @@
+#! /bin/sh
+
+CP=.
+for JAR in `ls $TRACE_BASE/lib/*.jar`; do
+    CP="$CP;`cygpath -w $JAR`"
+done
+EVAL hs.perfmon birt01-win 900 "1>&2" "&"
+java -Xmx1024m -cp $CP com.actuate.trace.Run "$@"
+EVAL wait
