@@ -17,6 +17,7 @@ $excel.Visible = $True
 $excel.DisplayAlerts = $False
 
 $now = (Get-Date -UFormat "%Y%m%d")
+$nowtime = (Get-Date -UFormat "%Y%m%d-%H%M%S")
     
 Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object -process {
     $file = $_
@@ -71,7 +72,7 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     } elseif ($XFSL -lt 2 -or $PTSL -lt 1) {
         $dest = $file.DirectoryName + "\不足沙龙[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
     } else {
-        $dest = $file.DirectoryName + ".合格\[${now}]$newName"
+        $dest = $file.DirectoryName + ".合格\[${nowtime}]$newName"
     }
     "`t`t`t`t`t`t`t`t-> $dest"
     
