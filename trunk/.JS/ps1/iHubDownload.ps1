@@ -17,7 +17,8 @@ function iHubDownload ($release_base, $license_base, $DST_DIR) {
     Copy-Item $SRC $DST
     Get-ChildItem $DST
 
-    unzip -q (cygpath $DST) -d (cygpath $DST_DIR\$DST_FILE)
+    #unzip -q (cygpath $DST) -d (cygpath $DST_DIR\$DST_FILE)
+    & "7z" x "$DST_FILE.zip" -y -o*
     ls $DST_DIR\$DST_FILE
 
     $LIC_ORIG = "$DST_DIR\$DST_FILE\iHub\shared\config\acserverlicense.xml"
