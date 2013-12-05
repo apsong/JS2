@@ -1,0 +1,116 @@
+<script
+	ScenarioName="Dashboard Test create users" 
+	ScenarioDescription="Create 16 users with home folders and administrator role."
+	ScenarioType="Sanity,Dashboard"	
+	logtarget="file"
+	>
+	<variable name="iserver" value="http://birt01-win:8000"/>
+	<variable name="NoOfUsers" value="16"/>
+	<variable name="FolderName" value="/Home"/>
+	<variable name="status"/>
+	<!-- Log In -->
+	<log level="always" category="Login as user">administrator</log>
+	<idapi url="{iserver}">
+		<Login>
+			<param name="User" value="administrator"/>
+			<param name="Password" value=""/>
+		</Login>
+		<idapiresponse>			
+			<read value="AuthId" into="AuthId"/>
+		</idapiresponse>
+	</idapi>
+	<verify cond="NOT(ISEMPTY({AuthId}))" onfail="exit"/>
+
+	
+	<!-- Delete exiting user home folders -->
+	<idapi url="{iserver}">
+    	<DeleteFile>
+			<param name="WorkingFolderName" value="{FolderName}"/>
+					
+			<object type="FileSearch">
+				<![CDATA[
+<Search>
+	<Condition>
+		<Field>Name</Field>
+		<Match>user*</Match>
+	</Condition>
+</Search>
+				]]>
+			</object>
+			<param name="IgnoreMissing" value="true"/>
+    	</DeleteFile>
+		<idapiresponse onsoapfault="exit"/>
+	</idapi>
+	
+	<!-- Delete Users -->
+	<log level="always" category="Start deleting test users">user1 through user{NoOfUsers}</log>
+	<idapi administrate="true">
+		<DeleteUser>
+				<object type="UserSearch">
+					<![CDATA[
+<Search>
+	<Condition>
+		<Field>Name</Field>
+		<Match>user*</Match>
+	</Condition>
+</Search>
+					]]>
+				</object>
+				<param name="IgnoreMissing" value="true"/>
+		</DeleteUser>
+	</idapi>
+	<log level="always" category="Deleted test users">user1 through user{NoOfUsers}</log>
+	
+	
+	
+	<!-- Create Users -->
+	<log level="always" category="Start creating test users">user1 through user{NoOfUsers}</log>
+	<for from="1" to="{NoOfUsers}" var="n">
+    		<idapi administrate="true">
+        		<CreateUser>
+            			<param name="Name" value="user{n}"/>
+						<param name="IgnoreDup" value="true"/>
+						<param name="Password" value=""/>
+						<param name="HomeFolder" value="{FolderName}/user{n}"/>
+        		</CreateUser>
+    		</idapi>
+		<!--<log level="always" category="Created test user">user{n}</log>-->
+	</for>
+	<idapi url="{iserver}">
+    		<Administrate/>
+		<idapiresponse onsoapfault="exit"/>
+	</idapi>
+	
+	 
+	
+	<log level="always" category="Created test users">user1 through user{NoOfUsers}</log>
+	
+	<idapi url="{iserver}">
+		<UpdateUser>
+			<object type="UserSearch">
+				<![CDATA[
+<Search>
+<Condition>
+	<Field>Name</Field>
+	<Match>user*</Match>
+</Condition>
+</Search>
+				]]>
+			</object>
+			<object type="UpdateUserOperationGroup">
+				<![CDATA[
+<UpdateUserOperationGroup>
+<UpdateUserOperation>
+	<AssignRolesByName>
+		<String>Administrators</String>
+	</AssignRolesByName>
+</UpdateUserOperation>
+</UpdateUserOperationGroup>
+				]]>
+			</object>
+		</UpdateUser>
+		<idapiresponse onsoapfault="exit"/>
+	</idapi>
+	<log level="always" category="Assigned role to each new User">Administrator</log>
+
+</script>

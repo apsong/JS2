@@ -1,6 +1,6 @@
 #! /bin/sh
 
-for DIR in 1.dashSelectMultiSelectorCrosstab 2.dashViewMultiSelector 3.dashViewSelector 4.dashCreateCrosstab 5.dashSubscribeCrosstab; do
+for DIR in 0.createUser 1.dashSelectMultiSelectorCrosstab 2.dashViewMultiSelector 3.dashViewSelector 4.dashCreateCrosstab 5.dashSubscribeCrosstab; do
     mkdir -v $DIR
     cp -v $TRACE_HOME/trace.properties $DIR
 done

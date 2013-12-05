@@ -19,7 +19,7 @@ do_trace()
     _EVAL sleep $DELAY
 }
 
-DELAY=0
+DELAY=60
 REPEAT=1
 repeat=1
 while [ $# -gt 0 ]; do
