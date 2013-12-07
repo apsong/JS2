@@ -1,31 +1,42 @@
 
 ###################################################################################################
 function iHubDownload ($release_base, $license_base, $DST_DIR) {
-    $SRC_DIR = (Get-ChildItem "$release_base\DEV-*" | Sort-Object | Select-Object -last 1).FullName
-    $DATE = $SRC_DIR -replace ".*-DEV", ""
-
-    $SRC = (Get-ChildItem $SRC_DIR -Recurse -Filter ActuateBIRTiHub.zip).FullName
+    cd $DST_DIR
     
-    $DST_FILE = "ActuateBIRTiHub${DATE}"
-    $DST = "${DST_DIR}\${DST_FILE}.zip"
+    # 1. Check new build
+    $SRC_DIR = (Get-ChildItem "$release_base\DEV-*" | Sort-Object | Select-Object -last 1).FullName
+    $SRC = (Get-ChildItem $SRC_DIR -Recurse -Filter ActuateBIRTiHub.zip).FullName
     Get-ChildItem $SRC
 
-    if (Test-Path $DST) {
-        "`nNOTE: $DST already exists."
-        exit 0
+    $DATE = $SRC_DIR -replace ".*-DEV", ""
+    $DST_FILE = "ActuateBIRTiHub${DATE}"
+    
+    # 2. Copy new build to local side
+    if (Test-Path "$DST_FILE.zip") {
+        "`nNOTE: $DST_FILE.zip already exists~~~~~~~~~~~~~~~~~~~~"
+    } else {
+        Copy-Item $SRC $DST_FILE.zip
     }
-    Copy-Item $SRC $DST
-    Get-ChildItem $DST
-
-    unzip -q (cygpath $DST) -d (cygpath $DST_DIR\$DST_FILE)
-    ls $DST_DIR\$DST_FILE
-
-    $LIC_ORIG = "$DST_DIR\$DST_FILE\iHub\shared\config\acserverlicense.xml"
-    if (-not (Test-Path "$LIC_ORIG.orig")) {
-        mv $LIC_ORIG "$LIC_ORIG.orig"
-        cp "$license_base\acserverlicense-autotest.xml" $LIC_ORIG
+    Get-ChildItem $DST_FILE.zip
+    
+    # 3. Unzip local build
+    if (Test-Path $DST_FILE) {
+        "`nNOTE: $DST_FILE already exists~~~~~~~~~~~~~~~~~~~~"
+    } else {
+        #unzip -q (cygpath $DST_DIR\$DST_FILE.zip) -d (cygpath $DST_DIR\$DST_FILE)
+        & "7z" x "$DST_FILE.zip" -y -o*
     }
-    ls "$LIC_ORIG*" | Select-String "UsageType|ExpirationDate" | %{ $_.Path + ":" + $_.LineNumber + "`t" + $_.Line}
+    ls $DST_FILE
+
+    # 4. Update license
+    $LIC = "$DST_FILE\iHub\shared\config\acserverlicense.xml"
+    if (Test-Path "$LIC.orig") {
+        "`nNOTE: $LIC.orig already exists~~~~~~~~~~~~~~~~~~~~"
+    } else {
+        mv $LIC "$LIC.orig"
+        cp "$license_base\acserverlicense-autotest.xml" $LIC
+    }
+    ls "$LIC*" | Select-String "UsageType|ExpirationDate" | %{ $_.Path + ":" + $_.LineNumber + "`t" + $_.Line}
 }
 
 $HOSTNAME = (hostname)
