@@ -1,0 +1,61 @@
+#! /bin/bash
+
+PROGRAM=`basename $0`
+
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <BEGIN> #######################
+EVAL()
+{
+    echo "#!CMD:[" $@ "]"
+    eval "$@"
+}
+
+NEWFILE()
+{
+    FILE=$1; [ -z "$FILE" ] && { echo 1>&2 "($PROGRAM:NEWFILE)Error: FILE is not set"; exit 100;}
+
+    REAL_FILE=.$FILE/`date "+%Y%m%d-%H%M%S"`#$FILE
+
+    mkdir -p .$FILE || exit 101
+    if [ -h $FILE ]; then
+        rm -f $FILE
+    elif [ -e $FILE ]; then
+        echo 1>&2 "($PROGRAM:NEWFILE)Note: '$FILE' exists and is not a symbolic file. Renamed to '$REAL_FILE.bak'"
+        mv $FILE $REAL_FILE.bak
+    fi
+    touch $REAL_FILE && ln -s $REAL_FILE $FILE && echo $REAL_FILE || exit 102
+}
+##################### .JS/bin/_SH_UTIL_FUNCTIONS <END> #########################
+
+DO_FIRST()
+{
+    local OLD_PWD=`pwd` #Here has to use the bash extension for local variable
+    for DIR do
+        [ -d $DIR ] || return 1
+        cd $DIR || return 2
+        case `pwd | awk -F@ '{print $NF}' | awk -F/ '{print NF}'` in
+            1|2) DO_FIRST */;;
+            3) DO_FIRST 1.0i/;;
+            4)
+                if [ -f ht.log ]; then
+                    grep -A 100 "grep.*ht.log" ht.log | \
+                        awk -v DIR=`pwd | sed -e "s/^.\\{$BASE_DIR_LEN\\}//"` '
+                            BEGIN {SUM=0; VALUES=""}
+                            /.* \| .* \| .*/ {SUM+=$4; VALUES=VALUES " " $4}
+                            END {
+                                printf("%-64s  FIRST_TIME: %6.2f  (%s )\n", DIR, SUM, VALUES)
+                            }'
+                fi
+                ;;
+            *) echo 1>&2 "Error: Invalid root directory '$PWD' to traverse"; exit 1;;
+        esac
+        cd $OLD_PWD
+    done
+}
+
+BASE_DIR=$PWD
+BASE_DIR_LEN=`pwd | wc -m`
+if [ $# -eq 0 ]; then
+    EVAL DO_FIRST .    "|" tee `NEWFILE $PROGRAM.log`
+else 
+    EVAL DO_FIRST "$@" "|" tee `NEWFILE $PROGRAM.log`
+fi
