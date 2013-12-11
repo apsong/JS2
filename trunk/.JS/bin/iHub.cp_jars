@@ -15,11 +15,14 @@
 DIRS=`ls -d iHub/{servletcontainer,web,reportengines,Jar} 2>/dev/null`
 echo "[DIRS]" $DIRS
 echo
-for JAR in `ls -d *.jar 2>/dev/null`; do
+
+JARS=`find *patch* -maxdepth 1 -name '*.jar'`
+for JAR_PATH in $JARS; do
+    JAR=`basename $JAR_PATH`
     if [ "$1" = "undo" ]; then
         find $DIRS \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -v {}.orig {} \;
     else
         find $DIRS \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -vn {} {}.orig \;
-        find $DIRS \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -v $JAR {} \;
+        find $DIRS \( -name "$JAR" -o -name "*.$JAR" \) -exec cp -v $JAR_PATH {} \;
     fi
 done
