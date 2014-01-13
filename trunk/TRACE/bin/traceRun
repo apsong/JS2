@@ -1,9 +1,14 @@
 #! /bin/sh
 
+TEST_DURATION=300
+
 CP=.
 for JAR in `ls $TRACE_BASE/lib/*.jar`; do
     CP="$CP;`cygpath -w $JAR`"
 done
-EVAL hs.perfmon birt01-win 900 "2>&1" "&"
-java -Xmx1024m -cp $CP com.actuate.trace.Run "$@"
+export CLASSPATH=$CP
+#env | grep CLASSPATH
+
+EVAL hs.perfmon birt01-win $TEST_DURATION "2>&1" "&"
+EVAL java -Xmx1024m com.actuate.trace.Run "$@" -TestDuration $TEST_DURATION 2>&1
 EVAL wait
