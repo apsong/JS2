@@ -32,7 +32,7 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     
     $worksheet = $workbook.Worksheets.Item(1)
     
-    $Name = $worksheet.Cells.Item($NameRow,$NameCol).Value()
+    $Name = ($worksheet.Cells.Item($NameRow,$NameCol).Value() -replace " ", "")
     $Phone1 = $worksheet.Cells.Item($PhoneRow1,$PhoneCol).Value()
     $Phone2 = $worksheet.Cells.Item($PhoneRow2,$PhoneCol).Value()
     $Email = $worksheet.Cells.Item($EmailRow,$EmailCol).Value(); if ($Email.Length -lt 5) { $Email = "INVALID_EMAIL" }
@@ -68,9 +68,9 @@ Get-ChildItem "I:\【数据管理】\报名表\*" -Include *.xls, *.xlsx | ForEach-Object
     $last = (Get-Date -UFormat "%Y%m%d" -Date $LastDate)
     $newName = $Name + $file.Extension; if ($file.Name -like "*(松江)*") { $newName = "(松江)$newName" }
     if ($WORD -lt 250 -or $WORD2 -eq 0) {
-        $dest = $file.DirectoryName + "\不足字数[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
+        $dest = $file.DirectoryName + "\不足字数[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}][${nowtime}]$newName"
     } elseif ($XFSL -lt 2 -or $PTSL -lt 1) {
-        $dest = $file.DirectoryName + "\不足沙龙[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}]$newName"
+        $dest = $file.DirectoryName + "\不足沙龙[${first}_${last}_pt${PTSL}_xf${XFSL}_${WORD}_${WORD2}][${nowtime}]$newName"
     } else {
         $dest = $file.DirectoryName + ".合格\[${nowtime}]$newName"
     }

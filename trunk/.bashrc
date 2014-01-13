@@ -36,7 +36,4 @@ done
 unset IFS
 export PATH="$_PATH"
 
-################################################################
-#export JMETER_HOME=$HOME/JMeter/apache-jmeter-2.9
-#export BUILTIN_JAVA=`which java`
-#export PATH=$HOME/.JS/bin/ext:$JMETER_HOME/bin:$PATH
+unset TZ
